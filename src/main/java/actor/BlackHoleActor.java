@@ -16,7 +16,7 @@ import command.config.CommandConfig;
  * Created by zzq on 16/5/16.
  */
 public class BlackHoleActor extends BaseActor {
-	public ExecutorService longRunningExecutor;//自加把protected改成public
+	public ExecutorService longRunningExecutor;
 	
 	private MonitorActor monitorActor;
     private GuardActor guardActor;
@@ -25,10 +25,10 @@ public class BlackHoleActor extends BaseActor {
     private MainUiActor mainUiActor;
     
     public BlackHoleActor(BlackHoleConfig blackHoleConfig){
-        //TO DO Initialize the BlackHoleActor 构造方法，进行config
+        //TO DO Initialize the BlackHoleActor
     	longRunningExecutor=Executors.newFixedThreadPool(blackHoleConfig.BLACK_HOLE_THREAD_POOL_SIZE);
   
-    	monitorActor=new MonitorActor(new MonitorActorConfig());//用相应的config配置相应的actor
+    	monitorActor=new MonitorActor(new MonitorActorConfig());
     	guardActor=new GuardActor(new GuardActorConfig());		
     	ctActor=new CtActor(new CtActorConfig());
     	mobileActor=new MobileActor(new MobileActorConfig());

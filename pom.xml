@@ -20,13 +20,6 @@
             <version>${weblaf.version}</version>
         </dependency>
         <!--end web look and feel-->
-        <!--start tinyos-->
-        <dependency>
-            <groupId>it.cnr.isti.domoware.tinyos</groupId>
-            <artifactId>tinyos-core-rxtx</artifactId>
-            <version>${tinyos.version}</version>
-        </dependency>
-        <!--end tinyos-->
         <dependency>
             <groupId>org.jfree</groupId>
             <artifactId>jfreechart</artifactId>

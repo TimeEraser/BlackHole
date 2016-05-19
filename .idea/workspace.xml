@@ -2,38 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="77c47f96-e5b9-4e48-bd44-7c401491e93f" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/actor/CtActor.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/actor/MainUiActor.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/actor/MobileActor.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/actor/config/CtActorConfig.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/actor/config/MainUiActorConfig.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/actor/config/MobileActorConfig.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/command/CtRequest.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/command/CtResponse.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/command/MainUiRequest.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/command/MainUiResponse.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/command/MobileRequest.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/command/MobileResponse.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/BlackHole.iml" afterPath="$PROJECT_DIR$/BlackHole.iml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pom.xml" afterPath="$PROJECT_DIR$/pom.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/BlackHole.java" afterPath="$PROJECT_DIR$/src/main/java/BlackHole.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/actor/BlackHoleActor.java" afterPath="$PROJECT_DIR$/src/main/java/actor/BlackHoleActor.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/actor/GuardActor.java" afterPath="$PROJECT_DIR$/src/main/java/actor/GuardActor.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/actor/MonitorActor.java" afterPath="$PROJECT_DIR$/src/main/java/actor/MonitorActor.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/actor/config/BlackHoleConfig.java" afterPath="$PROJECT_DIR$/src/main/java/actor/config/BlackHoleConfig.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/actor/config/GuardActorConfig.java" afterPath="$PROJECT_DIR$/src/main/java/actor/config/GuardActorConfig.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/actor/config/MonitorActorConfig.java" afterPath="$PROJECT_DIR$/src/main/java/actor/config/MonitorActorConfig.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/command/Command.java" afterPath="$PROJECT_DIR$/src/main/java/command/Command.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/command/ErrorMessage.java" afterPath="$PROJECT_DIR$/src/main/java/command/ErrorMessage.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/command/GuardRequest.java" afterPath="$PROJECT_DIR$/src/main/java/command/GuardRequest.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/command/GuardResponse.java" afterPath="$PROJECT_DIR$/src/main/java/command/GuardResponse.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/command/MonitorRequest.java" afterPath="$PROJECT_DIR$/src/main/java/command/MonitorRequest.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/command/MonitorResponse.java" afterPath="$PROJECT_DIR$/src/main/java/command/MonitorResponse.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/command/Request.java" afterPath="$PROJECT_DIR$/src/main/java/command/Request.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/command/Response.java" afterPath="$PROJECT_DIR$/src/main/java/command/Response.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/command/SystemRequest.java" afterPath="$PROJECT_DIR$/src/main/java/command/SystemRequest.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/command/config/CommandConfig.java" afterPath="$PROJECT_DIR$/src/main/java/command/config/CommandConfig.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/actor/MainUiActor.java" afterPath="$PROJECT_DIR$/src/main/java/actor/MainUiActor.java" />
     </list>
     <ignored path="BlackHole.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -72,8 +44,8 @@
       <file leaf-file-name="pom.xml" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/pom.xml">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.7620321">
-              <caret line="19" column="16" selection-start-line="19" selection-start-column="16" selection-end-line="19" selection-end-column="16" />
+            <state vertical-scroll-proportion="0.842246">
+              <caret line="21" column="36" selection-start-line="21" selection-start-column="36" selection-end-line="21" selection-end-column="36" />
               <folding />
             </state>
           </provider>
@@ -112,11 +84,43 @@
       <file leaf-file-name="MainUiActor.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/actor/MainUiActor.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-6.5185184">
-              <caret line="191" column="17" selection-start-line="191" selection-start-column="17" selection-end-line="191" selection-end-column="17" />
+            <state vertical-scroll-proportion="-3.1851852">
+              <caret line="186" column="9" selection-start-line="186" selection-start-column="9" selection-end-line="186" selection-end-column="9" />
               <folding>
                 <element signature="imports" expanded="true" />
+                <element signature="e#5605#5606#0" expanded="true" />
+                <element signature="e#5635#5636#0" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="MainUiActorConfig.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/actor/config/MainUiActorConfig.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="6" column="13" selection-start-line="6" selection-start-column="13" selection-end-line="6" selection-end-column="13" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="MonitorActorConfig.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/actor/config/MonitorActorConfig.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="7" column="1" selection-start-line="7" selection-start-column="1" selection-end-line="7" selection-end-column="1" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Request.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/command/Request.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="8" column="17" selection-start-line="8" selection-start-column="17" selection-end-line="8" selection-end-column="17" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -180,8 +184,8 @@
         <option value="$PROJECT_DIR$/src/main/java/BlackHole.java" />
         <option value="$PROJECT_DIR$/src/main/java/actor/GuardActor.java" />
         <option value="$PROJECT_DIR$/src/main/java/actor/BlackHoleActor.java" />
-        <option value="$PROJECT_DIR$/src/main/java/actor/MainUiActor.java" />
         <option value="$PROJECT_DIR$/pom.xml" />
+        <option value="$PROJECT_DIR$/src/main/java/actor/MainUiActor.java" />
       </list>
     </option>
   </component>
@@ -215,15 +219,15 @@
             <id />
           </State>
           <State>
-            <id>Java</id>
+            <id>Android Lint</id>
           </State>
           <State>
-            <id>Java language level migration aidsJava</id>
+            <id>Internationalization issues</id>
           </State>
         </expanded-state>
         <selected-state>
           <State>
-            <id>Android</id>
+            <id>Internationalization issues</id>
           </State>
         </selected-state>
       </profile-state>
@@ -450,7 +454,7 @@
     </panes>
   </component>
   <component name="PropertiesComponent">
-    <property name="settings.editor.selected.configurable" value="fileTemplates" />
+    <property name="settings.editor.selected.configurable" value="Errors" />
     <property name="settings.editor.splitter.proportion" value="0.2" />
     <property name="project.structure.last.edited" value="Modules" />
     <property name="project.structure.proportion" value="0.0" />
@@ -1001,12 +1005,12 @@
       <workItem from="1463464493438" duration="13000" />
       <workItem from="1463552433690" duration="7537000" />
       <workItem from="1463628219817" duration="1961000" />
-      <workItem from="1463633964416" duration="2885000" />
+      <workItem from="1463633964416" duration="4323000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="30563000" />
+    <option name="totallyTimeSpent" value="32001000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -1141,20 +1145,54 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/command/Request.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="8" column="17" selection-start-line="8" selection-start-column="17" selection-end-line="8" selection-end-column="17" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$MAVEN_REPOSITORY$/it/cnr/isti/domoware/tinyos/tinyos-core-rxtx/1.1.15.1/tinyos-core-rxtx-1.1.15.1.pom">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-1.4064171">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/actor/MainUiActor.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-6.5185184">
-          <caret line="191" column="17" selection-start-line="191" selection-start-column="17" selection-end-line="191" selection-end-column="17" />
+        <state vertical-scroll-proportion="-3.1851852">
+          <caret line="186" column="9" selection-start-line="186" selection-start-column="9" selection-end-line="186" selection-end-column="9" />
           <folding>
             <element signature="imports" expanded="true" />
+            <element signature="e#5605#5606#0" expanded="true" />
+            <element signature="e#5635#5636#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/actor/config/MainUiActorConfig.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="6" column="13" selection-start-line="6" selection-start-column="13" selection-end-line="6" selection-end-column="13" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/actor/config/MonitorActorConfig.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="7" column="1" selection-start-line="7" selection-start-column="1" selection-end-line="7" selection-end-column="1" />
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/pom.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.7620321">
-          <caret line="19" column="16" selection-start-line="19" selection-start-column="16" selection-end-line="19" selection-end-column="16" />
+        <state vertical-scroll-proportion="0.842246">
+          <caret line="21" column="36" selection-start-line="21" selection-start-column="36" selection-end-line="21" selection-end-column="36" />
           <folding />
         </state>
       </provider>

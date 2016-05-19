@@ -20,5 +20,7 @@
     <orderEntry type="library" name="Maven: org.slf4j:slf4j-api:1.7.7" level="project" />
     <orderEntry type="library" name="Maven: org.slf4j:slf4j-simple:1.7.7" level="project" />
     <orderEntry type="library" name="Maven: com.fifesoft:rsyntaxtextarea:2.5.3" level="project" />
+    <orderEntry type="library" name="Maven: org.jfree:jfreechart:1.0.19" level="project" />
+    <orderEntry type="library" name="Maven: org.jfree:jcommon:1.0.23" level="project" />
   </component>
 </module>

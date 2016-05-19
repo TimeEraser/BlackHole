@@ -1,3 +1,4 @@
+import actor.BlackHoleActor;
 import actor.config.BlackHoleConfig;
 import command.MonitorRequest;
 

@@ -68,7 +68,7 @@ public class MainUiActor extends BaseActor{
 	    }
 
 	    @Override
-	    public boolean start() {
+	    public boolean start()  {
 	    	WebLookAndFeel.globalControlFont  = new FontUIResource("Dialog",0, 12);
 			   Toolkit.getDefaultToolkit().setDynamicLayout(true);
 			   UIManager.put("ToolTip.font", new Font("Dialog", 0, 12)); 			   
@@ -89,15 +89,18 @@ public class MainUiActor extends BaseActor{
 			   UIManager.put("TableHeader.font", new Font("Dialog", 0, 12));        
 			   UIManager.put("TextField.font", new Font("Dialog", 0, 12));         
 			   UIManager.put("TextArea.font", new Font("Dialog", 0, 12));
-			   try {
+			try {
 				UIManager.setLookAndFeel( "com.alee.laf.WebLookAndFeel" );
-			} catch (ClassNotFoundException | InstantiationException
-					| IllegalAccessException | UnsupportedLookAndFeelException e) {
-				// TODO �Զ����ɵ� catch ��
+			} catch (ClassNotFoundException e) {
+				e.printStackTrace();
+			} catch (InstantiationException e) {
+				e.printStackTrace();
+			} catch (IllegalAccessException e) {
+				e.printStackTrace();
+			} catch (UnsupportedLookAndFeelException e) {
 				e.printStackTrace();
 			}
-		
-		JFrame jf=new JFrame("ҽ�ƽ�������ϵͳ");
+			JFrame jf=new JFrame("主界面");
 	    jf.setSize(800,600);
 	    jf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	    
@@ -106,17 +109,17 @@ public class MainUiActor extends BaseActor{
 //	    jf.setContentPane(contentPane);
 
 	    mb=new JMenuBar();
-	    ct=new JMenu("CT����");
-	    ecg=new JMenu("�ĵ���");
-	    guard=new JMenu("�澯���");
-	    mobile=new JMenu("�ֻ�ͬ��");
+	    ct=new JMenu("CT");
+	    ecg=new JMenu("心电仪");
+	    guard=new JMenu("告警");
+	    mobile=new JMenu("手机`	");
 	    
-	    ext=new JMenu("�˳�");
-	    ct_config=new JMenuItem("CT����");
-	    ct_analysis=new JMenuItem("CT����");
-	    ecg_config=new JMenuItem("�ĵ�������");
-	    ecg_analysis=new JMenuItem("�ĵ��Ƿ���");
-	    clo=new JMenuItem("�رմ���");
+	    ext=new JMenu("退出");
+	    ct_config=new JMenuItem("CT配置");
+	    ct_analysis=new JMenuItem("CT分析");
+	    ecg_config=new JMenuItem("心电配置");
+	    ecg_analysis=new JMenuItem("心电分析");
+	    clo=new JMenuItem("关闭窗口");
 	    ct_config.addActionListener(new CtConfigListener(mainUiActorConfig.getMonitorActor(), ct_config));
 	    ct_analysis.addActionListener(new CtConfigListener(lbl, ct_config));
 	    ecg_config.addActionListener(new CtConfigListener(lbl, ct_config));
@@ -128,14 +131,14 @@ public class MainUiActor extends BaseActor{
 	    mb.add(mobile);
 	    mb.add(ext);
 	    ct.add(ct_config);
-	    ct.addSeparator();			//�˵���֮��ķָ���
+	    ct.addSeparator();
 	    ct.add(ct_analysis);
 	    ecg.add(ecg_config);
 	    ecg.addSeparator();
 	    ecg.add(ecg_analysis);
 	    ext.add(clo);
 	    jf.setJMenuBar(mb);
-	    ct_config.setToolTipText("��һ��CTͼ��");		//��������Ĺ�����ʾ����
+	    ct_config.setToolTipText("��һ��CTͼ��");
 	    lbl=new JLabel("Menu Exampleһ����");
 	    contentPane.add(lbl); 
 //   double lx = Toolkit.getDefaultToolkit().getScreenSize().getWidth();
