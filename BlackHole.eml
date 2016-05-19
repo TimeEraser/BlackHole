@@ -5,4 +5,17 @@
 		<testFolder url="file://$MODULE_DIR$/src/test/java"/>
 		<excludeFolder url="file://$MODULE_DIR$/target"/>
 	</contentEntry>
+	<levels>
+		<level name="Maven: com.weblookandfeel:weblaf-ui:1.2.8" value="project"/>
+		<level name="Maven: com.weblookandfeel:weblaf-core:1.2.8" value="project"/>
+		<level name="Maven: com.thoughtworks.xstream:xstream:1.4.7" value="project"/>
+		<level name="Maven: net.htmlparser.jericho:jericho-html:3.3" value="project"/>
+		<level name="Maven: com.mortennobel:java-image-scaling:0.8.5" value="project"/>
+		<level name="Maven: com.jhlabs:filters:2.0.235" value="project"/>
+		<level name="Maven: org.slf4j:slf4j-api:1.7.7" value="project"/>
+		<level name="Maven: org.slf4j:slf4j-simple:1.7.7" value="project"/>
+		<level name="Maven: com.fifesoft:rsyntaxtextarea:2.5.3" value="project"/>
+		<level name="Maven: org.jfree:jfreechart:1.0.19" value="project"/>
+		<level name="Maven: org.jfree:jcommon:1.0.23" value="project"/>
+	</levels>
 </component>

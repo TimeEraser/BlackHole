@@ -1,3 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<eclipse-userlibraries />
+<eclipse-userlibraries>
+  <library name="Maven: com.weblookandfeel:weblaf-core:1.2.8">
+    <archive path="/Users/macbook/.m2/repository/com/weblookandfeel/weblaf-core/1.2.8/weblaf-core-1.2.8.jar" />
+  </library>
+  <library name="Maven: com.thoughtworks.xstream:xstream:1.4.7">
+    <archive path="/Users/macbook/.m2/repository/com/thoughtworks/xstream/xstream/1.4.7/xstream-1.4.7.jar" />
+  </library>
+  <library name="Maven: net.htmlparser.jericho:jericho-html:3.3">
+    <archive path="/Users/macbook/.m2/repository/net/htmlparser/jericho/jericho-html/3.3/jericho-html-3.3.jar" />
+  </library>
+  <library name="Maven: com.mortennobel:java-image-scaling:0.8.5">
+    <archive path="/Users/macbook/.m2/repository/com/mortennobel/java-image-scaling/0.8.5/java-image-scaling-0.8.5.jar" />
+  </library>
+  <library name="Maven: com.jhlabs:filters:2.0.235">
+    <archive path="/Users/macbook/.m2/repository/com/jhlabs/filters/2.0.235/filters-2.0.235.jar" />
+  </library>
+  <library name="Maven: org.slf4j:slf4j-api:1.7.7">
+    <archive path="/Users/macbook/.m2/repository/org/slf4j/slf4j-api/1.7.7/slf4j-api-1.7.7.jar" />
+  </library>
+  <library name="Maven: org.slf4j:slf4j-simple:1.7.7">
+    <archive path="/Users/macbook/.m2/repository/org/slf4j/slf4j-simple/1.7.7/slf4j-simple-1.7.7.jar" />
+  </library>
+  <library name="Maven: com.weblookandfeel:weblaf-ui:1.2.8">
+    <archive path="/Users/macbook/.m2/repository/com/weblookandfeel/weblaf-ui/1.2.8/weblaf-ui-1.2.8.jar" />
+  </library>
+  <library name="Maven: com.fifesoft:rsyntaxtextarea:2.5.3">
+    <archive path="/Users/macbook/.m2/repository/com/fifesoft/rsyntaxtextarea/2.5.3/rsyntaxtextarea-2.5.3.jar" />
+  </library>
+  <library name="Maven: org.jfree:jfreechart:1.0.19">
+    <archive path="/Users/macbook/.m2/repository/org/jfree/jfreechart/1.0.19/jfreechart-1.0.19.jar" />
+  </library>
+  <library name="Maven: org.jfree:jcommon:1.0.23">
+    <archive path="/Users/macbook/.m2/repository/org/jfree/jcommon/1.0.23/jcommon-1.0.23.jar" />
+  </library>
+</eclipse-userlibraries>
 
