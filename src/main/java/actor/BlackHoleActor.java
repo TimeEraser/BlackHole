@@ -35,6 +35,9 @@ public class BlackHoleActor extends BaseActor {
     	MainUiActorConfig mainUiActorConfig= new MainUiActorConfig();
     	mainUiActorConfig.setBlackHoleActor(this);
     	mainUiActorConfig.setMonitorActor(monitorActor);
+        mainUiActorConfig.setGuardActor(guardActor);
+        mainUiActorConfig.setCtActor(ctActor);
+        mainUiActorConfig.setMobileActor(mobileActor);
     	mainUiActor=new MainUiActor(mainUiActorConfig);
     }
     @Override
@@ -49,6 +52,9 @@ public class BlackHoleActor extends BaseActor {
         	redirectCommand(mainUiActor, request);
         if (request instanceof MobileRequest) 
         	redirectCommand(mobileActor,request);
+        if(request ==SystemRequest.SHUTDOWN){
+            System.exit(0);
+        }
         return false;
     }
     @Override

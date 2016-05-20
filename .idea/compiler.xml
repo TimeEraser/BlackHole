@@ -22,11 +22,11 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <processorPath useClasspath="true" />
-        <module name="BlackHole" />
+        <module name="blackhole" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="BlackHole" target="1.5" />
+      <module name="blackhole" target="1.5" />
     </bytecodeTargetLevel>
   </component>
 </project>
