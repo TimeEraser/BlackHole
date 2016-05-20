@@ -10,7 +10,7 @@ public class BlackHole {
         BlackHoleConfig blackHoleConfig = new BlackHoleConfig();
         BlackHoleActor blackHoleActor = new BlackHoleActor(blackHoleConfig);
         blackHoleActor.start();
-        blackHoleActor.execute(MonitorRequest.Monitor_BLOOD_OXYGEN);
+        //blackHoleActor.execute(MonitorRequest.Monitor_BLOOD_OXYGEN);
     }
 }
 
