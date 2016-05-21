@@ -49,7 +49,7 @@ public class MainUiActor extends BaseActor{
 	        //TO DO Initialize the MainUiActor
 		 this.mainUiActorConfig=mainUiActorConfig;
 		 ExecutorService mainUiRunningExecutor=Executors.newFixedThreadPool(mainUiActorConfig.getMAINUI_THREAD_POOL_SIZE());
-		 mainUiRunningExecutor.shutdown();
+		 //mainUiRunningExecutor.shutdown();
 	    }
 
 	 
@@ -183,7 +183,7 @@ class CtConfigListener extends BaseActor implements ActionListener
    { 
      JMenuItem mi=(JMenuItem) e.getSource();
      if(mi==jMenuItem){
-    	sendRequest(communcateActor, MainUiRequest.MAINUI_CT_CONFIG);
+    	sendRequest(communcateActor, CtRequest.CT_OPEN_IMG);
      }
    }
 
@@ -223,7 +223,7 @@ class CtAnalysisListener extends BaseActor implements ActionListener{
 	public void actionPerformed(ActionEvent e) {
 		JMenuItem mi=(JMenuItem) e.getSource();
 		if(mi==jMenuItem){
-			sendRequest(communcateActor, MainUiRequest.MAINUI_CT_ANALYSIS);
+			sendRequest(communcateActor, CtRequest.CT_ANALYSIS);
 		}
 
 	}
@@ -263,7 +263,7 @@ class EcgConfigListener extends BaseActor implements ActionListener{
 	public void actionPerformed(ActionEvent e) {
 		JMenuItem mi=(JMenuItem) e.getSource();
 		if(mi==jMenuItem){
-			sendRequest(communcateActor, MainUiRequest.MAINUI_ECG_CONFIG);
+			sendRequest(communcateActor, MonitorRequest.MONITOR_ECG_DATA);
 		}
 
 	}
@@ -301,7 +301,7 @@ class EcgAnalysisListener extends BaseActor implements ActionListener{
 	public void actionPerformed(ActionEvent e) {
 		JMenuItem mi=(JMenuItem) e.getSource();
 		if(mi==jMenuItem){
-			sendRequest(communcateActor, MainUiRequest.MAINUI_ECG_ANALYSIS);
+			sendRequest(communcateActor, MonitorRequest.MONITOR_ECG_DATA);
 		}
 
 	}

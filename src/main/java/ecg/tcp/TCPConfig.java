@@ -12,39 +12,33 @@ import static ecg.myals.WelcomeWindow.welcomeWindow;	//public static void main(S
 
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import javax.swing.*;
 import java.io.IOException;
 
 
-/**
- *
- * @author MCH
- */
-public class TCPConfig extends javax.swing.JFrame {		//TCP配置界面
+public class TCPConfig extends JFrame {		//TCP配置界面
 
-    /**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;	//常量
+	private static final long serialVersionUID = 1L;
 	/**
      * Creates new form tcpconfig
      */
 	
 	// Variables declaration - do not modify                     
-    private javax.swing.JButton jButton1;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
-    private javax.swing.JTextField jTextField3;
-    private javax.swing.JTextField jTextField4;
-    private javax.swing.JRadioButton jRadioButton1;
-    private javax.swing.JRadioButton jRadioButton2;
-    
+    private JButton jButton1;
+    private JLabel jLabel1;
+    private JLabel jLabel2;
+    private JLabel jLabel3;
+    private JLabel jLabel4;
+    private JLabel jLabel5;
+    private JTextField jTextField1;
+    private JTextField jTextField2;
+    private JTextField jTextField3;
+    private JTextField jTextField4;
+    private JRadioButton jRadioButton1;
+    private JRadioButton jRadioButton2;
     // End of variables declaration
-    private TCPClient client;	
+
+    private TCPClient client;	//把TCPConfig的内容传给TCPClient
 	
 	
     public TCPConfig() {		//构造方法
@@ -65,95 +59,113 @@ public class TCPConfig extends javax.swing.JFrame {		//TCP配置界面
      */
     //@SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">                          
-    private void initComponents() {
+    private void initComponents() {      //初始化构件
 
-        jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
-        jLabel4 = new javax.swing.JLabel();
-        jLabel5 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
-        jTextField2 = new javax.swing.JTextField();
-        jTextField3 = new javax.swing.JTextField();
-        jTextField4 = new javax.swing.JTextField();
-        jRadioButton1=new javax.swing.JRadioButton("男") ;
-        jRadioButton2=new javax.swing.JRadioButton("女") ;
-        jButton1 = new javax.swing.JButton();
-        javax.swing.ButtonGroup bg=new javax.swing.ButtonGroup();
+        jLabel1 = new JLabel();
+        jLabel2 = new JLabel();
+        jLabel3 = new JLabel();
+        jLabel4 = new JLabel();
+        jLabel5 = new JLabel();
+        jTextField1 = new JTextField();
+        jTextField2 = new JTextField();
+        jTextField3 = new JTextField();
+        jTextField4 = new JTextField();
+        jRadioButton1=new JRadioButton("男") ;
+        jRadioButton2=new JRadioButton("女") ;
+        jButton1 = new JButton();
+        ButtonGroup bg=new ButtonGroup();       //单选按钮组
         bg.add(jRadioButton1);
         bg.add(jRadioButton2);
-        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         setResizable(false);		//不可更改大小
 
         jLabel1.setText("心电仪IP地址");
         jLabel2.setText("端口号");
-        jLabel3.setText("ID");
+        jLabel3.setText("档案ID");
         jLabel4.setText("姓名");
         jLabel5.setText("性别");
         
         jButton1.setText("确定");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                jButton1ActionPerformed(evt);       //jButton1ActionPerformed这个方法在后面定义
             }
-        });
+        }
+        );     //按钮的监听事件
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        GroupLayout layout = new GroupLayout(getContentPane());     //GroupLayout布局
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            layout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(43, 43, 43)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jButton1)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                        	.addComponent(jLabel5)	
-                        	.addComponent(jLabel4)
-                        	.addComponent(jLabel3)
-                            .addComponent(jLabel2)
-                            .addComponent(jLabel1))
-                        .addGap(40, 40, 40)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        	.addComponent(jRadioButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        	.addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)	
-                        	.addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            ))
-                .addContainerGap(85, Short.MAX_VALUE))
+                      .addGap(40, 40, 40)
+                      .addGroup(layout.createParallelGroup(GroupLayout.Alignment.TRAILING)
+                          .addComponent(jButton1)
+                          .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.TRAILING)
+                        	            .addComponent(jLabel5)
+                        	            .addComponent(jLabel4)
+                        	            .addComponent(jLabel3)
+                                        .addComponent(jLabel2)
+                                        .addComponent(jLabel1)
+                                )
+                                 .addGap(40, 40, 40)
+                                 .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                                         .addGroup(layout.createSequentialGroup()
+                                                         .addComponent(jRadioButton1)
+                                                         .addComponent(jRadioButton2)
+                                         )
+                        	            .addComponent(jTextField4, GroupLayout.PREFERRED_SIZE, 160, GroupLayout.PREFERRED_SIZE)
+                        	            .addComponent(jTextField3, GroupLayout.PREFERRED_SIZE, 160, GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(jTextField2, GroupLayout.PREFERRED_SIZE, 160, GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(jTextField1, GroupLayout.PREFERRED_SIZE, 160, GroupLayout.PREFERRED_SIZE)
+                                 )
+                          )
+                      )
+                .addContainerGap(85, Short.MAX_VALUE)
+            )
         );
+
         layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            layout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(78, 78, 78)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGap(20,20,20)
+                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(68, 68, 68)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jTextField1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                )
+                .addGap(20,20,20)
+                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
-                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGap(58, 58, 58)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jTextField2, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                )
+                .addGap(20,20,20)
+                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
-                    .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGap(48, 48, 48)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jTextField3, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                )
+                .addGap(20,20,20)
+                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
-                    .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(38, 38, 38)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jTextField4, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                )
+                .addGap(20,20,20)
+                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel5)
-                    .addComponent(jRadioButton1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                   
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                    .addGroup(layout.createParallelGroup()
+
+                         .addComponent(jRadioButton1)
+                         .addComponent(jRadioButton2)
+                        )
+                )
+                .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jButton1)
-                .addContainerGap(23, Short.MAX_VALUE))
+                .addContainerGap(23, Short.MAX_VALUE)
+            )
         );
 
         pack();		//调整此窗口的大小，以适合其子组件的首选大小和布局
-    }// </editor-fold>                        
+    }// </editor-fold>      初始化构件initComponents() 结束
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {                                         
         // TODO add your handling code here:
@@ -195,9 +207,9 @@ public class TCPConfig extends javax.swing.JFrame {		//TCP配置界面
          * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
          */
         try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+            for (UIManager.LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
                 if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    UIManager.setLookAndFeel(info.getClassName());
                     break;
                 }
             }
@@ -207,7 +219,7 @@ public class TCPConfig extends javax.swing.JFrame {		//TCP配置界面
             java.util.logging.Logger.getLogger(TCPConfig.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
             java.util.logging.Logger.getLogger(TCPConfig.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+        } catch (UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(TCPConfig.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
@@ -220,27 +232,27 @@ public class TCPConfig extends javax.swing.JFrame {		//TCP配置界面
         });
     }
 
-    public javax.swing.JButton getjButton1() {
+    public JButton getjButton1() {
 		return jButton1;
 	}
 
-	public void setjButton1(javax.swing.JButton jButton1) {
+	public void setjButton1(JButton jButton1) {
 		this.jButton1 = jButton1;
 	}
 
-	public javax.swing.JTextField getjTextField1() {
+	public JTextField getjTextField1() {
 		return jTextField1;
 	}
 
-	public void setjTextField1(javax.swing.JTextField jTextField1) {
+	public void setjTextField1(JTextField jTextField1) {
 		this.jTextField1 = jTextField1;
 	}
 
-	public javax.swing.JTextField getjTextField2() {
+	public JTextField getjTextField2() {
 		return jTextField2;
 	}
 
-	public void setjTextField2(javax.swing.JTextField jTextField2) {
+	public void setjTextField2(JTextField jTextField2) {
 		this.jTextField2 = jTextField2;
 	}
 

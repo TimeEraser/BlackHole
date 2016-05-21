@@ -4,7 +4,7 @@ import actor.*;
 
 
 public class MainUiActorConfig {
-	private Integer MAINUI_THREAD_POOL_SIZE=1;
+	private Integer MAINUI_THREAD_POOL_SIZE=4;
 	private MonitorActor monitorActor;
 	private BlackHoleActor blackHoleActor;
 	private CtActor ctActor;

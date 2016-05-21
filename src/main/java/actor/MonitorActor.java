@@ -1,10 +1,13 @@
 package actor;
 
+import command.MonitorRequest;
 import command.MonitorResponse;
 import command.Request;
 import command.Response;
 import actor.config.MonitorActorConfig;
 import command.config.CommandConfig;
+import ecg.myals.MyMainWindow;
+import ecg.tcp.TCPConfig;
 
 /**
  * Created by zzq on 16/5/16.
@@ -15,6 +18,11 @@ public class MonitorActor extends BaseActor{
     }
     @Override
     protected boolean processActorRequest(Request request) {
+        if(request== MonitorRequest.MONITOR_ECG_DATA){
+            TCPConfig  TCPC =  new TCPConfig();
+            TCPC.setVisible(true);
+            System.out.println("MonitorRequest.MONITOR_ECG_DATA");
+        }
         //.....
         sendResponse(request,MonitorResponse.MONITOR_DATA,"NI_MA_HIGH");
         return false;
