@@ -170,7 +170,8 @@ public class CTMainGUI1 extends JFrame {
         exit.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                System.exit(0);
+
+                //System.exit(0);
             }
         });
 
@@ -183,6 +184,8 @@ public class CTMainGUI1 extends JFrame {
     public static void main(String[] args) {
         CTMainGUI1 jf = new CTMainGUI1();
         jf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        //jf.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+
         jf.pack();
         jf.setVisible(true);
     }

@@ -6,14 +6,22 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.Arrays;
 
+import actor.MonitorActor;
 import ecg.ecgshow.MyECGShowUI;
 import ecg.myals.WelcomeWindow;
+
+import javax.management.monitor.Monitor;
+
 //没有main方法
 public class TCPClient extends Thread{  //跑多线程，私有变量只能在TCPClient这个类内使用
 	private Socket s;
 	private InputStream is;//输入流is
 	private String host;//主机域名
 	private int port;   //主机端口号
+	private String Id;	//档案ID
+	private String Name;//姓名
+	private String Sex;	//性别
+
 	private byte[] receivedBuffer = new byte[40000];//接收缓存，40000个字节
 	private byte[] receivedTemp = new byte[1024];   //接收临时变量，1024个字节
 	public boolean connectFlag = false;//布尔变量型 连接标志，初始时设为false没有连接
@@ -51,14 +59,28 @@ public class TCPClient extends Thread{  //跑多线程，私有变量只能在TC
 	public void setPort(int port) {	//给TCPClient下的int类的port赋值
 		this.port = port;
 	}
+	public void setID(String Id){this.Id=Id;}
+	public void setNAME(String Name){this.Name=Name;}
+	public void setSEX(String Sex){this.Sex=Sex;}
+	public String getID(){return Id;}
+	public String getNAME(){return Name;}
+	public String getSEX(){return Sex;}
 	
 	public void connect(){	//public类型的方法 connect(),有异常处理
 		try {
 			s = new Socket(host, port);	//用host和 port初始化Socket类的s变量
 			connectFlag = true;		//	连接标志为true
-			WelcomeWindow.welcomeWindow.getTCPC().getjButton1().setText("结束");		//在als.myals包中的WelcomeWindow类的一个实例welcomeWindow的getTCPC()方法
-			WelcomeWindow.welcomeWindow.getTCPC().getjTextField1().setEnabled(false);
-			WelcomeWindow.welcomeWindow.getTCPC().getjTextField2().setEnabled(false);
+//			WelcomeWindow.welcomeWindow.getTCPC().getjButton1().setText("结束");		//在als.myals包中的WelcomeWindow类的一个实例welcomeWindow的getTCPC()方法
+//			WelcomeWindow.welcomeWindow.getTCPC().getjTextField1().setEnabled(false);
+//			WelcomeWindow.welcomeWindow.getTCPC().getjTextField2().setEnabled(false);
+			MonitorActor.getTCPC().getjButton1().setText("结束");		//在als.myals包中的WelcomeWindow类的一个实例welcomeWindow的getTCPC()方法
+			MonitorActor.getTCPC().getjTextField1().setEnabled(false);
+			MonitorActor.getTCPC().getjTextField2().setEnabled(false);
+			MonitorActor.getTCPC().getjTextField3().setEnabled(false);
+			MonitorActor.getTCPC().getjTextField4().setEnabled(false);
+
+
+
 			try {
 				for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
 					if ("Nimbus".equals(info.getName())) {
@@ -82,6 +104,7 @@ public class TCPClient extends Thread{  //跑多线程，私有变量只能在TC
 				public void run() {			//多线程要运行的代码段
 					if (myECGShowUI == null) {
 						myECGShowUI = new MyECGShowUI("ecg", 5000L);
+						//myECGShowUI;
 					}
 					myECGShowUI.setVisible(true);
 				}

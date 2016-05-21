@@ -73,9 +73,9 @@ public class TCPConfig extends JFrame {		//TCP配置界面
         jRadioButton1=new JRadioButton("男") ;
         jRadioButton2=new JRadioButton("女") ;
         jButton1 = new JButton();
-        ButtonGroup bg=new ButtonGroup();       //单选按钮组
-        bg.add(jRadioButton1);
-        bg.add(jRadioButton2);
+        ButtonGroup buttonGroup=new ButtonGroup();       //单选按钮组
+        buttonGroup.add(jRadioButton1);
+        buttonGroup.add(jRadioButton2);
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         setResizable(false);		//不可更改大小
 
@@ -170,9 +170,22 @@ public class TCPConfig extends JFrame {		//TCP配置界面
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {                                         
         // TODO add your handling code here:
     	if (jButton1.getText().equals("确定")) {
+
+            String jRadioButtonName=new String("null");
+            if(jRadioButton1.isSelected()){
+                jRadioButtonName=jRadioButton1.getText();
+            }
+            else if (jRadioButton2.isSelected()){
+                jRadioButtonName=jRadioButton2.getText();
+            }
+
     		client = new TCPClient();		//新建一个TCPClient()方法的实例client
     		client.setHost(jTextField1.getText());	//设置主机
     		client.setPort(Integer.parseInt(jTextField2.getText()));	//设置端口
+            client.setID(jTextField3.getText());
+            client.setNAME(jTextField4.getText());
+            client.setSEX(jRadioButtonName);
+
     		client.stopFlag = false;
     		client.start();		//客户端线程开始运行
 //    		if(client.connectFlag){					//
@@ -251,10 +264,23 @@ public class TCPConfig extends JFrame {		//TCP配置界面
 	public JTextField getjTextField2() {
 		return jTextField2;
 	}
-
 	public void setjTextField2(JTextField jTextField2) {
 		this.jTextField2 = jTextField2;
 	}
+
+    public JTextField getjTextField3() {
+        return jTextField3;
+    }
+    public void setjTextField3(JTextField jTextField3) {
+        this.jTextField3 = jTextField3;
+    }
+
+    public JTextField getjTextField4() {
+        return jTextField4;
+    }
+    public void setjTextField4(JTextField jTextField4) {
+        this.jTextField4 = jTextField4;
+    }
 
 
 }
