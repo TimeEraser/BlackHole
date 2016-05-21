@@ -7,14 +7,15 @@ import command.config.CommandConfig;
  */
 public enum SystemResponse implements Response{
     SYSTEM_MESSAGE;
-    private CommandConfig requestConfig=null;
+    private CommandConfig responseConfig=null;
     @Override
     public CommandConfig getConfig() {
-        return null;
+        return responseConfig;
     }
 
     @Override
     public CommandConfig setConfig(CommandConfig responseConfig) {
-        return null;
+        this.responseConfig=responseConfig;
+        return responseConfig;
     }
 }
