@@ -27,6 +27,7 @@ public class MainUiActor extends BaseActor{
 		private GuardActor guardActor;
 		private MonitorActor monitorActor;
 		private BlackHoleActor blackHoleActor;
+		private MobileActor mobileActor;
         //Interface element
 		private Integer WIDTH;
 		private Integer HEIGHT;
@@ -37,9 +38,10 @@ public class MainUiActor extends BaseActor{
 	public MainUiActor(MainUiActorConfig mainUiActorConfig){
 
 		 ctActor=mainUiActorConfig.getCtActor();
-		 guardActor=mainUiActorConfig.guardActor();
+		 guardActor=mainUiActorConfig.getGuardActor();
 		 monitorActor=mainUiActorConfig.getMonitorActor();
 		 blackHoleActor=mainUiActorConfig.getBlackHoleActor();
+		 mobileActor=mainUiActorConfig.getMobileActor();
 
 		 WIDTH=mainUiActorConfig.getWIDTH();
 		 HEIGHT=mainUiActorConfig.getHeight();
@@ -52,7 +54,7 @@ public class MainUiActor extends BaseActor{
 	    @Override
 	    public boolean processActorRequest(Request  request) {
 	    	if(request == SystemRequest.BOOT){
-	    		sendResponse(request, SystemResponse.SYSTEM_MESSAGE,"收到SystemRequest.BOOT请求，启动mainUi");
+	    		sendResponse(request, SystemResponse.SYSTEM_MESSAGE,"mainUiActor收到SystemRequest.BOOT请求，启动mainUi");
 	    		this.start();
 				return true;
 	    	}
@@ -82,61 +84,7 @@ public class MainUiActor extends BaseActor{
 		managerElement();
 	}
 
-	private void managerElement() {
-		JFrame InitializationInterface=new JFrame("医疗健康管理系统");
-		InitializationInterface.setSize(WIDTH,HEIGHT);
-		InitializationInterface.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		//menu
-		InitializationInterface.setJMenuBar(managerMenu());
-		//content
-		InitializationInterface.getContentPane().add(managerContent());
-		
-		InitializationInterface.setVisible(true);
-	}
-	private JMenuBar managerMenu() {
-		JMenuBar mainMenu=new JMenuBar();
 
-		JMenu ct=new JMenu("CT");
-			JMenuItem ct_config=new JMenuItem("CT配置");
-			ct_config.addActionListener(new CtConfigListener(ctActor, ct_config));
-			ct_config.setToolTipText("打开一张CT图像");
-			JMenuItem ct_analysis=new JMenuItem("CT分析");
-			ct_analysis.addActionListener(new CtAnalysisListener(ctActor, ct_analysis));
-			ct.add(ct_config);
-			ct.addSeparator();
-			ct.add(ct_analysis);
-		mainMenu.add(ct);
-
-
-		JMenu ecg=new JMenu("心电仪");
-			JMenuItem ecg_config=new JMenuItem("心电仪配置");
-			ecg_config.addActionListener(new EcgConfigListener(monitorActor, ecg_config));
-			JMenuItem ecg_analysis=new JMenuItem("心电仪分析");
-			ecg_analysis.addActionListener(new EcgAnalysisListener(monitorActor,ecg_analysis));
-			ecg.add(ecg_config);
-			ecg.addSeparator();
-			ecg.add(ecg_analysis);
-		mainMenu.add(ecg);
-
-		JMenu guard=new JMenu("告警");
-		mainMenu.add(guard);
-
-		JMenu mobile=new JMenu("手机");
-		mainMenu.add(mobile);
-
-		JMenu ext=new JMenu("退出");
-			JMenuItem clo=new JMenuItem("关闭窗口");
-			clo.addActionListener(new CloseListener(blackHoleActor,clo));
-			ext.add(clo);
-		mainMenu.add(ext);
-		return mainMenu;
-	}
-
-	private JLabel managerContent() {
-		JLabel lbl;
-		lbl=new JLabel("Menu Example一二三");
-		return lbl;
-	}
 	private void managerStyle() {
 		WebLookAndFeel.globalControlFont  = new FontUIResource("Dialog",0, CONTENT_FONT_SIZE);
 		Toolkit.getDefaultToolkit().setDynamicLayout(true);
@@ -170,12 +118,78 @@ public class MainUiActor extends BaseActor{
 			e.printStackTrace();
 		}
 	}
+
+	private void managerElement() {
+		JFrame InitializationInterface=new JFrame("医疗健康管理系统");
+		InitializationInterface.setSize(WIDTH,HEIGHT);
+		InitializationInterface.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		//menu
+		InitializationInterface.setJMenuBar(managerMenu());
+		//content
+		InitializationInterface.getContentPane().add(managerContent());
+		
+		InitializationInterface.setVisible(true);
+	}
+
+	private JMenuBar managerMenu() {
+		JMenuBar mainMenu=new JMenuBar();
+
+		JMenu ct=new JMenu("CT");
+			JMenuItem ct_config=new JMenuItem("CT配置");
+			ct_config.addActionListener(new CtConfigListener(ctActor, ct_config));
+			ct_config.setToolTipText("打开一张CT图像");
+			JMenuItem ct_analysis=new JMenuItem("CT分析");
+			ct_analysis.addActionListener(new CtAnalysisListener(ctActor, ct_analysis));
+			ct.add(ct_config);
+			ct.addSeparator();
+			ct.add(ct_analysis);
+		mainMenu.add(ct);
+
+
+		JMenu ecg=new JMenu("心电仪");
+			JMenuItem ecg_config=new JMenuItem("心电仪配置");
+			ecg_config.addActionListener(new EcgConfigListener(monitorActor, ecg_config));
+			JMenuItem ecg_analysis=new JMenuItem("心电仪分析");
+			ecg_analysis.addActionListener(new EcgAnalysisListener(monitorActor,ecg_analysis));
+			ecg.add(ecg_config);
+			ecg.addSeparator();
+			ecg.add(ecg_analysis);
+		mainMenu.add(ecg);
+
+		JMenu guard=new JMenu("告警");
+			JMenuItem guard_config=new JMenuItem("连接告警设备");
+			guard_config.addActionListener(new GuardConfigListener(guardActor,guard_config));
+			guard.add(guard_config);
+		mainMenu.add(guard);
+
+		JMenu mobile=new JMenu("手机");
+			JMenuItem mobile_config=new JMenuItem("连接手机");
+			mobile_config.addActionListener(new MobileConfigListener(mobileActor,mobile_config));
+			mobile.add(mobile_config);
+		mainMenu.add(mobile);
+
+		JMenu ext=new JMenu("退出");
+			JMenuItem clo=new JMenuItem("关闭窗口");
+			clo.addActionListener(new CloseListener(blackHoleActor,clo));
+			ext.add(clo);
+		mainMenu.add(ext);
+		return mainMenu;
+	}
+
+	private JLabel managerContent() {
+		JLabel lbl;
+		lbl=new JLabel("---TEXT---");
+		return lbl;
+	}
+
 }
+
+
  class CtConfigListener extends BaseActor implements ActionListener
-{     	
-	JLabel lb1;
-	JMenuItem jMenuItem;
-	BaseActor communicateActor;
+{
+	private JLabel lb1;
+	private JMenuItem jMenuItem;
+	private BaseActor communicateActor;
 	public CtConfigListener(JLabel lb1,JMenuItem ct_config){
 		this.lb1=lb1;
 		this.jMenuItem=ct_config;
@@ -214,9 +228,9 @@ public class MainUiActor extends BaseActor{
 
 class CtAnalysisListener extends BaseActor implements ActionListener{
 
-	JLabel lb1;
-	JMenuItem jMenuItem;
-	BaseActor communicateActor;
+	private JLabel lb1;
+	private JMenuItem jMenuItem;
+	private BaseActor communicateActor;
 	public CtAnalysisListener(JLabel lb1,JMenuItem ct_config){
 		this.lb1=lb1;
 		this.jMenuItem=ct_config;
@@ -258,9 +272,9 @@ class CtAnalysisListener extends BaseActor implements ActionListener{
 
 
 class EcgConfigListener extends BaseActor implements ActionListener{
-	JLabel lb1;
-	JMenuItem jMenuItem;
-	BaseActor communicateActor;
+	private JLabel lb1;
+	private JMenuItem jMenuItem;
+	private BaseActor communicateActor;
 	public EcgConfigListener(JLabel lb1,JMenuItem ecg_config){
 		this.lb1=lb1;
 		this.jMenuItem=ecg_config;
@@ -298,9 +312,9 @@ class EcgConfigListener extends BaseActor implements ActionListener{
 }
 
 class EcgAnalysisListener extends BaseActor implements ActionListener{
-	JLabel lb1;
-	JMenuItem jMenuItem;
-	BaseActor communicateActor;
+	private JLabel lb1;
+	private JMenuItem jMenuItem;
+	private BaseActor communicateActor;
 	public EcgAnalysisListener(JLabel lb1,JMenuItem ecg_analysis){
 		this.lb1=lb1;
 		this.jMenuItem=ecg_analysis;
@@ -338,9 +352,9 @@ class EcgAnalysisListener extends BaseActor implements ActionListener{
 }
 
 class CloseListener extends BaseActor implements ActionListener{
-	JLabel lb1;
-	JMenuItem jMenuItem;
-	BaseActor communicateActor;
+	private JLabel lb1;
+	private JMenuItem jMenuItem;
+	private BaseActor communicateActor;
 	public CloseListener(JLabel lb1,JMenuItem clo){
 		this.lb1=lb1;
 		this.jMenuItem=clo;
@@ -372,4 +386,80 @@ class CloseListener extends BaseActor implements ActionListener{
 	public boolean shutdown() {
 		return false;
 	}
+}
+
+
+class GuardConfigListener extends BaseActor implements ActionListener{
+
+	private JLabel lb1;
+	private JMenuItem jMenuItem;
+	private BaseActor communicateActor;
+	public GuardConfigListener(JLabel lb1,JMenuItem guard_config){
+		this.lb1=lb1;
+		this.jMenuItem=guard_config;
+	}
+	public GuardConfigListener(BaseActor commuBaseActor ,JMenuItem guard_config) {
+		this.communicateActor=commuBaseActor;
+		this.jMenuItem=guard_config;
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		JMenuItem mi=(JMenuItem) e.getSource();
+		if(mi==jMenuItem){
+			sendRequest(communicateActor, GuardRequest.GUARD_DATA);
+		}
+	}
+
+	@Override
+	protected boolean processActorRequest(Request requests) {return false;}
+
+	@Override
+	protected boolean processActorResponse(Response responses) {return false;}
+
+	@Override
+	public boolean start() {return false;}
+
+	@Override
+	public boolean shutdown() {return false;}
+
+
+}
+
+
+class MobileConfigListener extends BaseActor implements ActionListener{
+
+	private JLabel lb1;
+	private JMenuItem jMenuItem;
+	private BaseActor communicateActor;
+	public MobileConfigListener(JLabel lb1,JMenuItem mobile_config){
+		this.lb1=lb1;
+		this.jMenuItem=mobile_config;
+	}
+	public MobileConfigListener(BaseActor commuBaseActor ,JMenuItem mobile_config) {
+		this.communicateActor=commuBaseActor;
+		this.jMenuItem=mobile_config;
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		JMenuItem mi=(JMenuItem) e.getSource();
+		if(mi==jMenuItem){
+			sendRequest(communicateActor, MobileRequest.MOBILE_CONNECT);
+		}
+	}
+
+	@Override
+	protected boolean processActorRequest(Request requests) {return false;}
+
+	@Override
+	protected boolean processActorResponse(Response responses) {return false;}
+
+	@Override
+	public boolean start() {return false;}
+
+	@Override
+	public boolean shutdown() {return false;}
+
+
 }

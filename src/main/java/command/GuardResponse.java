@@ -9,7 +9,8 @@ public enum  GuardResponse implements Response {
     GUARD_DATA,
     GUARD_BUBBLE,
     GUARD_BLOOD_LEAK,
-    GUARD_TEMPERATURE;
+    GUARD_TEMPERATURE,
+    GUARD_ERROR;
     //if CommandConfig==null abandon the response
     CommandConfig responseConfig=null;
     public CommandConfig setConfig(CommandConfig responseConfig) {

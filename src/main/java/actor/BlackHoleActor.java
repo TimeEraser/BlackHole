@@ -16,7 +16,7 @@ import command.config.CommandConfig;
  * Created by zzq on 16/5/16.
  */
 public class BlackHoleActor extends BaseActor {
-	public ExecutorService longRunningExecutor;
+	//public ExecutorService longRunningExecutor;
 	
 	private MonitorActor monitorActor;
     private GuardActor guardActor;
@@ -26,7 +26,7 @@ public class BlackHoleActor extends BaseActor {
     
     public BlackHoleActor(BlackHoleConfig blackHoleConfig){
         //TO DO Initialize the BlackHoleActor
-    	longRunningExecutor=Executors.newFixedThreadPool(blackHoleConfig.BLACK_HOLE_THREAD_POOL_SIZE);
+    	//longRunningExecutor=Executors.newFixedThreadPool(blackHoleConfig.BLACK_HOLE_THREAD_POOL_SIZE);
   
     	monitorActor=new MonitorActor(new MonitorActorConfig());
     	guardActor=new GuardActor(new GuardActorConfig());		
@@ -59,7 +59,7 @@ public class BlackHoleActor extends BaseActor {
     }
     @Override
     protected boolean processActorResponse(Response response) {
-       System.out.println(response.getConfig().getData());
+       System.out.println("blackHoleActor.processActorResponse:"+response.getConfig().getData());
         return false;
     }
 

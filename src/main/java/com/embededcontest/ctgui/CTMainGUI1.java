@@ -27,7 +27,7 @@ public class CTMainGUI1 extends JFrame {
     private GridBagLayout layout;
     private JButton open;
     private JButton analysis;
-    private JButton exit;
+    private JButton remove;
     private GridBagConstraints c;
     public MandelDraw imgPanel;
     private JPanel textPanel;
@@ -64,16 +64,16 @@ public class CTMainGUI1 extends JFrame {
         c.weightx = 0.5;
         container.add(analysis,c);
 
-        exit = new JButton("退出");
+        remove = new JButton("清除");
         c.fill = GridBagConstraints.HORIZONTAL;
         c.gridx = 2;
         c.gridy = 0;
         c.weightx = 0.5;
-        container.add(exit,c);
+        container.add(remove,c);
 
         imgPanel = new MandelDraw();
-        imgPanel.setBorder(BorderFactory.createEtchedBorder());
         imgPanel.setSize(getPreferredSize());
+        imgPanel.setBorder(BorderFactory.createEtchedBorder());
         c.fill = GridBagConstraints.BOTH;
         c.gridx = 0;
         c.gridy = 1;
@@ -167,11 +167,18 @@ public class CTMainGUI1 extends JFrame {
             }
         });
 
-        exit.addActionListener(new ActionListener() {
+        /*exit.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                System.exit(0);
+            }
+        });*/
 
-                //System.exit(0);
+        remove.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                imgPanel.removeImg();
+                rstShow.setText("");
             }
         });
 
@@ -184,9 +191,7 @@ public class CTMainGUI1 extends JFrame {
     public static void main(String[] args) {
         CTMainGUI1 jf = new CTMainGUI1();
         jf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        //jf.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-
-        jf.pack();
+        jf.setSize(512,666);
         jf.setVisible(true);
     }
 

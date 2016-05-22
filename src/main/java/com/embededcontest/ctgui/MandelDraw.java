@@ -57,6 +57,7 @@ public class MandelDraw extends JPanel {
         if (image != null) {
             return new Dimension(image.getWidth(), image.getHeight());
         }
+
         return super.getPreferredSize();
     }
 
@@ -94,6 +95,7 @@ public class MandelDraw extends JPanel {
             mousePress = e.getPoint();
             x1 = e.getX();
             y1 = e.getY();
+            System.out.println("x1:"+x1+" y1:"+y1);
         }
 
         @Override
@@ -113,16 +115,29 @@ public class MandelDraw extends JPanel {
         public void mouseReleased(MouseEvent e) {
             x2 = e.getX();
             y2 = e.getY();
+            System.out.println("x2:"+x2+" y2:"+y2);
             drawing = false;
             repaint();
         }
 
+        @Override
+        public void mouseClicked(MouseEvent e) {
+            if(rect!=null){
+                rect = null;
+            }
+        }
     }
 
     public double[] getCoordinate(){
         double[] getCoordinate = {x1,y1,x2,y2};
         return getCoordinate;
 
+    }
+
+    public void removeImg(){
+        if(image!=null){
+            image = null;
+        }
     }
 
     private static void createAndShowGui() {

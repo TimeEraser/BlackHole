@@ -1,6 +1,7 @@
 package actor;
 
 import actor.config.MobileActorConfig;
+import command.MobileRequest;
 import command.Request;
 import command.Response;
 import command.config.CommandConfig;
@@ -12,6 +13,13 @@ public class MobileActor extends BaseActor  {
     }
     @Override
     public boolean processActorRequest(Request request) {
+        if(request == MobileRequest.MOBILE_CONNECT){
+
+            System.out.println("MobileRequest.MOBILE_CONNECT");
+
+        }
+
+
         return false;
     }
 

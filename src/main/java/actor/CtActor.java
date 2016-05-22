@@ -28,7 +28,7 @@ public class CtActor extends BaseActor{
                 public void run() {
                     CTMainGUI1 jf = new CTMainGUI1();
                    // jf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-                    jf.pack();
+                    jf.setSize(512,666);
                     jf.setVisible(true);
                 }
             });
