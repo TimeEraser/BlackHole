@@ -17,12 +17,15 @@ public class MainUiActorConfig {
 
 	//Interface element
 	private Dimension screenSize= Toolkit.getDefaultToolkit().getScreenSize();
+	//size
 	private Integer screenWidth = screenSize.width;
 	private Integer screenHeight = screenSize.height;
 	private Integer WIDTH = (int)(screenWidth*0.8);
 	private Integer Height = (int)(screenHeight*0.8);
+	private Integer LEFT = (screenWidth-WIDTH)/2;
+	private Integer TOP = (screenHeight-Height)/2;
 	private Integer MENU_FONT_SIZE=12;
-	private Integer CONTENT_FONT_SIZE=12;
+	private Integer CONTENT_FONT_SIZE=18;
 
 	public MonitorActor getMonitorActor() {return monitorActor;}
 	public void setMonitorActor(MonitorActor monitorActor) {this.monitorActor = monitorActor;}
@@ -50,5 +53,12 @@ public class MainUiActorConfig {
 
 	public Integer getMENU_FONT_SIZE() {return MENU_FONT_SIZE;}
 	public void setMENU_FONT_SIZE(Integer MENU_FONT_SIZE) {this.MENU_FONT_SIZE = MENU_FONT_SIZE;}
+
+	public Integer getLEFT() {
+		return LEFT;
+	}
+	public Integer getTOP() {
+		return TOP;
+	}
 }
 
