@@ -26,8 +26,7 @@ public class BlackHoleActor extends BaseActor {
     
     public BlackHoleActor(BlackHoleConfig blackHoleConfig){
         //TO DO Initialize the BlackHoleActor
-    	//longRunningExecutor=Executors.newFixedThreadPool(blackHoleConfig.BLACK_HOLE_THREAD_POOL_SIZE);
-  
+    	//longRunningExecutor=Executors.newFixedThreadPool(blackHoleConfig.BLACK_HOLE_THREAD_POOL_SIZE)
     	monitorActor=new MonitorActor(new MonitorActorConfig());
     	guardActor=new GuardActor(new GuardActorConfig());
     	ctActor=new CtActor(new CtActorConfig());
