@@ -3,10 +3,7 @@ package actor;
 import actor.config.CtActorConfig;
 
 import com.embededcontest.ctgui.CTMainGUI1;
-import command.CtRequest;
-import command.Request;
-import command.Response;
-import command.CtResponse;
+import command.*;
 import command.config.CommandConfig;
 
 import javax.swing.*;
@@ -20,9 +17,7 @@ public class CtActor extends BaseActor{
     }
     @Override
     public boolean processActorRequest(Request  request ) {
-        if(request== CtRequest.CT_OPEN_IMG){
-
-
+        if(request== MainUiRequest.MAIN_UI_CT_CONFIG){
             Thread thread =new Thread(new Runnable() {
                 @Override
                 public void run() {

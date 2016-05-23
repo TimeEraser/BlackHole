@@ -3,12 +3,13 @@ package command;
 import command.config.CommandConfig;
 
 public enum  MainUiRequest implements Request {
-	MAINUI_CT_CONFIG,
-	MAINUI_CT_ANALYSIS,
-	MAINUI_ECG_CONFIG,
-	MAINUI_ECG_ANALYSIS,
-	MAINUI_GUARD_DATA,
-	MAINUI_MOBILE_DATA;
+	MAIN_UI_CT_CONFIG,
+	MAIN_UI_CT_ANALYSIS,
+	MAIN_UI_ECG_CONFIG,
+	MAIN_UI_ECG_ANALYSIS,
+	MAIN_UI_GUARD_DATA,
+	MAIN_UI_MOBILE_DATA,
+	MAIN_UI_SHUTDOWN;
 	   //if CommandConfig==null abandon the request
 	private CommandConfig requestConfig=null;
     public CommandConfig setConfig(CommandConfig requestConfig) {

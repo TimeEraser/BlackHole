@@ -50,7 +50,6 @@
             <artifactId>serial-driver</artifactId>
             <version>${serial-driver.version}</version>
         </dependency>
-
     </dependencies>
 
 

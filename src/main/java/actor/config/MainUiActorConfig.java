@@ -9,12 +9,12 @@ import java.awt.Toolkit;
 public class MainUiActorConfig {
 
 	//Interactive element
-
 	private CtActor ctActor;
 	private GuardActor guardActor;
 	private MobileActor mobileActor;
 	private MonitorActor monitorActor;
 	private BlackHoleActor blackHoleActor;
+
 	//Interface element
 	private Dimension screenSize= Toolkit.getDefaultToolkit().getScreenSize();
 	private Integer screenWidth = screenSize.width;

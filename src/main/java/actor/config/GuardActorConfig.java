@@ -5,5 +5,4 @@ package actor.config;
  */
 public class GuardActorConfig {
     Integer GUARD_THREAD_POOL_SIZE;
-
 }

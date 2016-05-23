@@ -1,9 +1,6 @@
 package actor;
 
-import command.MonitorRequest;
-import command.MonitorResponse;
-import command.Request;
-import command.Response;
+import command.*;
 import actor.config.MonitorActorConfig;
 import command.config.CommandConfig;
 import ecg.model.GuardianData;
@@ -32,8 +29,7 @@ public class MonitorActor extends BaseActor{
     }
     @Override
     protected boolean processActorRequest(Request request) {
-        if(request== MonitorRequest.MONITOR_ECG_DATA){
-
+        if(request== MainUiRequest.MAIN_UI_ECG_CONFIG){
             if(TCPC == null)
                 TCPC = new TCPConfig();
             TCPC.setVisible(true);		//使得框架可见
@@ -43,7 +39,6 @@ public class MonitorActor extends BaseActor{
                 // TODO Auto-generated catch block
                 e.printStackTrace();
             }
-
             System.out.println("MonitorRequest.MONITOR_ECG_DATA");
         }
         //.....

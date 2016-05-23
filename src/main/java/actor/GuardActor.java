@@ -25,15 +25,15 @@ import java.util.concurrent.Executors;
  * Created by zzq on 16/5/16.
  */
 public class GuardActor extends BaseActor {
-    protected BaseActor commActor;
-    protected static CommPortIdentifier portId;
-    protected static Enumeration portList;
-    protected short readFlag=0;
-    protected int temperater;
+    private BaseActor commActor;
+    private static CommPortIdentifier portId;
+    private static Enumeration portList;
+    private short readFlag=0;
+    private int temperater;
     private byte temp;
-    protected boolean alarmBlood;
-    protected boolean alarmBubble;
-    protected byte[] data = new byte[2];
+    private boolean alarmBlood;
+    private boolean alarmBubble;
+    private byte[] data = new byte[2];
 
     public GuardActor(GuardActorConfig guardActorConfig){
         portList=CommPortIdentifier.getPortIdentifiers();
@@ -66,7 +66,7 @@ public class GuardActor extends BaseActor {
         }
         if(readFlag==2){
             readFlag=0;
-            temperater=(Integer)(data[0]%32+(data[1]&0x7F)*32);
+            temperater=(int)(data[0]%32+(data[1]&0x7F)*32);
             System.out.print("temperater:");
             System.out.println(temperater/10.0);
             alarmBlood=(data[0]/32%2==1);
@@ -81,8 +81,6 @@ public class GuardActor extends BaseActor {
         if(alarmBubble){
             System.out.println("Bubble");
         }
-
-
         return false;
     }
 

@@ -106,6 +106,7 @@ public class CTMainGUI1 extends JFrame {
                     imgPanel.setIMAGE_ADDR(imagePath);
                     imgPanel.makeDraw();
                 }
+                rstShow.setText("可能病症：肝癌");
             }
         });
 
