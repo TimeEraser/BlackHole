@@ -2,33 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="f5837106-7dd2-42e1-98e7-1d847bf7fd76" name="Default" comment="">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/main/java/ecg/myals/MyMainWindow.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/main/java/ecg/myals/WelcomeWindow.java" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/conf/RandomForest" afterPath="$PROJECT_DIR$/conf/RandomForest" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gitignore" afterPath="$PROJECT_DIR$/.gitignore" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/compiler.xml" afterPath="$PROJECT_DIR$/.idea/compiler.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/misc.xml" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/modules.xml" afterPath="$PROJECT_DIR$/.idea/modules.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/BlackHole.iml" afterPath="$PROJECT_DIR$/BlackHole.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/actor/BlackHoleActor.java" afterPath="$PROJECT_DIR$/src/main/java/actor/BlackHoleActor.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/actor/CtActor.java" afterPath="$PROJECT_DIR$/src/main/java/actor/CtActor.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/actor/GuardActor.java" afterPath="$PROJECT_DIR$/src/main/java/actor/GuardActor.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/actor/Listener/NoticeListener.java" afterPath="$PROJECT_DIR$/src/main/java/actor/Listener/NoticeListener.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/actor/MainUiActor.java" afterPath="$PROJECT_DIR$/src/main/java/actor/MainUiActor.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/actor/MonitorActor.java" afterPath="$PROJECT_DIR$/src/main/java/actor/MonitorActor.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/actor/config/GuardActorConfig.java" afterPath="$PROJECT_DIR$/src/main/java/actor/config/GuardActorConfig.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/actor/config/MainUiActorConfig.java" afterPath="$PROJECT_DIR$/src/main/java/actor/config/MainUiActorConfig.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/embededcontest/ctgui/CTMainGUI1.java" afterPath="$PROJECT_DIR$/src/main/java/com/embededcontest/ctgui/CTMainGUI1.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/command/GuardRequest.java" afterPath="$PROJECT_DIR$/src/main/java/command/GuardRequest.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/command/GuardResponse.java" afterPath="$PROJECT_DIR$/src/main/java/command/GuardResponse.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/command/MainUiRequest.java" afterPath="$PROJECT_DIR$/src/main/java/command/MainUiRequest.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/command/MainUiResponse.java" afterPath="$PROJECT_DIR$/src/main/java/command/MainUiResponse.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/command/MonitorRequest.java" afterPath="$PROJECT_DIR$/src/main/java/command/MonitorRequest.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/command/MonitorResponse.java" afterPath="$PROJECT_DIR$/src/main/java/command/MonitorResponse.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/ecg/ecgshow/MyECGShowUI.java" afterPath="$PROJECT_DIR$/src/main/java/ecg/ecgshow/MyECGShowUI.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/ecg/tcp/TCPClient.java" afterPath="$PROJECT_DIR$/src/main/java/ecg/tcp/TCPClient.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/ecg/tcp/TCPConfig.java" afterPath="$PROJECT_DIR$/src/main/java/ecg/tcp/TCPConfig.java" />
     </list>
     <ignored path="blackhole.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -54,7 +28,7 @@
       <file leaf-file-name="BlackHole.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/BlackHole.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.4849138">
+            <state vertical-scroll-proportion="0.56675065">
               <caret line="15" column="0" selection-start-line="15" selection-start-column="0" selection-end-line="15" selection-end-column="0" />
               <folding>
                 <element signature="imports" expanded="true" />
@@ -1057,16 +1031,16 @@
       <workItem from="1463935807806" duration="1144000" />
       <workItem from="1463968701763" duration="1505000" />
       <workItem from="1463979513388" duration="2825000" />
-      <workItem from="1464087183481" duration="266000" />
+      <workItem from="1464087183481" duration="374000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="5740000" />
+    <option name="totallyTimeSpent" value="5848000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="26" width="1280" height="725" extended-state="6" />
-    <editor active="true" />
+    <editor active="false" />
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
@@ -1075,8 +1049,8 @@
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.43533123" sideWeight="0.5219619" order="10" side_tool="true" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.329429" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.329653" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.22274882" sideWeight="0.47803807" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.328594" sideWeight="0.49676898" order="9" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.22274882" sideWeight="0.47803807" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.328594" sideWeight="0.49676898" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.18336026" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="JProfiler" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
@@ -1496,7 +1470,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/BlackHole.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.4849138">
+        <state vertical-scroll-proportion="0.56675065">
           <caret line="15" column="0" selection-start-line="15" selection-start-column="0" selection-end-line="15" selection-end-column="0" />
           <folding>
             <element signature="imports" expanded="true" />
