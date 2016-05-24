@@ -3,9 +3,12 @@ package actor;
 import java.awt.*;
 import java.net.URL;
 import javax.swing.*;
+import javax.swing.border.Border;
+import javax.swing.border.EtchedBorder;
 import javax.swing.plaf.FontUIResource;
 
 import actor.Listener.NoticeListener;
+import actor.Listener.SwitchListener;
 import actor.config.MainUiActorConfig;
 import com.alee.laf.WebLookAndFeel;
 import command.*;
@@ -120,84 +123,132 @@ public class MainUiActor extends BaseActor{
 		InitializationInterface.setSize(WIDTH,HEIGHT);
 		InitializationInterface.setLocation(LEFT,TOP);
 		InitializationInterface.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		//menu
-		InitializationInterface.setJMenuBar(managerMenu());
-		//content
-		InitializationInterface.getContentPane().add(managerContent());
-		
-		InitializationInterface.setVisible(true);
-	}
+		InitializationInterface.setLayout(null);
 
-	private JMenuBar managerMenu() {
+		Container contentPane = InitializationInterface.getContentPane();
+		Component CTComponent = createCTJPanel();
+		Component ECGComponent = createECGJPanel();
+		contentPane.add(CTComponent);
+		contentPane.add(ECGComponent);
+
 		JMenuBar mainMenu=new JMenuBar();
 		JMenu sys = new JMenu();
-			ImageIcon beginIcon = new ImageIcon(getIconImage("Icon/file.png"));
-			sys.setIcon(beginIcon);
-		mainMenu.add(sys);
-			ImageIcon configIcon = new ImageIcon(getIconImage("Icon/config.png"));
-			ImageIcon analysisIcon = new ImageIcon(getIconImage("Icon/analysis.png"));
+		ImageIcon beginIcon = new ImageIcon(getIconImage("Icon/sys.png"));
+		sys.setIcon(beginIcon);
+		mainMenu.add(sys);;
+
 		JMenu ct=new JMenu("");
-			ImageIcon ctIcon = new ImageIcon(getIconImage("Icon/ct.png"));
-			ct.setIcon(ctIcon);
-			JMenuItem ct_config=new JMenuItem("CT配置");
-			ct_config.setIcon(configIcon);
-			ct_config.addActionListener(new NoticeListener(ctActor,MainUiRequest.MAIN_UI_CT_CONFIG));
-			ct_config.setToolTipText("打开一张CT图像");
-			JMenuItem ct_analysis=new JMenuItem("CT分析");
-			ct_analysis.setIcon(analysisIcon);
-			ct_analysis.addActionListener(new NoticeListener(ctActor,MainUiRequest.MAIN_UI_CT_ANALYSIS));
-			ct.add(ct_config);
-			ct.addSeparator();
-			ct.add(ct_analysis);
+		ct.addMenuListener(new SwitchListener(contentPane,CTComponent));
+		ImageIcon ctIcon = new ImageIcon(getIconImage("Icon/ct.png"));
+		ct.setIcon(ctIcon);
 		mainMenu.add(ct);
 
 
 		JMenu ecg=new JMenu("");
-			ImageIcon ecgIcon = new ImageIcon(getIconImage("Icon/monitor.png"));
-			ecg.setIcon(ecgIcon);
-			JMenuItem ecg_config=new JMenuItem("心电仪配置");
-			ecg_config.setIcon(configIcon);
-			ecg_config.addActionListener(new NoticeListener(monitorActor,MainUiRequest.MAIN_UI_ECG_CONFIG));
-			JMenuItem ecg_analysis=new JMenuItem("心电仪分析");
-			ecg_analysis.setIcon(analysisIcon);
-			ecg_analysis.addActionListener(new NoticeListener(monitorActor,MainUiRequest.MAIN_UI_ECG_ANALYSIS));
-			ecg.add(ecg_config);
-			ecg.addSeparator();
-			ecg.add(ecg_analysis);
+		ecg.addMenuListener(new SwitchListener(contentPane,ECGComponent));
+		ImageIcon ecgIcon = new ImageIcon(getIconImage("Icon/monitor.png"));
+		ecg.setIcon(ecgIcon);
 		mainMenu.add(ecg);
 
 		JMenu guard=new JMenu("");
-			guard.setHorizontalTextPosition(SwingConstants.RIGHT);
-			ImageIcon guardIcon = new ImageIcon(getIconImage("Icon/guard.png"));
-			guard.setIcon(guardIcon);
-			JMenuItem guard_config=new JMenuItem("连接告警设备");
-			guard_config.addActionListener(new NoticeListener(guardActor,MainUiRequest.MAIN_UI_GUARD_DATA));
-			guard.add(guard_config);
+		guard.addMenuListener(new SwitchListener(contentPane,null));
+		guard.setHorizontalTextPosition(SwingConstants.RIGHT);
+		ImageIcon guardIcon = new ImageIcon(getIconImage("Icon/guard.png"));
+		guard.setIcon(guardIcon);
+		JMenuItem guard_config=new JMenuItem("连接告警设备");
+		guard_config.addActionListener(new NoticeListener(guardActor,MainUiRequest.MAIN_UI_GUARD_DATA));
+		guard.add(guard_config);
 		mainMenu.add(guard);
 
 		JMenu mobile=new JMenu("");
-			ImageIcon phoneIcon = new ImageIcon(getIconImage("Icon/phone.png"));
-			mobile.setIcon(phoneIcon);
-			JMenuItem mobile_config=new JMenuItem("连接手机");
-			mobile_config.addActionListener(new NoticeListener(mobileActor,MainUiRequest.MAIN_UI_MOBILE_DATA));
-			mobile.add(mobile_config);
+		mobile.addMenuListener(new SwitchListener(contentPane,null));
+		ImageIcon phoneIcon = new ImageIcon(getIconImage("Icon/phone.png"));
+		mobile.setIcon(phoneIcon);
+		JMenuItem mobile_config=new JMenuItem("连接手机");
+		mobile_config.addActionListener(new NoticeListener(mobileActor,MainUiRequest.MAIN_UI_MOBILE_DATA));
+		mobile.add(mobile_config);
 		mainMenu.add(mobile);
+		InitializationInterface.setJMenuBar(mainMenu);
 
-//		JMenu ext=new JMenu("退出");
-//			ext.setHorizontalAlignment(SwingConstants.LEFT);
-//			System.out.println(ext.getHorizontalAlignment());
-//			JMenuItem clo=new JMenuItem("关闭窗口");
-//			clo.addActionListener(new NoticeListener(blackHoleActor,MainUiRequest.MAIN_UI_SHUTDOWN));
-//			ext.add(clo);
-//		mainMenu.add(ext);
-		return mainMenu;
+		InitializationInterface.setVisible(true);
 	}
-	private JLabel managerContent() {
-		JLabel lbl;
-		lbl=new JLabel("---TEXT---");
-		return lbl;
-	}
+
 	private URL getIconImage(String path){
 		return this.getClass().getClassLoader().getResource(path);
+	}
+	private JPanel createCTJPanel(){
+		JPanel CTPanel= new JPanel(null);
+		Border etchedBorder = BorderFactory.createEtchedBorder(EtchedBorder.LOWERED,Color.LIGHT_GRAY,Color.LIGHT_GRAY);
+		CTPanel.setBounds(0,0,WIDTH,(int)(HEIGHT*0.9));
+		JPanel CTData = new JPanel();
+		CTData.setBorder(etchedBorder);
+		CTData.setBounds((int)(WIDTH*0.05),(int)(HEIGHT*0.05),(int)(WIDTH*0.65),(int)(HEIGHT*0.8));
+		CTPanel.add(CTData);
+
+		JPanel CTControl = new JPanel();
+		CTControl.setLayout(new FlowLayout(FlowLayout.CENTER));
+		//CTControl.setBorder(etchedBorder);
+		CTControl.setBounds((int)(WIDTH*0.75),(int)(HEIGHT*0.05),(int)(WIDTH*0.2),(int)(HEIGHT*0.15));
+		JButton CTOpen = new JButton();
+		CTOpen.addActionListener(new NoticeListener(ctActor,MainUiRequest.MAIN_UI_CT_CONFIG));
+		CTOpen.setText("打开CT图片");
+		CTOpen.setIcon(new ImageIcon(getIconImage("Icon/open.png")));
+		CTControl.add(CTOpen);
+		JButton CTAnalyse = new JButton();
+		CTAnalyse.setText("分析CT病灶");
+		CTAnalyse.setIcon(new ImageIcon(getIconImage("Icon/analyse_min.png")));
+		CTControl.add(CTAnalyse);
+		CTPanel.add(CTControl);
+
+		JPanel CTFocus = new JPanel();
+		CTFocus.setBorder(etchedBorder);
+		CTFocus.setBounds((int)(WIDTH*0.75),(int)(HEIGHT*0.25),(int)(WIDTH*0.2),(int)(HEIGHT*0.6));
+		CTPanel.add(CTFocus);
+
+		CTPanel.setVisible(false);
+		return CTPanel;
+	}
+	private JPanel createECGJPanel(){
+		JPanel ECGPanel= new JPanel(null);
+		Border etchedBorder = BorderFactory.createEtchedBorder(EtchedBorder.LOWERED,Color.LIGHT_GRAY,Color.LIGHT_GRAY);
+		ECGPanel.setBounds(0,0,WIDTH,(int)(HEIGHT*0.9));
+
+		JPanel ECGControl = new JPanel();
+		//ECGControl.setBorder(etchedBorder);
+		ECGControl.setBounds((int)(WIDTH*0.05),(int)(HEIGHT*0.05),(int)(WIDTH*0.65),(int)(HEIGHT*0.10));
+		ECGControl.setLayout(new FlowLayout(FlowLayout.CENTER));
+
+		JButton ecgConfig = new JButton();
+		ecgConfig.setText("监护仪配置");
+		ecgConfig.setIcon(new ImageIcon(getIconImage("Icon/config.png")));
+		ecgConfig.addActionListener(new NoticeListener(monitorActor,MainUiRequest.MAIN_UI_ECG_CONFIG));
+		ECGControl.add(ecgConfig);
+		JButton ecgStart = new JButton();
+		ecgStart.setText("开始传输");
+		ecgStart.setIcon(new ImageIcon(getIconImage("Icon/start.png")));
+		ECGControl.add(ecgStart);
+		JButton ecgStop = new JButton();
+		ecgStop.setText("停止传输");
+		ecgStop.setIcon(new ImageIcon(getIconImage("Icon/stop.png")));
+		ECGControl.add(ecgStop);
+		JButton ecgAnalyse = new JButton();
+		ecgAnalyse.setText("心电图分析");
+		ecgAnalyse.setIcon(new ImageIcon(getIconImage("Icon/analyse.png")));
+		ecgAnalyse.addActionListener(new NoticeListener(monitorActor,MainUiRequest.MAIN_UI_ECG_ANALYSIS));
+		ECGControl.add(ecgAnalyse);
+		ECGPanel.add(ECGControl);
+
+		JPanel ECGData = new JPanel();
+		ECGData.setBorder(etchedBorder);
+		ECGData.setBounds((int)(WIDTH*0.05),(int)(HEIGHT*0.20),(int)(WIDTH*0.65),(int)(HEIGHT*0.65));
+		ECGPanel.add(ECGData);
+
+		JPanel ECGAnalyse = new JPanel();
+		ECGAnalyse.setBorder(etchedBorder);
+		ECGAnalyse.setBounds((int)(WIDTH*0.75),(int)(HEIGHT*0.05),(int)(WIDTH*0.2),(int)(HEIGHT*0.8));
+		ECGPanel.add(ECGAnalyse);
+
+		ECGPanel.setVisible(false);
+		return ECGPanel;
 	}
 }
