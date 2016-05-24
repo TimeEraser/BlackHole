@@ -21,6 +21,7 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 //import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JFrame;
 
 //import myecg.myanalizer.Analizer;
 
@@ -43,7 +44,7 @@ import com.alee.laf.WebLookAndFeel;
  *
  * @author MCH
  */
-public class MyECGShowUI extends javax.swing.JFrame {
+public class MyECGShowUI extends JPanel {
 
     /**
 	 * 
@@ -54,7 +55,8 @@ public class MyECGShowUI extends javax.swing.JFrame {
      */
 	
 	// Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JPanel jPanel1;
+    private JPanel contentPane=new JPanel();
+    private JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     // End of variables declaration//GEN-END:variables
     public static final int LEAD_COUNT=3;
@@ -86,7 +88,7 @@ public class MyECGShowUI extends javax.swing.JFrame {
 	
 	
     public MyECGShowUI(String title, long timeZone) {		//构造方法
-    	super(title);
+    	super();
         initComponents(timeZone);
         ECGShow();
     }
@@ -102,34 +104,34 @@ public class MyECGShowUI extends javax.swing.JFrame {
     	double lx = Toolkit.getDefaultToolkit().getScreenSize().getWidth();
     	double ly = Toolkit.getDefaultToolkit().getScreenSize().getHeight();
         jScrollPane1 = new javax.swing.JScrollPane();		//滚动条
-        jPanel1 = new javax.swing.JPanel();
+        jPanel1 = new JPanel();
         
-        showException = new javax.swing.JButton();
-        stopRefresh = new javax.swing.JButton();
+        showException = new JButton();
+        stopRefresh = new JButton();
         
-        label_HI = new javax.swing.JLabel();
-        label_HB = new javax.swing.JLabel();
-        lblBeat = new javax.swing.JLabel();
-        label_APB = new javax.swing.JLabel();
-        label_VPB = new javax.swing.JLabel();
-        label_HT = new javax.swing.JLabel();
-        isAPCLabel = new javax.swing.JLabel();
-        isPVCLabel = new javax.swing.JLabel();
-        isBeatLabel = new javax.swing.JLabel();
-        label_PI = new javax.swing.JLabel();
-        label_Name = new javax.swing.JLabel();
-        lblName = new javax.swing.JLabel();
-        label_ID = new javax.swing.JLabel();
-        lblId = new javax.swing.JLabel();
-        label_OP = new javax.swing.JLabel();
+        label_HI = new JLabel();
+        label_HB = new JLabel();
+        lblBeat = new JLabel();
+        label_APB = new JLabel();
+        label_VPB = new JLabel();
+        label_HT = new JLabel();
+        isAPCLabel = new JLabel();
+        isPVCLabel = new JLabel();
+        isBeatLabel = new JLabel();
+        label_PI = new JLabel();
+        label_Name = new JLabel();
+        lblName = new JLabel();
+        label_ID = new JLabel();
+        lblId = new JLabel();
+        label_OP = new JLabel();
         
-        ecgPanel = new javax.swing.JPanel();
-        panel_PI = new javax.swing.JPanel();
-        panel_OP = new javax.swing.JPanel();
-        panel_charts = new javax.swing.JPanel(new GridLayout(LEAD_COUNT,1));
+        ecgPanel = new JPanel();
+        panel_PI = new JPanel();
+        panel_OP = new JPanel();
+        panel_charts = new JPanel(new GridLayout(LEAD_COUNT,1));
 
 //      setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+       // setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         
         showException.setText("异常");
         stopRefresh.setText("暂停");
@@ -310,12 +312,13 @@ public class MyECGShowUI extends javax.swing.JFrame {
 			numberaxis.setLabelFont(new Font("SansSerif", 0, 14));
 
 			XYLineAndShapeRenderer xylineandshaperenderer = new XYLineAndShapeRenderer(true, false);
-			xylineandshaperenderer.setSeriesPaint(0, Color.red);
+			xylineandshaperenderer.setSeriesPaint(0, Color.green);  //线段颜色为绿
 			XYPlot xyplot = new XYPlot(timeseriescollection, dateaxis, numberaxis, xylineandshaperenderer);
 			xyplot.setBackgroundPaint(Color.lightGray);
 			xyplot.setDomainGridlinePaint(Color.red);
 			xyplot.setRangeGridlinePaint(Color.blue);
 			xyplot.setAxisOffset(new RectangleInsets(5D, 5D, 5D, 5D));
+            xyplot.setBackgroundPaint(Color.black);
 
 			dateaxis.setAutoRange(true);
 			dateaxis.setLowerMargin(0.0D);
@@ -380,8 +383,8 @@ public class MyECGShowUI extends javax.swing.JFrame {
 
         jScrollPane1.setViewportView(jPanel1);
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);  
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(contentPane);
+        contentPane.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jScrollPane1)
@@ -390,8 +393,8 @@ public class MyECGShowUI extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jScrollPane1)
         );
-
-        pack();
+        this.add(contentPane);
+        //pack();
     }// </editor-fold>//GEN-END:initComponents
 
     public void ECGShow() {	
@@ -420,30 +423,36 @@ public class MyECGShowUI extends javax.swing.JFrame {
          * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
          */
 	
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(MyECGShowUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(MyECGShowUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(MyECGShowUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(MyECGShowUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
+//        try {
+//            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+//                if ("Nimbus".equals(info.getName())) {
+//                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+//                    break;
+//                }
+//            }
+//        } catch (ClassNotFoundException ex) {
+//            java.util.logging.Logger.getLogger(MyECGShowUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//        } catch (InstantiationException ex) {
+//            java.util.logging.Logger.getLogger(MyECGShowUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//        } catch (IllegalAccessException ex) {
+//            java.util.logging.Logger.getLogger(MyECGShowUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+//            java.util.logging.Logger.getLogger(MyECGShowUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//        }
         //</editor-fold>
 
         /* Create and display the form */
+        JFrame jFrame=new JFrame();
+        jFrame.setContentPane(new MyECGShowUI("",5000L));
+        jFrame.pack();
+        jFrame.setVisible(true);
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
             	new MyECGShowUI("ecg",5000L).setVisible(true);
             }
         });
+
+
     }
 
     public DataRefresher getDataReFresher() {

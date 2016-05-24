@@ -2,15 +2,13 @@ package actor;
 
 import command.*;
 import actor.config.MonitorActorConfig;
-import command.config.CommandConfig;
 import ecg.model.GuardianData;
 import ecg.model.PressureData;
 import ecg.model.PumpSpeedData;
-import ecg.myals.MyMainWindow;
-import ecg.tcp.TCPConfig;
+import ecg.tcp.*;
 
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.util.ArrayList;
 
 /**
  * Created by zzq on 16/5/16.
@@ -21,7 +19,17 @@ public class MonitorActor extends BaseActor{
     private GuardianData guardianData;
     private PressureData pressureData;
     private PumpSpeedData pumpSpeedData;
-    private FileOutputStream fos;
+    private static FileOutputStream fos;
+    private TCPClient client;
+
+
+    private String host;//主机域名
+    private int port;   //主机端口号
+    private String Id;	//档案ID
+    private String Name;//姓名
+    private String Sex;	//性别
+    private Object data;
+
 
     public MonitorActor(MonitorActorConfig monitorActorConfig){
         //TO DO Initialize the MonitorActor
@@ -30,19 +38,41 @@ public class MonitorActor extends BaseActor{
     @Override
     protected boolean processActorRequest(Request request) {
         if(request== MainUiRequest.MAIN_UI_ECG_CONFIG){
-            if(TCPC == null)
-                TCPC = new TCPConfig();
-            TCPC.setVisible(true);		//使得框架可见
-            try {
-                fos = new FileOutputStream(surgeryNo+"_ecg.dat");
-            } catch (FileNotFoundException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
+            ArrayList<String> dataList= (ArrayList<String>) request.getConfig().getData();
+            String[] dataString = (String[]) dataList.toArray(new String[0]);
+              host=dataString[0];
+              port=Integer.parseInt(dataString[1]);
+              Id=dataString[2];
+              Name=dataString[3];
+              Sex=dataString[4];
+            System.out.println("MonitorActor: "+host);
+            System.out.println("MonitorActor: "+port);
+            System.out.println("MonitorActor: "+Id);
+            System.out.println("MonitorActor: "+Name);
+            System.out.println("MonitorActor: "+Sex);
             System.out.println("MonitorRequest.MONITOR_ECG_DATA");
+
+            client = new TCPClient();		//新建一个TCPClient()方法的实例client
+            client.setHost(host);	//设置主机
+            client.setPort(port);	//设置端口
+            client.setID(Id);
+            client.setNAME(Name);
+            client.setSEX(Sex);
+
+            client.stopFlag = false;
+            client.setMainUiActor((MainUiActor) request.getConfig().getSendActor());
+            client.start();		//客户端线程开始运行
+
         }
-        //.....
-        sendResponse(request,MonitorResponse.MONITOR_DATA,"NI_MA_HIGH");
+        if(request==MainUiRequest.MAIN_UI_ECG_STOP){
+
+            client.stopFlag =true;
+            sendResponse(request,MonitorResponse.MONITOR_SHUTDOWM);
+
+            System.out.println("client.stopFlag =true");
+        }
+
+
         return false;
     }
 
@@ -64,4 +94,10 @@ public class MonitorActor extends BaseActor{
     public static TCPConfig getTCPC() {
         return TCPC;
     }
+    public static FileOutputStream getFos() {
+        return fos;
+    }
+   // public static void setFos(FileOutputStream fos) {
+       // this.fos = fos;
+    //}
 }

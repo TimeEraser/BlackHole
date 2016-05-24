@@ -8,9 +8,7 @@ import java.util.Arrays;
 
 import actor.MonitorActor;
 import ecg.ecgshow.MyECGShowUI;
-import ecg.myals.WelcomeWindow;
-
-import javax.management.monitor.Monitor;
+import actor.MainUiActor;
 
 //没有main方法
 public class TCPClient extends Thread{  //跑多线程，私有变量只能在TCPClient这个类内使用
@@ -21,17 +19,17 @@ public class TCPClient extends Thread{  //跑多线程，私有变量只能在TC
 	private String Id;	//档案ID
 	private String Name;//姓名
 	private String Sex;	//性别
+	private MainUiActor mainUiActor;
 
 	private byte[] receivedBuffer = new byte[40000];//接收缓存，40000个字节
 	private byte[] receivedTemp = new byte[1024];   //接收临时变量，1024个字节
 	public boolean connectFlag = false;//布尔变量型 连接标志，初始时设为false没有连接
 	public boolean stopFlag = false;   //布尔变量型 停止标志，初始时设为false 连接依旧存在
 	private MyECGShowUI myECGShowUI;   //图形化界面
-	
+
 	public Socket getS() {	//获得socket
 		return s;
 	}
-
 	public void setS(Socket s) {  //给TCPClient下的Socket类的实例s赋值
 		this.s = s;
 	}
@@ -39,7 +37,6 @@ public class TCPClient extends Thread{  //跑多线程，私有变量只能在TC
 	public InputStream getIs() {	//获得输入流is
 		return is;
 	}
-
 	public void setIs(InputStream is) {	//给TCPClient下的InputStream类的实例is赋值
 		this.is = is;
 	}
@@ -47,7 +44,6 @@ public class TCPClient extends Thread{  //跑多线程，私有变量只能在TC
 	public String getHost() {		//获得主机名
 		return host;
 	}
-
 	public void setHost(String host) {	//给TCPClient下的String类的实例host赋值
 		this.host = host;
 	}
@@ -55,17 +51,41 @@ public class TCPClient extends Thread{  //跑多线程，私有变量只能在TC
 	public int getPort() {		//获得端口
 		return port;
 	}
-
 	public void setPort(int port) {	//给TCPClient下的int类的port赋值
 		this.port = port;
 	}
-	public void setID(String Id){this.Id=Id;}
-	public void setNAME(String Name){this.Name=Name;}
-	public void setSEX(String Sex){this.Sex=Sex;}
+
 	public String getID(){return Id;}
+	public void setID(String Id){this.Id=Id;}
 	public String getNAME(){return Name;}
+
+	public void setNAME(String Name){this.Name=Name;}
+
 	public String getSEX(){return Sex;}
-	
+	public void setSEX(String Sex){this.Sex=Sex;}
+
+	public void setMainUiActor(MainUiActor mainUiActor){this.mainUiActor=mainUiActor;}
+
+	@Override	  //重载run()方法
+	public void run() {	  //public class TCPClient extends Thread的线程
+		// TODO Auto-generated method stub
+		connect();
+		startReceive();
+		try {
+			//is.close();
+			s.shutdownInput();
+			s.close();
+			System.out.println("关闭成功！");
+//			MonitorActor.getTCPC().getjButton1().setText("确定");
+//			MonitorActor.getTCPC().getjTextField1().setEnabled(true);
+//			MonitorActor.getTCPC().getjTextField2().setEnabled(true);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+
 	public void connect(){	//public类型的方法 connect(),有异常处理
 		try {
 			s = new Socket(host, port);	//用host和 port初始化Socket类的s变量
@@ -73,30 +93,30 @@ public class TCPClient extends Thread{  //跑多线程，私有变量只能在TC
 //			WelcomeWindow.welcomeWindow.getTCPC().getjButton1().setText("结束");		//在als.myals包中的WelcomeWindow类的一个实例welcomeWindow的getTCPC()方法
 //			WelcomeWindow.welcomeWindow.getTCPC().getjTextField1().setEnabled(false);
 //			WelcomeWindow.welcomeWindow.getTCPC().getjTextField2().setEnabled(false);
-			MonitorActor.getTCPC().getjButton1().setText("结束");		//在als.myals包中的WelcomeWindow类的一个实例welcomeWindow的getTCPC()方法
-			MonitorActor.getTCPC().getjTextField1().setEnabled(false);
-			MonitorActor.getTCPC().getjTextField2().setEnabled(false);
-			MonitorActor.getTCPC().getjTextField3().setEnabled(false);
-			MonitorActor.getTCPC().getjTextField4().setEnabled(false);
+//            MonitorActor.getTCPC().getjButton1().setText("结束");		//在als.myals包中的WelcomeWindow类的一个实例welcomeWindow的getTCPC()方法
+//            MonitorActor.getTCPC().getjTextField1().setEnabled(false);
+//            MonitorActor.getTCPC().getjTextField2().setEnabled(false);
+//            MonitorActor.getTCPC().getjTextField3().setEnabled(false);
+//            MonitorActor.getTCPC().getjTextField4().setEnabled(false);
 
 
-
-			try {
-				for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-					if ("Nimbus".equals(info.getName())) {
-						javax.swing.UIManager.setLookAndFeel(info.getClassName());
-						break;
-					}
-				}
-			} catch (ClassNotFoundException ex) {	//class未找到异常
-				java.util.logging.Logger.getLogger(MyECGShowUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-			} catch (InstantiationException ex) {	//实例化异常
-				java.util.logging.Logger.getLogger(MyECGShowUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-			} catch (IllegalAccessException ex) {	//非法访问异常
-				java.util.logging.Logger.getLogger(MyECGShowUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-			} catch (javax.swing.UnsupportedLookAndFeelException ex) {	//swing组件中的不支持LookAndFeel异常
-				java.util.logging.Logger.getLogger(MyECGShowUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-			}
+//
+//			try {
+//				for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+//					if ("Nimbus".equals(info.getName())) {
+//						javax.swing.UIManager.setLookAndFeel(info.getClassName());
+//						break;
+//					}
+//				}
+//			} catch (ClassNotFoundException ex) {	//class未找到异常
+//				java.util.logging.Logger.getLogger(MyECGShowUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//			} catch (InstantiationException ex) {	//实例化异常
+//				java.util.logging.Logger.getLogger(MyECGShowUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//			} catch (IllegalAccessException ex) {	//非法访问异常
+//				java.util.logging.Logger.getLogger(MyECGShowUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//			} catch (javax.swing.UnsupportedLookAndFeelException ex) {	//swing组件中的不支持LookAndFeel异常
+//				java.util.logging.Logger.getLogger(MyECGShowUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//			}
 			//</editor-fold>
 
          /* Create and display the form */  //创建并且显示图表
@@ -104,9 +124,12 @@ public class TCPClient extends Thread{  //跑多线程，私有变量只能在TC
 				public void run() {			//多线程要运行的代码段
 					if (myECGShowUI == null) {
 						myECGShowUI = new MyECGShowUI("ecg", 5000L);
-						//myECGShowUI;
 					}
-					myECGShowUI.setVisible(true);
+
+					mainUiActor.getInitializationInterface().getContentPane().add(myECGShowUI);
+					mainUiActor.getInitializationInterface().pack();
+					mainUiActor.getInitializationInterface().setVisible(true);
+					//myECGShowUI.setVisible(true);
 				}
 			});
 		} catch (UnknownHostException e) {		//public void connect()对应的异常处理。未知的主机异常
@@ -123,14 +146,19 @@ public class TCPClient extends Thread{  //跑多线程，私有变量只能在TC
 			e.printStackTrace();
 		}
 	}
-	
+
 	public void startReceive(){		//开始接收,startReceive方法
 		int len = 0;	//初始化长度为0
 		int lenTemp;	//长度len的临时变量
 		while(true){		//这个方法就是做这个while循环
+			System.out.print(stopFlag);
 			if(stopFlag){		//如果停止传输
 				try {
-					WelcomeWindow.welcomeWindow.getFos().close();	//关闭（信息获取？）
+					MonitorActor.getFos().close();	//关闭（信息获取？）
+					myECGShowUI.setVisible(false);
+					mainUiActor.getInitializationInterface().remove(myECGShowUI);
+					mainUiActor.getInitializationInterface().repaint();
+
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -190,13 +218,13 @@ public class TCPClient extends Thread{  //跑多线程，私有变量只能在TC
 //								}
 					// readBuffer = Arrays.copyOfRange(readBuffer, frameLen, length);
 
-                    if(receivedBuffer[0]==0x01){
-                        WelcomeWindow.welcomeWindow.getFos().write(receivedBuffer, 16, 3000);
-                        myECGShowUI.getDataReFresher().refreshData(Arrays.copyOfRange(receivedBuffer, 16, 3016));
-                    }
+					if(receivedBuffer[0]==0x01){
+						MonitorActor.getFos().write(receivedBuffer, 16, 3000);
+						myECGShowUI.getDataReFresher().refreshData(Arrays.copyOfRange(receivedBuffer, 16, 3016));
+					}
 
-						System.out.println(len);
-						System.out.println(frameLen);
+					System.out.println(len);
+					System.out.println(frameLen);
 					System.arraycopy(receivedBuffer, frameLen, receivedBuffer, 0, len - frameLen);	//更新receivedBuffer
 					len = len - frameLen;
 				}
@@ -207,22 +235,5 @@ public class TCPClient extends Thread{  //跑多线程，私有变量只能在TC
 		}
 	}
 
-	@Override	  //重载run()方法
-	public void run() {	  //public class TCPClient extends Thread的线程
-		// TODO Auto-generated method stub
-		connect();
-		startReceive();
-		try {
-			//is.close();
-			s.shutdownInput();
-			s.close();
-			System.out.println("关闭成功！");
-			WelcomeWindow.welcomeWindow.getTCPC().getjButton1().setText("确定");
-			WelcomeWindow.welcomeWindow.getTCPC().getjTextField1().setEnabled(true);
-			WelcomeWindow.welcomeWindow.getTCPC().getjTextField2().setEnabled(true);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
+
 }

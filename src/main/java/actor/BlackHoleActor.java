@@ -22,11 +22,12 @@ public class BlackHoleActor extends BaseActor {
     private GuardActor guardActor;
     private CtActor ctActor;
     private MobileActor mobileActor;
-    private MainUiActor mainUiActor;
+    public static MainUiActor mainUiActor;
     
     public BlackHoleActor(BlackHoleConfig blackHoleConfig){
         //TO DO Initialize the BlackHoleActor
-    	//longRunningExecutor=Executors.newFixedThreadPool(blackHoleConfig.BLACK_HOLE_THREAD_POOL_SIZE)
+    	//longRunningExecutor=Executors.newFixedThreadPool(blackHoleConfig.BLACK_HOLE_THREAD_POOL_SIZE);
+  
     	monitorActor=new MonitorActor(new MonitorActorConfig());
     	guardActor=new GuardActor(new GuardActorConfig());
     	ctActor=new CtActor(new CtActorConfig());
@@ -58,6 +59,7 @@ public class BlackHoleActor extends BaseActor {
     }
     @Override
     protected boolean processActorResponse(Response response) {
+
        System.out.println("blackHoleActor.processActorResponse:"+response.getConfig().getData());
         return false;
     }

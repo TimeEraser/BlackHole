@@ -10,6 +10,8 @@ public enum  GuardRequest implements Request {
     GUARD_BUBBLE,
     GUARD_BLOOD_LEAK,
     GUARD_TEMPERATURE,
+    GUARD_SERIAL_NUM,
+    GUARD_START,
     GUARD_ERROR;
     //if CommandConfig==null abandon the request
     private CommandConfig requestConfig=null;

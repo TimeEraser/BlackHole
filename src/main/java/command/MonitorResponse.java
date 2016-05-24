@@ -8,7 +8,8 @@ import command.config.CommandConfig;
 public enum MonitorResponse implements Response {
     MONITOR_DATA,
     MONITOR_ECG_DATA,
-    Monitor_BLOOD_OXYGEN,
+    MONITOR_BLOOD_OXYGEN,
+    MONITOR_SHUTDOWM,
     MONITOR_PRESSURE_DATA;
     //if CommandConfig==null abandon the response
     CommandConfig responseConfig=null;
