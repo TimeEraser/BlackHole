@@ -9,6 +9,7 @@ public enum  MainUiRequest implements Request {
 	MAIN_UI_ECG_ANALYSIS,
 	MAIN_UI_GUARD_DATA,
 	MAIN_UI_MOBILE_DATA,
+	MAIN_UI_ECG_STOP,
 	MAIN_UI_SHUTDOWN;
 	   //if CommandConfig==null abandon the request
 	private CommandConfig requestConfig=null;

@@ -17,7 +17,6 @@ public class MainUiActorConfig {
 
 	//Interface element
 	private Dimension screenSize= Toolkit.getDefaultToolkit().getScreenSize();
-	//size
 	private Integer screenWidth = screenSize.width;
 	private Integer screenHeight = screenSize.height;
 	private Integer WIDTH = (int)(screenWidth*0.8);
@@ -60,5 +59,6 @@ public class MainUiActorConfig {
 	public Integer getTOP() {
 		return TOP;
 	}
+
 }
 

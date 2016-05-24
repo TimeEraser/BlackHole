@@ -25,6 +25,7 @@ import java.util.concurrent.Executors;
  * Created by zzq on 16/5/16.
  */
 public class GuardActor extends BaseActor {
+    protected GuardActorConfig guardActorConfig;
     private BaseActor commActor;
     private static CommPortIdentifier portId;
     private static Enumeration portList;
@@ -36,52 +37,54 @@ public class GuardActor extends BaseActor {
     private byte[] data = new byte[2];
 
     public GuardActor(GuardActorConfig guardActorConfig){
-        portList=CommPortIdentifier.getPortIdentifiers();
-        while (portList.hasMoreElements()) {
-            portId = (CommPortIdentifier) portList.nextElement();
-            /*getPortType方法返回端口类型*/
-            if (portId.getPortType() == CommPortIdentifier.PORT_SERIAL) {
-            /* 找Windows下的第6个串口,即小板子连上我的电脑后的串口编号*/
-                if (portId.getName().equals("COM6")) {
-            /*找Unix-like系统下的第一个串口*/
-                    //if (portId.getName().equals("/dev/term/a")) {
-                    SerialComm serialComm = new SerialComm(this,portId,portList);
-                }
-            }
-        }
+        this.guardActorConfig=guardActorConfig;
+        portList=CommPortIdentifier.getPortIdentifiers();//读出串口列表
         //TO DO Initialize the GuardActor
     }
     @Override
-    protected boolean processActorRequest(Request requests){
-        if(requests==GuardRequest.GUARD_DATA){
-            temp=(Byte)(requests.getConfig().getData());
-            if(temp>0){
-                data[0]=temp;
-                readFlag+=1;
-            }
-            else{
-                data[1]=temp;
-                readFlag+=1;
+    protected boolean processActorRequest(Request requests) {
+        if (requests == GuardRequest.GUARD_START) {
+            System.out.println("GuardRequest.GUARD_START");
+            if(!start()){
+                sendResponse(requests,GuardResponse.GUARD_ERROR);
             }
         }
-        if(readFlag==2){
-            readFlag=0;
-            temperater=(int)(data[0]%32+(data[1]&0x7F)*32);
-            System.out.print("temperater:");
-            System.out.println(temperater/10.0);
-            alarmBlood=(data[0]/32%2==1);
-            alarmBubble=(data[0]/64%2==1);
+        if(requests==GuardRequest.GUARD_SERIAL_NUM){
+            guardActorConfig.setSerialPortNum((Integer)requests.getConfig().getData());
         }
-        if(requests==GuardRequest.GUARD_ERROR){
+        if (requests == GuardRequest.GUARD_DATA) {
+            temp = (Byte) (requests.getConfig().getData());
+            if (temp > 0) {
+                data[0] = temp;
+                readFlag += 1;
+            } else {
+                data[1] = temp;
+                readFlag += 1;
+            }
+        }
+        if (requests == GuardRequest.GUARD_ERROR) {
 
         }
+        //完整读取2字节后处理
+        if (readFlag == 2) {
+            serialDataProcess();
+        }
+        return false;
+    }
+    //串口数据处理
+    protected void serialDataProcess(){
+        readFlag = 0;
+        temperater = (int) (data[0] % 32 + (data[1] & 0x7F) * 32);
+        System.out.print("temperater:");
+        System.out.println(temperater / 10.0);
+        alarmBlood = (data[0] / 32 % 2 == 1);
+        alarmBubble = (data[0] / 64 % 2 == 1);
         if(alarmBlood){
             System.out.println("BLOOD");
         }
-        if(alarmBubble){
+        if(alarmBubble) {
             System.out.println("Bubble");
         }
-        return false;
     }
 
     @Override
@@ -91,7 +94,23 @@ public class GuardActor extends BaseActor {
 
     @Override
     public boolean start() {
-        return false;
+        boolean successFlag=false;
+        String winSerialPort="COM"+String.valueOf(guardActorConfig.readSerialPortNum());
+        String unixSerialPort="/dev/term/"+String.valueOf((char)(guardActorConfig.readSerialPortNum()+64));
+        while (portList.hasMoreElements()) {
+            portId = (CommPortIdentifier) portList.nextElement();
+            /*getPortType方法返回端口类型*/
+            if (portId.getPortType() == CommPortIdentifier.PORT_SERIAL) {
+            /* 默认找Windows下的第6个串口,即小板子连上我的电脑后的串口编号*/
+                if (portId.getName().equals(winSerialPort)) {
+            /*找Unix-like系统下的第一个串口*/
+                    //if (portId.getName().equals(unixSerialPort)) {
+                    SerialComm serialComm = new SerialComm(this,portId,portList);
+                    successFlag=true;
+                }
+            }
+        }
+        return successFlag;
     }
 
     @Override
@@ -118,7 +137,7 @@ CommPortOwnershipListener事件机制，传递一个PORT_OWNERSHIP_REQUESTED事�
 InputStream和一个OutputStream。如果端口是用open方法打开的，那么任何的getInputStream都将返回
 相同的数据流对象，除非有close被调用。有两个参数，第一个为应用程序名；第二个参数是在端口打开
 时阻塞等待的毫秒数。 */
-            serialPort = (SerialPort) portId.open("SimpleReadApp", 2000);
+            serialPort = (SerialPort) portId.open("GuardRead", 2000);
         } catch (PortInUseException e) {}
         try {
             /*获取端口的输入流对象*/
@@ -186,12 +205,6 @@ InputStream和一个OutputStream。如果端口是用open方法打开的，那�
                         numBytes = inputStream.read(readBuffer);
                     }
                     for (int iii = 0; iii < numBytes; iii++) {
-                            /*if(readBuffer[iii]>0){
-                                sendRequest(commActor, GuardRequest.GUARD_DATA0, readBuffer[iii]);
-                            }
-                            else {
-                                sendRequest(commActor, GuardRequest.GUARD_DATA1, readBuffer[iii]);
-                            }*/
                         sendRequest(commActor,GuardRequest.GUARD_DATA,readBuffer[iii]);
                     }
                 } catch (IOException e) {}

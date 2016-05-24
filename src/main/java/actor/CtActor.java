@@ -28,6 +28,7 @@ public class CtActor extends BaseActor{
                 }
             });
             thread.start();
+
             System.out.println("CtRequest.CT_OPEN_IMG");
         }
         return false;

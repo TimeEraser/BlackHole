@@ -4,6 +4,7 @@ package com.embededcontest.ctgui;
 
 
 
+import com.zju.lab.ct.algorithm.App;
 import com.zju.lab.ct.algorithm.feature.ImageFeature;
 import com.zju.lab.ct.algorithm.randomforest.RandomForest;
 
@@ -118,6 +119,9 @@ public class CTMainGUI1 extends JFrame {
         analysis.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+
+                App app = new App();
+                app.testGenerateModel();
                 try {
 
                     //实例化ObjectInputStream对象

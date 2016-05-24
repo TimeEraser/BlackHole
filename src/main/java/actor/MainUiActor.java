@@ -17,65 +17,65 @@ import command.*;
 public class MainUiActor extends BaseActor{
 
 	//Initialize parameter
-		//Interactive element
-		private CtActor ctActor;
-		private GuardActor guardActor;
-		private MonitorActor monitorActor;
-		private BlackHoleActor blackHoleActor;
-		private MobileActor mobileActor;
-        //Interface element
-		private Integer WIDTH;
-		private Integer HEIGHT;
-		private Integer MENU_FONT_SIZE;
-		private Integer CONTENT_FONT_SIZE;
-	    private Integer LEFT;
-	    private Integer TOP;
-	
-	
+	//Interactive element
+	private CtActor ctActor;
+	private GuardActor guardActor;
+	private MonitorActor monitorActor;
+	private BlackHoleActor blackHoleActor;
+	private MobileActor mobileActor;
+	//Interface element
+	private Integer WIDTH;
+	private Integer HEIGHT;
+	private Integer MENU_FONT_SIZE;
+	private Integer CONTENT_FONT_SIZE;
+	private Integer LEFT;
+	private Integer TOP;
+
+
 	public MainUiActor(MainUiActorConfig mainUiActorConfig){
 
-		 ctActor=mainUiActorConfig.getCtActor();
-		 guardActor=mainUiActorConfig.getGuardActor();
-		 monitorActor=mainUiActorConfig.getMonitorActor();
-		 blackHoleActor=mainUiActorConfig.getBlackHoleActor();
-		 mobileActor=mainUiActorConfig.getMobileActor();
+		ctActor=mainUiActorConfig.getCtActor();
+		guardActor=mainUiActorConfig.getGuardActor();
+		monitorActor=mainUiActorConfig.getMonitorActor();
+		blackHoleActor=mainUiActorConfig.getBlackHoleActor();
+		mobileActor=mainUiActorConfig.getMobileActor();
 
-		 WIDTH=mainUiActorConfig.getWIDTH();
-		 HEIGHT=mainUiActorConfig.getHeight();
-		 MENU_FONT_SIZE=mainUiActorConfig.getMENU_FONT_SIZE();
-		 CONTENT_FONT_SIZE=mainUiActorConfig.getCONTENT_FONT_SIZE();
-		 LEFT = mainUiActorConfig.getLEFT();
-		 TOP = mainUiActorConfig.getTOP();
+		WIDTH=mainUiActorConfig.getWIDTH();
+		HEIGHT=mainUiActorConfig.getHeight();
+		MENU_FONT_SIZE=mainUiActorConfig.getMENU_FONT_SIZE();
+		CONTENT_FONT_SIZE=mainUiActorConfig.getCONTENT_FONT_SIZE();
+		LEFT = mainUiActorConfig.getLEFT();
+		TOP = mainUiActorConfig.getTOP();
 
-	    }
+	}
 
-	 
-	    @Override
-	    public boolean processActorRequest(Request  request) {
-	    	if(request == SystemRequest.BOOT){
-	    		sendResponse(request, SystemResponse.SYSTEM_MESSAGE,"mainUiActor收到SystemRequest.BOOT请求，启动mainUi");
-	    		this.start();
-				return true;
-	    	}
-	        return false;
-	    }
 
-	    @Override
-	    public boolean processActorResponse(Response responses) {
+	@Override
+	public boolean processActorRequest(Request  request) {
+		if(request == SystemRequest.BOOT){
+			sendResponse(request, SystemResponse.SYSTEM_MESSAGE,"mainUiActor收到SystemRequest.BOOT请求，启动mainUi");
+			this.start();
+			return true;
+		}
+		return false;
+	}
 
-			return false;
-	    }
+	@Override
+	public boolean processActorResponse(Response responses) {
 
-	    @Override
-	    public boolean start()  {
-			this.constructInterface();
-	        return false;
-	    }
+		return false;
+	}
 
-	    @Override
-	    public boolean shutdown() {
-	        return false;
-	    }
+	@Override
+	public boolean start()  {
+		this.constructInterface();
+		return false;
+	}
+
+	@Override
+	public boolean shutdown() {
+		return false;
+	}
 
 
 	private void  constructInterface(){
