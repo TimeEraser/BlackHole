@@ -1,6 +1,6 @@
 /target
-.idea
-.settings
+.idea/
+.settinga/s
 .classpath
 .project
 BlackHole.iml
