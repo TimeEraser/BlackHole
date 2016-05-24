@@ -125,9 +125,9 @@ public class TCPClient extends Thread{  //跑多线程，私有变量只能在TC
 					if (myECGShowUI == null) {
 						myECGShowUI = new MyECGShowUI("ecg", 5000L);
 					}
-//					mainUiActor.getInitializationInterface().getContentPane().add(myECGShowUI);
-//					mainUiActor.getInitializationInterface().pack();
-//					mainUiActor.getInitializationInterface().setVisible(true);
+					mainUiActor.getECGData().add(myECGShowUI);
+					//mainUiActor.getMainUi().pack();
+					mainUiActor.getMainUi().setVisible(true);
 					//myECGShowUI.setVisible(true);
 				}
 			});

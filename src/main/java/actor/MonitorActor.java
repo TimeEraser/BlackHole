@@ -7,6 +7,7 @@ import ecg.model.PressureData;
 import ecg.model.PumpSpeedData;
 import ecg.tcp.*;
 
+import javax.swing.*;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
 
@@ -14,12 +15,13 @@ import java.util.ArrayList;
  * Created by zzq on 16/5/16.
  */
 public class MonitorActor extends BaseActor{
-    private static TCPConfig TCPC;
+
     private String surgeryNo = "unknown";
     private GuardianData guardianData;
     private PressureData pressureData;
     private PumpSpeedData pumpSpeedData;
     private static FileOutputStream fos;
+    private  static TCPConfig TCPC;
     private TCPClient client;
 
 
@@ -38,13 +40,16 @@ public class MonitorActor extends BaseActor{
     @Override
     protected boolean processActorRequest(Request request) {
         if(request== MainUiRequest.MAIN_UI_ECG_CONFIG){
-            ArrayList<String> dataList= (ArrayList<String>) request.getConfig().getData();
-            String[] dataString = (String[]) dataList.toArray(new String[0]);
-              host=dataString[0];
-              port=Integer.parseInt(dataString[1]);
-              Id=dataString[2];
-              Name=dataString[3];
-              Sex=dataString[4];
+            data=request.getConfig().getData();
+            TCPC = new TCPConfig( (JFrame)data,true);
+            TCPC.setVisible(true);
+            host=TCPC.getjTextField1().getText();
+            port=Integer.parseInt(TCPC.getjTextField2().getText());
+           // port=TCPC.getjTextField2().getText();
+            Id=TCPC.getjTextField3().getText();
+            Name=TCPC.getjTextField4().getText();
+            Sex=TCPC.getJRadioButtonName();
+
             System.out.println("MonitorActor: "+host);
             System.out.println("MonitorActor: "+port);
             System.out.println("MonitorActor: "+Id);
@@ -91,10 +96,10 @@ public class MonitorActor extends BaseActor{
         return false;
     }
 
-    public static TCPConfig getTCPC() {
+    public  static TCPConfig getTCPC() {
         return TCPC;
     }
-    public static FileOutputStream getFos() {
+    public  static FileOutputStream getFos() {
         return fos;
     }
    // public static void setFos(FileOutputStream fos) {

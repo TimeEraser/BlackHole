@@ -23,8 +23,8 @@ public class TCPConfig extends JDialog {		//TCP配置界面
     private String jRadioButtonName;
     // End of variables declaration
 
-    public TCPConfig(Frame InitializationInterface,boolean  model) {		//构造方法
-        super(InitializationInterface,model);
+    public TCPConfig(JFrame jFrame,Boolean model) {		//构造方法
+        super(jFrame,model);
         initComponents();		//初始化构件
     }
 
@@ -147,8 +147,6 @@ public class TCPConfig extends JDialog {		//TCP配置界面
             else if (jRadioButton2.isSelected()){
                 jRadioButtonName=jRadioButton2.getText();
             }
-
-
             this.dispose() ;
 
     }
