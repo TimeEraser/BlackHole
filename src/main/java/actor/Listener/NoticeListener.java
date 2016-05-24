@@ -13,9 +13,13 @@ import java.awt.event.ActionListener;
  */
 public class NoticeListener extends BaseActor implements ActionListener{
     private MainUiActor mainUiActor;
+
     private BaseActor receiver;
+    //private BaseActor responseRedirectActor;
+
     private Request request;
     private Object data;
+    //private Boolean redirect=false;
     public  NoticeListener(MainUiActor mainUiActor, BaseActor receiver , Request request){
         this.mainUiActor=mainUiActor;
         this.receiver=receiver;

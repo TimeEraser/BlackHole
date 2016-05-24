@@ -1,16 +1,11 @@
 package actor;
 
 import java.awt.*;
+import java.net.URL;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
-import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
+import javax.swing.*;
 import javax.swing.plaf.FontUIResource;
 
 import actor.Listener.NoticeListener;
@@ -18,6 +13,7 @@ import actor.config.MainUiActorConfig;
 import com.alee.laf.WebLookAndFeel;
 import command.*;
 import ecg.tcp.*;
+
 
 
 public class MainUiActor extends BaseActor{
@@ -34,9 +30,11 @@ public class MainUiActor extends BaseActor{
 		private Integer HEIGHT;
 		private Integer MENU_FONT_SIZE;
 		private Integer CONTENT_FONT_SIZE;
+		private Integer LEFT;
+		private Integer TOP;
+
 	    private TCPConfig TCPC;
 	    private JFrame InitializationInterface;
-
 		protected MainUiActorConfig mainUiActorConfig;
 
 	
@@ -53,7 +51,8 @@ public class MainUiActor extends BaseActor{
 		 HEIGHT=mainUiActorConfig.getHeight();
 		 MENU_FONT_SIZE=mainUiActorConfig.getMENU_FONT_SIZE();
 		 CONTENT_FONT_SIZE=mainUiActorConfig.getCONTENT_FONT_SIZE();
-
+		LEFT = mainUiActorConfig.getLEFT();
+		TOP = mainUiActorConfig.getTOP();
 	    }
 
 	 
@@ -111,7 +110,7 @@ public class MainUiActor extends BaseActor{
 
 
 	private void managerStyle() {
-		WebLookAndFeel.globalControlFont  = new FontUIResource("Dialog",0, CONTENT_FONT_SIZE);
+		WebLookAndFeel.globalControlFont  = new FontUIResource("Dialog",0, 12);
 		Toolkit.getDefaultToolkit().setDynamicLayout(true);
 		UIManager.put("ToolTip.font", new Font("Dialog", 0, CONTENT_FONT_SIZE));
 		UIManager.put("Menu.font", new Font("Dialog", 0, CONTENT_FONT_SIZE));
@@ -147,6 +146,7 @@ public class MainUiActor extends BaseActor{
 	private void managerElement() {
 		InitializationInterface=new JFrame("医疗健康管理系统");
 		InitializationInterface.setSize(WIDTH,HEIGHT);
+		InitializationInterface.setLocation(LEFT,TOP);
 		InitializationInterface.setLocationRelativeTo(null);	//设置窗口居中
 		InitializationInterface.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		//menu
@@ -159,12 +159,24 @@ public class MainUiActor extends BaseActor{
 
 	private JMenuBar managerMenu() {
 		JMenuBar mainMenu=new JMenuBar();
+		JMenu sys = new JMenu();
+		ImageIcon beginIcon = new ImageIcon(getIconImage("Icon/file.png"));
+		sys.setIcon(beginIcon);
+		mainMenu.add(sys);
+		ImageIcon configIcon = new ImageIcon(getIconImage("Icon/config.png"));
+		ImageIcon analysisIcon = new ImageIcon(getIconImage("Icon/analysis.png"));
 
-		JMenu ct=new JMenu("CT");
+
+
+		JMenu ct=new JMenu("");
+		ImageIcon ctIcon = new ImageIcon(getIconImage("Icon/ct.png"));
+		ct.setIcon(ctIcon);
 			JMenuItem ct_config=new JMenuItem("CT配置");
+			ct_config.setIcon(configIcon);
 			ct_config.addActionListener(new NoticeListener(this,ctActor,MainUiRequest.MAIN_UI_CT_CONFIG));
 			ct_config.setToolTipText("打开一张CT图像");
 			JMenuItem ct_analysis=new JMenuItem("CT分析");
+		ct_analysis.setIcon(analysisIcon);
 			ct_analysis.addActionListener(new NoticeListener(this,ctActor,MainUiRequest.MAIN_UI_CT_ANALYSIS));
 			ct.add(ct_config);
 			ct.addSeparator();
@@ -172,9 +184,13 @@ public class MainUiActor extends BaseActor{
 		mainMenu.add(ct);
 
 
-		JMenu ecg=new JMenu("心电仪");
+		JMenu ecg=new JMenu("");
+		ImageIcon ecgIcon = new ImageIcon(getIconImage("Icon/monitor.png"));
+		ecg.setIcon(ecgIcon);
 			JMenuItem ecg_config=new JMenuItem("心电仪配置");
+		ecg_config.setIcon(configIcon);
 			JMenuItem ecg_analysis=new JMenuItem("心电仪停止");
+		ecg_analysis.setIcon(analysisIcon);
 			ecg_analysis.setEnabled(false);
 			ecg_config.addActionListener(new EcgConfigListener(this,this,MainUiRequest.MAIN_UI_ECG_CONFIG,ecg_analysis));
 			ecg_analysis.addActionListener(new NoticeListener(this,this,MainUiRequest.MAIN_UI_ECG_STOP));
@@ -183,23 +199,28 @@ public class MainUiActor extends BaseActor{
 			ecg.add(ecg_analysis);
 		mainMenu.add(ecg);
 
-		JMenu guard=new JMenu("告警");
+		JMenu guard=new JMenu("");
+		guard.setHorizontalTextPosition(SwingConstants.RIGHT);
+		ImageIcon guardIcon = new ImageIcon(getIconImage("Icon/guard.png"));
+		guard.setIcon(guardIcon);
 			JMenuItem guard_config=new JMenuItem("连接告警设备");
 			guard_config.addActionListener(new NoticeListener(this,this,GuardRequest.GUARD_START));
 			guard.add(guard_config);
 		mainMenu.add(guard);
 
-		JMenu mobile=new JMenu("手机");
+		JMenu mobile=new JMenu("");
+		ImageIcon phoneIcon = new ImageIcon(getIconImage("Icon/phone.png"));
+		mobile.setIcon(phoneIcon);
 			JMenuItem mobile_config=new JMenuItem("连接手机");
 			mobile_config.addActionListener(new NoticeListener(this,mobileActor,MainUiRequest.MAIN_UI_MOBILE_DATA));
 			mobile.add(mobile_config);
 		mainMenu.add(mobile);
 
-		JMenu ext=new JMenu("退出");
-			JMenuItem clo=new JMenuItem("关闭窗口");
-			clo.addActionListener(new NoticeListener(this,blackHoleActor,SystemRequest.SHUTDOWN));
-			ext.add(clo);
-		mainMenu.add(ext);
+//		JMenu ext=new JMenu("退出");
+//			JMenuItem clo=new JMenuItem("关闭窗口");
+//			clo.addActionListener(new NoticeListener(this,blackHoleActor,SystemRequest.SHUTDOWN));
+//			ext.add(clo);
+//		mainMenu.add(ext);
 		return mainMenu;
 	}
 	private JLabel managerContent() {
@@ -207,7 +228,9 @@ public class MainUiActor extends BaseActor{
 		lbl=new JLabel("---TEXT---");
 		return lbl;
 	}
-
+	private URL getIconImage(String path){
+		return this.getClass().getClassLoader().getResource(path);
+	}
 
 	class EcgConfigListener extends BaseActor implements ActionListener{
 		private String host;//主机域名
