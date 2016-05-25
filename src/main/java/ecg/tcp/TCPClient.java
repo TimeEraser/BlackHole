@@ -66,6 +66,8 @@ public class TCPClient extends Thread{  //跑多线程，私有变量只能在TC
 
 	public void setMainUiActor(MainUiActor mainUiActor){this.mainUiActor=mainUiActor;}
 
+	public MyECGShowUI getMyECGShowUI(){return myECGShowUI;}
+
 	@Override	  //重载run()方法
 	public void run() {	  //public class TCPClient extends Thread的线程
 		// TODO Auto-generated method stub
@@ -126,8 +128,10 @@ public class TCPClient extends Thread{  //跑多线程，私有变量只能在TC
 						myECGShowUI = new MyECGShowUI("ecg", 5000L);
 					}
 					mainUiActor.getECGData().add(myECGShowUI);
-					//mainUiActor.getMainUi().pack();
+					mainUiActor.getECGAnalyse().add(myECGShowUI.getecgPanel());
+					mainUiActor.getECGAnalyse().add(myECGShowUI.getecgPanel());
 					mainUiActor.getMainUi().setVisible(true);
+					//mainUiActor.getMainUi().pack();
 					//myECGShowUI.setVisible(true);
 				}
 			});

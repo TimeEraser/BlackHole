@@ -6,10 +6,7 @@
 
 package ecg.ecgshow;
 
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.GridLayout;
-import java.awt.Toolkit;
+import java.awt.*;
 //import java.awt.event.ActionEvent;
 //import java.awt.event.ActionListener;
 //import java.awt.event.WindowAdapter;
@@ -46,14 +43,6 @@ import com.alee.laf.WebLookAndFeel;
  */
 public class MyECGShowUI extends JPanel {
 
-    /**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-	/**
-     * Creates new form MyECGShowUI
-     */
-	
 	// Variables declaration - do not modify//GEN-BEGIN:variables
     private JPanel contentPane=new JPanel();
     private JPanel jPanel1;
@@ -62,6 +51,7 @@ public class MyECGShowUI extends JPanel {
     public static final int LEAD_COUNT=3;
 	private DataRefresher dataReFresher;
 	private JPanel ecgPanel;
+
 	private JLabel label_HI;
 	private JLabel label_HB;
 	private JLabel lblBeat;
@@ -71,15 +61,20 @@ public class MyECGShowUI extends JPanel {
 	private JLabel isAPCLabel;
 	private JLabel isPVCLabel;
 	private JLabel isBeatLabel;
+
 	private JPanel panel_PI;
+
 	private JLabel label_PI;
 	private JLabel label_Name;
 	private JLabel lblName;
 	private JLabel label_ID;
 	private JLabel lblId;
+
 	private JPanel panel_OP;
+
 	private JButton showException;
 	private JButton stopRefresh;
+
 	private JLabel label_OP;
 	private JPanel panel_charts;
 	
@@ -220,6 +215,7 @@ public class MyECGShowUI extends JPanel {
                         .addComponent(isBeatLabel)))
                 .addContainerGap(10, Short.MAX_VALUE))
         );
+
         
         javax.swing.GroupLayout panel_PILayout = new javax.swing.GroupLayout(panel_PI);
         panel_PI.setLayout(panel_PILayout);
@@ -304,17 +300,19 @@ public class MyECGShowUI extends JPanel {
 			ecgSerises[i] = new TimeSeries("导联" + (i+1));
 			ecgSerises[i].setMaximumItemAge(timeZone);
 			timeseriescollection.addSeries(ecgSerises[i]);
-			DateAxis dateaxis = new DateAxis("Time");
-			NumberAxis numberaxis = new NumberAxis("ecg");
+			//DateAxis dateaxis = new DateAxis("Time");
+            DateAxis dateaxis = new DateAxis();
+			//NumberAxis numberaxis = new NumberAxis("ecg");
+            NumberAxis numberaxis = new NumberAxis();
 			dateaxis.setTickLabelFont(new Font("SansSerif", 0, 12));
 			numberaxis.setTickLabelFont(new Font("SansSerif", 0, 12));
 			dateaxis.setLabelFont(new Font("SansSerif", 0, 14));
 			numberaxis.setLabelFont(new Font("SansSerif", 0, 14));
 
-			XYLineAndShapeRenderer xylineandshaperenderer = new XYLineAndShapeRenderer(true, false);
+			XYLineAndShapeRenderer xylineandshaperenderer = new XYLineAndShapeRenderer(true,false);
 			xylineandshaperenderer.setSeriesPaint(0, Color.green);  //线段颜色为绿
 			XYPlot xyplot = new XYPlot(timeseriescollection, dateaxis, numberaxis, xylineandshaperenderer);
-			xyplot.setBackgroundPaint(Color.lightGray);
+			xyplot.setBackgroundPaint(Color.LIGHT_GRAY);
 			xyplot.setDomainGridlinePaint(Color.red);
 			xyplot.setRangeGridlinePaint(Color.blue);
 			xyplot.setAxisOffset(new RectangleInsets(5D, 5D, 5D, 5D));
@@ -328,15 +326,17 @@ public class MyECGShowUI extends JPanel {
 			numberaxis.setLowerBound(1500D);
 			numberaxis.setUpperBound(3000D);
 			JFreeChart jfreechart = new JFreeChart(xyplot);
-			jfreechart.setBackgroundPaint(Color.white);
+			jfreechart.setBackgroundPaint(Color.LIGHT_GRAY);
 			ChartPanel chartpanel = new ChartPanel(jfreechart,
 				(int) lx * 5 / 9, (int) ly * 9 / 40, 0, 0,
 				Integer.MAX_VALUE, Integer.MAX_VALUE, true, true, false,
 				true, false, false);
 
 			chartpanel.setBorder(BorderFactory.createCompoundBorder(
-				BorderFactory.createEmptyBorder(4, 4, 4, 4),
-				BorderFactory.createLineBorder(Color.black)));
+				BorderFactory.createEmptyBorder(0, 0, 0, 0)     //边界线条间距为0
+				//,BorderFactory.createLineBorder(Color.black)
+                    ,BorderFactory.createEmptyBorder()          //边界线条不可见
+            ));
 
 			panel_charts.add(chartpanel);
 		}
@@ -347,14 +347,14 @@ public class MyECGShowUI extends JPanel {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(90, 90, 90)
-                        .addComponent(panel_PI, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(30, 30, 30)
-                        .addComponent(ecgPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(30, 30, 30)
-                        .addComponent(panel_OP, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        )
+//                    .addGroup(jPanel1Layout.createSequentialGroup()
+//                        .addGap(90, 90, 90)
+//                        .addComponent(panel_PI, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+//                        .addGap(30, 30, 30)
+//                        .addComponent(ecgPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+//                        .addGap(30, 30, 30)
+//                        .addComponent(panel_OP, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+//                        )
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(30, 30, 30)
                         .addComponent(panel_charts, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -365,17 +365,17 @@ public class MyECGShowUI extends JPanel {
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(0, 0, 0)
-                        .addComponent(panel_PI, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(0, 0, 0)
-                        .addComponent(ecgPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(0, 0, 0)
-                        .addComponent(panel_OP, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        )
+//                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+//                    .addGroup(jPanel1Layout.createSequentialGroup()
+//                        .addGap(0, 0, 0)
+//                        .addComponent(panel_PI, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+//                    .addGroup(jPanel1Layout.createSequentialGroup()
+//                        .addGap(0, 0, 0)
+//                        .addComponent(ecgPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+//                    .addGroup(jPanel1Layout.createSequentialGroup()
+//                        .addGap(0, 0, 0)
+//                        .addComponent(panel_OP, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+//                        )
                 .addGap(10, 10, 10)
                 .addComponent(panel_charts, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(20, Short.MAX_VALUE))
@@ -458,7 +458,7 @@ public class MyECGShowUI extends JPanel {
     public DataRefresher getDataReFresher() {
 		return dataReFresher;
 	}
-
+    public JPanel getecgPanel(){return ecgPanel;}
 	public void setDataReFresher(DataRefresher dataReFresher) {
 		this.dataReFresher = dataReFresher;
 	}

@@ -89,6 +89,8 @@ public class MainUiActor extends BaseActor{
 		if(responses==MonitorResponse.MONITOR_SHUTDOWM){
 			ECGData.removeAll();
 			ECGData.repaint();
+			ECGAnalyse.removeAll();
+			ECGAnalyse.repaint();
 			return true;
 		}
 
@@ -218,7 +220,7 @@ public class MainUiActor extends BaseActor{
 
 		JPanel CTControl = new JPanel();
 		CTControl.setLayout(new FlowLayout(FlowLayout.CENTER));
-		//CTControl.setBorder(etchedBorder);
+		CTControl.setBorder(etchedBorder);
 		CTControl.setBounds((int)(WIDTH*0.75),(int)(HEIGHT*0.05),(int)(WIDTH*0.2),(int)(HEIGHT*0.15));
 		JButton CTOpen = new JButton();
 		CTOpen.addActionListener(new NoticeListener(ctActor,MainUiRequest.MAIN_UI_CT_CONFIG));
@@ -242,7 +244,7 @@ public class MainUiActor extends BaseActor{
 	}
 	private JPanel createECGJPanel(){
 		JPanel ECGPanel= new JPanel(null);
-		Border etchedBorder = BorderFactory.createEtchedBorder(EtchedBorder.LOWERED,Color.LIGHT_GRAY,Color.LIGHT_GRAY);
+		//Border etchedBorder = BorderFactory.createEtchedBorder(EtchedBorder.LOWERED,Color.LIGHT_GRAY,Color.LIGHT_GRAY);
 		ECGPanel.setBounds(0,0,WIDTH,(int)(HEIGHT*0.9));
 
 		JPanel ECGControl = new JPanel();
@@ -258,7 +260,7 @@ public class MainUiActor extends BaseActor{
 		JButton ecgStart = new JButton();
 		ecgStart.setText("开始传输");
 		ecgStart.setIcon(new ImageIcon(getIconImage("Icon/start.png")));
-		//ecgStart.addActionListener(new NoticeListener(monitorActor,MainUiRequest.MAIN_UI_ECG_ANALYSIS));
+		ecgStart.addActionListener(new NoticeListener(monitorActor,MainUiRequest.MAIN_UI_ECG_START));
 		ECGControl.add(ecgStart);
 		JButton ecgStop = new JButton();
 		ecgStop.setText("停止传输");
@@ -273,12 +275,12 @@ public class MainUiActor extends BaseActor{
 		ECGPanel.add(ECGControl);
 
 		 ECGData = new JPanel();
-		ECGData.setBorder(etchedBorder);
+		//ECGData.setBorder(etchedBorder);
 		ECGData.setBounds((int)(WIDTH*0.05),(int)(HEIGHT*0.20),(int)(WIDTH*0.65),(int)(HEIGHT*0.65));
 		ECGPanel.add(ECGData);
 
 		ECGAnalyse = new JPanel();
-		ECGAnalyse.setBorder(etchedBorder);
+		//ECGAnalyse.setBorder(etchedBorder);
 		ECGAnalyse.setBounds((int)(WIDTH*0.75),(int)(HEIGHT*0.05),(int)(WIDTH*0.2),(int)(HEIGHT*0.8));
 		ECGPanel.add(ECGAnalyse);
 

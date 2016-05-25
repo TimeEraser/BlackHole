@@ -25,11 +25,11 @@ public class MonitorActor extends BaseActor{
     private TCPClient client;
 
 
-    private String host;//主机域名
-    private int port;   //主机端口号
-    private String Id;	//档案ID
-    private String Name;//姓名
-    private String Sex;	//性别
+    private String host=null;//主机域名
+    private String port=null;   //主机端口号
+    private String Id=null;	//档案ID
+    private String Name=null;//姓名
+    private String Sex=null;	//性别
     private Object data;
 
 
@@ -44,30 +44,32 @@ public class MonitorActor extends BaseActor{
             TCPC = new TCPConfig( (JFrame)data,true);
             TCPC.setVisible(true);
             host=TCPC.getjTextField1().getText();
-            port=Integer.parseInt(TCPC.getjTextField2().getText());
-           // port=TCPC.getjTextField2().getText();
+            port=TCPC.getjTextField2().getText();
             Id=TCPC.getjTextField3().getText();
             Name=TCPC.getjTextField4().getText();
             Sex=TCPC.getJRadioButtonName();
 
-            System.out.println("MonitorActor: "+host);
-            System.out.println("MonitorActor: "+port);
-            System.out.println("MonitorActor: "+Id);
-            System.out.println("MonitorActor: "+Name);
-            System.out.println("MonitorActor: "+Sex);
-            System.out.println("MonitorRequest.MONITOR_ECG_DATA");
 
-            client = new TCPClient();		//新建一个TCPClient()方法的实例client
-            client.setHost(host);	//设置主机
-            client.setPort(port);	//设置端口
-            client.setID(Id);
-            client.setNAME(Name);
-            client.setSEX(Sex);
+            if((host!=null)&&(port!=null)) {
+                System.out.println("MonitorActor: "+host);
+                System.out.println("MonitorActor: "+port);
+                System.out.println("MonitorActor: "+Id);
+                System.out.println("MonitorActor: "+Name);
+                System.out.println("MonitorActor: "+Sex);
+                System.out.println("MonitorRequest.MONITOR_ECG_DATA");
 
-            client.stopFlag = false;
-            client.setMainUiActor((MainUiActor) request.getConfig().getSendActor());
-            client.start();		//客户端线程开始运行
 
+                client = new TCPClient();        //新建一个TCPClient()方法的实例client
+                client.setHost(host);    //设置主机
+                client.setPort(Integer.parseInt(port));    //设置端口
+                client.setID(Id);
+                client.setNAME(Name);
+                client.setSEX(Sex);
+
+                client.stopFlag = false;
+                client.setMainUiActor((MainUiActor) request.getConfig().getSendActor());
+                client.start();        //客户端线程开始运行
+            }
         }
         if(request==MainUiRequest.MAIN_UI_ECG_STOP){
 
@@ -75,6 +77,10 @@ public class MonitorActor extends BaseActor{
             sendResponse(request,MonitorResponse.MONITOR_SHUTDOWM);
 
             System.out.println("client.stopFlag =true");
+        }
+
+        if(request==MainUiRequest.MAIN_UI_ECG_START){
+            client.getMyECGShowUI().getDataReFresher().setstopFlag();
         }
 
 

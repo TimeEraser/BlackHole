@@ -177,4 +177,8 @@ public class DataRefresher extends Observable implements Observer,ActionListener
 		String text=stopFlag?"开始":"暂停";
 		button.setText(text);
 	}
+
+	public void setstopFlag(){stopFlag=!stopFlag;}
+
+
 }
