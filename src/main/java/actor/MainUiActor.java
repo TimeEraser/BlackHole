@@ -80,6 +80,9 @@ public class MainUiActor extends BaseActor{
 			sendRequest(ctActor,request,request.getConfig().getData());
 			return true;
 		}
+		if(request==MainUiRequest.MAIN_UI_GUARD_START){
+			sendRequest(guardActor,GuardRequest.GUARD_START);
+		}
 		return false;
 	}
 
@@ -187,7 +190,7 @@ public class MainUiActor extends BaseActor{
 		ImageIcon guardIcon = new ImageIcon(getIconImage("Icon/guard.png"));
 		guard.setIcon(guardIcon);
 		JMenuItem guard_config=new JMenuItem("连接告警设备");
-		guard_config.addActionListener(new NoticeListener(guardActor,MainUiRequest.MAIN_UI_GUARD_DATA));
+		guard_config.addActionListener(new NoticeListener(this,MainUiRequest.MAIN_UI_GUARD_START,getMainUi()));
 		guard.add(guard_config);
 		mainMenu.add(guard);
 
