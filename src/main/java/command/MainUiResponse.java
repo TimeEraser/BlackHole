@@ -9,6 +9,7 @@ public enum MainUiResponse implements Response{
 	MAINUI_ECG_ANALYSIS,
 	MAINUI_GUARD_DATA,
 	MAIN_UI_ECG_STOP,
+	MAIN_UI_ECG_START,
 	MAINUI_MOBILE_DATA;
 	 //if CommandConfig==null abandon the response
 	CommandConfig responseConfig=null;

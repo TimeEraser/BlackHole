@@ -27,18 +27,7 @@ public class MandelDraw extends JPanel {
     public String saveImgPath;
 
     public MandelDraw() {
-//        try {
-//            image = ImageIO.read(new File(getIMAGE_ADDR()));
-//            MyMouseAdapter mouseAdapter = new MyMouseAdapter();
-//            addMouseListener(mouseAdapter);
-//            addMouseMotionListener(mouseAdapter);
-//        } catch (MalformedURLException e) {
-//            e.printStackTrace();
-//            System.exit(-1);
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//            System.exit(-1);
-//        }
+
     }
 
     public void makeDraw(){
@@ -61,7 +50,6 @@ public class MandelDraw extends JPanel {
         if (image != null) {
             return new Dimension(image.getWidth(), image.getHeight());
         }
-
         return super.getPreferredSize();
     }
 
@@ -104,7 +92,6 @@ public class MandelDraw extends JPanel {
 
         @Override
         public void mouseDragged(MouseEvent e) {
-
             drawing = true;
             x = Math.min(mousePress.x, e.getPoint().x);
             y = Math.min(mousePress.y, e.getPoint().y);
@@ -154,7 +141,9 @@ public class MandelDraw extends JPanel {
         try{
             serialNum++;
             String name = date()+String.valueOf(serialNum)+"."+"jpg";
-            File f = new File("res",name);
+
+            File f = new File("./src/main/resources",name);
+
             System.out.println(name);
             ImageIO.write(saveimage, "jpg", f);
             saveImgPath = f.getAbsolutePath();

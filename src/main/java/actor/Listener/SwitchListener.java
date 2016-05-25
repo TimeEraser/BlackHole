@@ -16,11 +16,10 @@ public class SwitchListener implements MenuListener {
     }
     @Override
     public void menuSelected(MenuEvent e) {
-        for (Component c:
-             contentPane.getComponents()) {
+        for (Component c: contentPane.getComponents()) {
             c.setVisible(false);
         }
-        if(content!= null)content.setVisible(true);
+        if(content!= null) content.setVisible(true);
     }
 
     @Override

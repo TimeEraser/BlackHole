@@ -14,11 +14,11 @@ import java.util.TimerTask;
 
 import javax.swing.JButton;
 
+import org.jfree.chart.axis.DateAxis;
 import org.jfree.data.time.Millisecond;
 import org.jfree.data.time.TimeSeries;
 
 //数据刷新
-//没有main方法
 public class DataRefresher extends Observable implements Observer,ActionListener {
 	public static final int SAMPLING=500;		//取样时间
 	public static final int MAX_TIME=1;			//最大时间
@@ -27,6 +27,7 @@ public class DataRefresher extends Observable implements Observer,ActionListener
 	
 	private Timer timer;					//定时器
 	private TimeSeries[] ecgSerises;		//时间序列数组
+	private DateAxis[] dateAxises;          //时间轴
 	private String filePath;				//文件路径
 	private Millisecond time;				//几个毫秒
 	private short[][] datas=new short[MyECGShowUI.LEAD_COUNT][DATA_LENGTH];	//短整型二维数组
@@ -34,13 +35,14 @@ public class DataRefresher extends Observable implements Observer,ActionListener
 	private boolean stopFlag=false;			//停止标志
 
 
-	public DataRefresher(TimeSeries[] ecgSerises,String filePath){	//构造方法
+	public DataRefresher(TimeSeries[] ecgSerises,String filePath){
 		this.ecgSerises=ecgSerises;
 		this.filePath=filePath;
 		timer=new Timer();
 	}
-	public DataRefresher(TimeSeries[] ecgSerises){	//构造方法
+	public DataRefresher(TimeSeries[] ecgSerises, DateAxis[] dateAxises){
 		this.ecgSerises=ecgSerises;
+		this.dateAxises=dateAxises;
 		timer=new Timer();
 	}
 	public void cancel(){
@@ -58,7 +60,6 @@ public class DataRefresher extends Observable implements Observer,ActionListener
 		time=new Millisecond();
 		timer.schedule(new AddToShowTask(), 0, REFRESH_TIME);
 	}
-	
 	
 	private short[][] readFileByBytes(String fileName) {
 		//三导联。每导联10秒，采样率为500/s
@@ -120,14 +121,27 @@ public class DataRefresher extends Observable implements Observer,ActionListener
 	 */
 	class AddToShowTask extends TimerTask{
 		private static final int LOWSAMPLE=5;
+		private Integer count=0;
 		@Override
 		public void run() {
 			if(datas!=null){
 				for(int i=0;i<REFRESH_TIME/LOWSAMPLE/2;i++){
 					if(currentPoint< DATA_LENGTH){
 						if(stopFlag==false){
+							if(count==0) {
+								for (DateAxis d:dateAxises) {
+									long beginMilliSecond=time.getFirstMillisecond();
+									d.setRange(new Date(beginMilliSecond),new Date(beginMilliSecond+5000));
+								}
+							}
 							for(int j=0;j<MyECGShowUI.LEAD_COUNT;j++){
-								ecgSerises[j].add(time, datas[j][currentPoint]);//该方法在超过指定长度后会将最久的数据丢弃
+								//ecgSerises[j].add(time, datas[j][currentPoint]);//该方法在超过指定长度后会将最久的数据丢弃
+								ecgSerises[j].add(time, 2000);//该方法在超过指定长度后会将最久的数据丢弃
+								ecgSerises[j+MyECGShowUI.LEAD_COUNT].add(time, 2000);//该方法在超过指定长度后会将最久的数据丢弃
+							}
+							count++;
+							if(count==500){
+								count=0;
 							}
 						}
 						time=(Millisecond) time.next().next().next().next().next().next().next().next().next().next();
@@ -177,4 +191,8 @@ public class DataRefresher extends Observable implements Observer,ActionListener
 		String text=stopFlag?"开始":"暂停";
 		button.setText(text);
 	}
+
+	public void setstopFlag(){stopFlag=!stopFlag;}
+
+
 }

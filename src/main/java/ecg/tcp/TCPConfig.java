@@ -1,9 +1,6 @@
 package ecg.tcp;
 
-import actor.MainUiActor;
-
 import javax.swing.*;
-import java.awt.*;
 
 public class TCPConfig extends JDialog {		//TCP配置界面
 
@@ -23,8 +20,8 @@ public class TCPConfig extends JDialog {		//TCP配置界面
     private String jRadioButtonName;
     // End of variables declaration
 
-    public TCPConfig(Frame InitializationInterface,boolean  model) {		//构造方法
-        super(InitializationInterface,model);
+    public TCPConfig(JFrame jFrame,Boolean model) {		//构造方法
+        super(jFrame,model);
         initComponents();		//初始化构件
     }
 
@@ -122,7 +119,6 @@ public class TCPConfig extends JDialog {		//TCP配置界面
                                 .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                                         .addComponent(jLabel5)
                                         .addGroup(layout.createParallelGroup()
-
                                                 .addComponent(jRadioButton1)
                                                 .addComponent(jRadioButton2)
                                         )
@@ -135,24 +131,19 @@ public class TCPConfig extends JDialog {		//TCP配置界面
 
         pack();		//调整此窗口的大小，以适合其子组件的首选大小和布局
         setLocationRelativeTo(null);    //窗口居中显示
-    }// </editor-fold>      初始化构件initComponents() 结束
+    }//  初始化构件initComponents() 结束
 
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {  //监听事件
         // TODO add your handling code here:
-
             if(jRadioButton1.isSelected()){
                 jRadioButtonName=jRadioButton1.getText();
             }
             else if (jRadioButton2.isSelected()){
                 jRadioButtonName=jRadioButton2.getText();
             }
-
-
             this.dispose() ;
-
     }
-
 
     public JButton getjButton1() {
         return jButton1;
@@ -190,7 +181,5 @@ public class TCPConfig extends JDialog {		//TCP配置界面
     }
 
     public String getJRadioButtonName(){return jRadioButtonName;}
-
-
 
 }
