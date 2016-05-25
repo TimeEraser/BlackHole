@@ -45,12 +45,14 @@ public class MyECGShowUI extends JPanel {
 
 	// Variables declaration - do not modify//GEN-BEGIN:variables
     private JPanel contentPane=new JPanel();
+
     private JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     // End of variables declaration//GEN-END:variables
     public static final int LEAD_COUNT=3;
 	private DataRefresher dataReFresher;
 	private JPanel ecgPanel;
+    private JPanel panel_charts;
 
 	private JLabel label_HI;
 	private JLabel label_HB;
@@ -76,7 +78,7 @@ public class MyECGShowUI extends JPanel {
 	private JButton stopRefresh;
 
 	private JLabel label_OP;
-	private JPanel panel_charts;
+
 	
 	private TimeSeries[] ecgSerises = new TimeSeries[LEAD_COUNT];
 //	private Analizer analizer;	
@@ -328,7 +330,7 @@ public class MyECGShowUI extends JPanel {
 			JFreeChart jfreechart = new JFreeChart(xyplot);
 			jfreechart.setBackgroundPaint(Color.LIGHT_GRAY);
 			ChartPanel chartpanel = new ChartPanel(jfreechart,
-				(int) lx * 5 / 9, (int) ly * 9 / 40, 0, 0,
+				(int) lx * 10 / 20, (int) ly * 9 / 55, 0, 0,
 				Integer.MAX_VALUE, Integer.MAX_VALUE, true, true, false,
 				true, false, false);
 
@@ -399,7 +401,7 @@ public class MyECGShowUI extends JPanel {
 
     public void ECGShow() {	
 		dataReFresher = new DataRefresher(ecgSerises);
-		stopRefresh.addActionListener(dataReFresher);
+		//stopRefresh.addActionListener(dataReFresher);
 		
 //		addWindowListener(new WindowAdapter() {
 //			public void windowClosing(WindowEvent e) {
@@ -459,6 +461,7 @@ public class MyECGShowUI extends JPanel {
 		return dataReFresher;
 	}
     public JPanel getecgPanel(){return ecgPanel;}
+    public JPanel getpanel_charts(){return panel_charts;}
 	public void setDataReFresher(DataRefresher dataReFresher) {
 		this.dataReFresher = dataReFresher;
 	}

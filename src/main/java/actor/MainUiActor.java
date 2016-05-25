@@ -220,7 +220,7 @@ public class MainUiActor extends BaseActor{
 
 		JPanel CTControl = new JPanel();
 		CTControl.setLayout(new FlowLayout(FlowLayout.CENTER));
-		CTControl.setBorder(etchedBorder);
+		//CTControl.setBorder(etchedBorder);
 		CTControl.setBounds((int)(WIDTH*0.75),(int)(HEIGHT*0.05),(int)(WIDTH*0.2),(int)(HEIGHT*0.15));
 		JButton CTOpen = new JButton();
 		CTOpen.addActionListener(new NoticeListener(ctActor,MainUiRequest.MAIN_UI_CT_CONFIG));
@@ -244,7 +244,7 @@ public class MainUiActor extends BaseActor{
 	}
 	private JPanel createECGJPanel(){
 		JPanel ECGPanel= new JPanel(null);
-		//Border etchedBorder = BorderFactory.createEtchedBorder(EtchedBorder.LOWERED,Color.LIGHT_GRAY,Color.LIGHT_GRAY);
+		Border etchedBorder = BorderFactory.createEtchedBorder(EtchedBorder.LOWERED,Color.LIGHT_GRAY,Color.LIGHT_GRAY);
 		ECGPanel.setBounds(0,0,WIDTH,(int)(HEIGHT*0.9));
 
 		JPanel ECGControl = new JPanel();
@@ -275,12 +275,12 @@ public class MainUiActor extends BaseActor{
 		ECGPanel.add(ECGControl);
 
 		 ECGData = new JPanel();
-		//ECGData.setBorder(etchedBorder);
+		ECGData.setBorder(etchedBorder);
 		ECGData.setBounds((int)(WIDTH*0.05),(int)(HEIGHT*0.20),(int)(WIDTH*0.65),(int)(HEIGHT*0.65));
 		ECGPanel.add(ECGData);
 
 		ECGAnalyse = new JPanel();
-		//ECGAnalyse.setBorder(etchedBorder);
+		ECGAnalyse.setBorder(etchedBorder);
 		ECGAnalyse.setBounds((int)(WIDTH*0.75),(int)(HEIGHT*0.05),(int)(WIDTH*0.2),(int)(HEIGHT*0.8));
 		ECGPanel.add(ECGAnalyse);
 

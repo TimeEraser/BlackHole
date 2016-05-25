@@ -10,6 +10,8 @@ import actor.MonitorActor;
 import ecg.ecgshow.MyECGShowUI;
 import actor.MainUiActor;
 
+import javax.swing.*;
+
 //没有main方法
 public class TCPClient extends Thread{  //跑多线程，私有变量只能在TCPClient这个类内使用
 	private Socket s;
@@ -126,10 +128,12 @@ public class TCPClient extends Thread{  //跑多线程，私有变量只能在TC
 				public void run() {			//多线程要运行的代码段
 					if (myECGShowUI == null) {
 						myECGShowUI = new MyECGShowUI("ecg", 5000L);
+						myECGShowUI.setBorder(BorderFactory.createEmptyBorder());
+
 					}
-					mainUiActor.getECGData().add(myECGShowUI);
+					mainUiActor.getECGData().add(myECGShowUI.getpanel_charts());
 					mainUiActor.getECGAnalyse().add(myECGShowUI.getecgPanel());
-					mainUiActor.getECGAnalyse().add(myECGShowUI.getecgPanel());
+					//mainUiActor.getECGAnalyse().add(myECGShowUI.getecgPanel());
 					mainUiActor.getMainUi().setVisible(true);
 					//mainUiActor.getMainUi().pack();
 					//myECGShowUI.setVisible(true);
