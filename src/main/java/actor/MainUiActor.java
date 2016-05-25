@@ -13,7 +13,6 @@ import actor.config.MainUiActorConfig;
 import com.alee.laf.WebLookAndFeel;
 import command.*;
 
-
 public class MainUiActor extends BaseActor{
 
 	//Initialize parameter
@@ -23,6 +22,12 @@ public class MainUiActor extends BaseActor{
 	private MonitorActor monitorActor;
 	private BlackHoleActor blackHoleActor;
 	private MobileActor mobileActor;
+
+	private JFrame InitializationInterface;
+	private JPanel ECGAnalyse;
+	private JPanel ECGData;
+	private JPanel CTData;
+	private JPanel CTFocus;
 	//Interface element
 	private Integer WIDTH;
 	private Integer HEIGHT;
@@ -30,16 +35,9 @@ public class MainUiActor extends BaseActor{
 	private Integer CONTENT_FONT_SIZE;
 	private Integer LEFT;
 	private Integer TOP;
-	private JFrame InitializationInterface;
-	private JPanel ECGAnalyse;
-	private JPanel ECGData;
-	private JPanel CTData;
-	private JPanel CTFocus;
-
 
 
 	public MainUiActor(MainUiActorConfig mainUiActorConfig){
-
 		ctActor=mainUiActorConfig.getCtActor();
 		guardActor=mainUiActorConfig.getGuardActor();
 		monitorActor=mainUiActorConfig.getMonitorActor();
@@ -52,7 +50,6 @@ public class MainUiActor extends BaseActor{
 		CONTENT_FONT_SIZE=mainUiActorConfig.getCONTENT_FONT_SIZE();
 		LEFT = mainUiActorConfig.getLEFT();
 		TOP = mainUiActorConfig.getTOP();
-
 	}
 
 
@@ -83,9 +80,6 @@ public class MainUiActor extends BaseActor{
 			sendRequest(ctActor,request,request.getConfig().getData());
 			return true;
 		}
-
-
-
 		return false;
 	}
 
@@ -94,7 +88,6 @@ public class MainUiActor extends BaseActor{
 		if(responses==GuardResponse.GUARD_ERROR){
 			System.out.print("GuardResponse.GUARD_ERROR");
 			return true;
-
 		}
 		if(responses==MonitorResponse.MONITOR_SHUTDOWM){
 			ECGData.removeAll();
@@ -103,8 +96,6 @@ public class MainUiActor extends BaseActor{
 			ECGAnalyse.repaint();
 			return true;
 		}
-
-
 		return false;
 	}
 
@@ -115,9 +106,7 @@ public class MainUiActor extends BaseActor{
 	}
 
 	@Override
-	public boolean shutdown() {
-		return false;
-	}
+	public boolean shutdown() {return false;}
 
 
 	private void  constructInterface(){
@@ -225,7 +214,7 @@ public class MainUiActor extends BaseActor{
 		CTPanel.setBounds(0,0,WIDTH,(int)(HEIGHT*0.9));
 		CTData = new JPanel();
 		CTData.setBorder(etchedBorder);
-		CTData.setBounds((int)(WIDTH*0.05),(int)(HEIGHT*0.05),(int)(WIDTH*0.65),(int)(HEIGHT*0.8));
+		CTData.setBounds((int)(WIDTH*0.05),(int)(HEIGHT*0.02),(int)(WIDTH*0.65),(int)(HEIGHT*0.81));
 		CTPanel.add(CTData);
 
 		JPanel CTControl = new JPanel();
@@ -247,11 +236,13 @@ public class MainUiActor extends BaseActor{
 		CTFocus = new JPanel();
 		CTFocus.setBorder(etchedBorder);
 		CTFocus.setBounds((int)(WIDTH*0.75),(int)(HEIGHT*0.25),(int)(WIDTH*0.2),(int)(HEIGHT*0.6));
+		CTFocus.setLayout(new GridLayout(2,1));
 		CTPanel.add(CTFocus);
 
 		CTPanel.setVisible(false);
 		return CTPanel;
 	}
+
 	private JPanel createECGJPanel(){
 		JPanel ECGPanel= new JPanel(null);
 		Border etchedBorder = BorderFactory.createEtchedBorder(EtchedBorder.LOWERED,Color.LIGHT_GRAY,Color.LIGHT_GRAY);
@@ -284,7 +275,7 @@ public class MainUiActor extends BaseActor{
 		ECGControl.add(ecgAnalyse);
 		ECGPanel.add(ECGControl);
 
-		 ECGData = new JPanel();
+		ECGData = new JPanel();
 		ECGData.setBorder(etchedBorder);
 		ECGData.setBounds((int)(WIDTH*0.05),(int)(HEIGHT*0.20),(int)(WIDTH*0.65),(int)(HEIGHT*0.65));
 		ECGPanel.add(ECGData);

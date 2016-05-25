@@ -12,8 +12,8 @@ import actor.MainUiActor;
 
 import javax.swing.*;
 
-//没有main方法
-public class TCPClient extends Thread{  //跑多线程，私有变量只能在TCPClient这个类内使用
+
+public class TCPClient extends Thread{  //跑多线程
 	private Socket s;
 	private InputStream is;//输入流is
 	private String host;//主机域名
@@ -70,8 +70,8 @@ public class TCPClient extends Thread{  //跑多线程，私有变量只能在TC
 
 	public MyECGShowUI getMyECGShowUI(){return myECGShowUI;}
 
-	@Override	  //重载run()方法
-	public void run() {	  //public class TCPClient extends Thread的线程
+	@Override
+	public void run() {
 		// TODO Auto-generated method stub
 		connect();
 		startReceive();
@@ -80,9 +80,6 @@ public class TCPClient extends Thread{  //跑多线程，私有变量只能在TC
 			s.shutdownInput();
 			s.close();
 			System.out.println("关闭成功！");
-//			MonitorActor.getTCPC().getjButton1().setText("确定");
-//			MonitorActor.getTCPC().getjTextField1().setEnabled(true);
-//			MonitorActor.getTCPC().getjTextField2().setEnabled(true);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -90,42 +87,14 @@ public class TCPClient extends Thread{  //跑多线程，私有变量只能在TC
 	}
 
 
-	public void connect(){	//public类型的方法 connect(),有异常处理
+	public void connect(){
 		try {
 			s = new Socket(host, port);	//用host和 port初始化Socket类的s变量
 			connectFlag = true;		//	连接标志为true
-//			WelcomeWindow.welcomeWindow.getTCPC().getjButton1().setText("结束");		//在als.myals包中的WelcomeWindow类的一个实例welcomeWindow的getTCPC()方法
-//			WelcomeWindow.welcomeWindow.getTCPC().getjTextField1().setEnabled(false);
-//			WelcomeWindow.welcomeWindow.getTCPC().getjTextField2().setEnabled(false);
-//            MonitorActor.getTCPC().getjButton1().setText("结束");		//在als.myals包中的WelcomeWindow类的一个实例welcomeWindow的getTCPC()方法
-//            MonitorActor.getTCPC().getjTextField1().setEnabled(false);
-//            MonitorActor.getTCPC().getjTextField2().setEnabled(false);
-//            MonitorActor.getTCPC().getjTextField3().setEnabled(false);
-//            MonitorActor.getTCPC().getjTextField4().setEnabled(false);
-
-
-//
-//			try {
-//				for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-//					if ("Nimbus".equals(info.getName())) {
-//						javax.swing.UIManager.setLookAndFeel(info.getClassName());
-//						break;
-//					}
-//				}
-//			} catch (ClassNotFoundException ex) {	//class未找到异常
-//				java.util.logging.Logger.getLogger(MyECGShowUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//			} catch (InstantiationException ex) {	//实例化异常
-//				java.util.logging.Logger.getLogger(MyECGShowUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//			} catch (IllegalAccessException ex) {	//非法访问异常
-//				java.util.logging.Logger.getLogger(MyECGShowUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//			} catch (javax.swing.UnsupportedLookAndFeelException ex) {	//swing组件中的不支持LookAndFeel异常
-//				java.util.logging.Logger.getLogger(MyECGShowUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//			}
-			//</editor-fold>
 
          /* Create and display the form */  //创建并且显示图表
-			java.awt.EventQueue.invokeLater(new Runnable() {	//多线程
-				public void run() {			//多线程要运行的代码段
+			java.awt.EventQueue.invokeLater(new Runnable() {
+				public void run() {
 					if (myECGShowUI == null) {
 						myECGShowUI = new MyECGShowUI("ecg", 5000L);
 						myECGShowUI.setBorder(BorderFactory.createEmptyBorder());
@@ -133,10 +102,7 @@ public class TCPClient extends Thread{  //跑多线程，私有变量只能在TC
 					}
 					mainUiActor.getECGData().add(myECGShowUI.getpanel_charts());
 					mainUiActor.getECGAnalyse().add(myECGShowUI.getecgPanel());
-					//mainUiActor.getECGAnalyse().add(myECGShowUI.getecgPanel());
 					mainUiActor.getMainUi().setVisible(true);
-					//mainUiActor.getMainUi().pack();
-					//myECGShowUI.setVisible(true);
 				}
 			});
 		} catch (UnknownHostException e) {		//public void connect()对应的异常处理。未知的主机异常
@@ -163,9 +129,6 @@ public class TCPClient extends Thread{  //跑多线程，私有变量只能在TC
 				try {
 					MonitorActor.getFos().close();	//关闭（信息获取？）
 					myECGShowUI.setVisible(false);
-//					mainUiActor.getInitializationInterface().remove(myECGShowUI);
-//					mainUiActor.getInitializationInterface().repaint();
-
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -179,51 +142,6 @@ public class TCPClient extends Thread{  //跑多线程，私有变量只能在TC
 				len = lenTemp + len;	//用lenTemp更新receivedBuffer的长度len
 				while (len >= 3 && len >= ((receivedBuffer[2] & 0xFF)*256 + (receivedBuffer[1] & 0xFF)+3)) {	//不知道是什么意思
 					int frameLen = (receivedBuffer[2] & 0xFF)*256 + (receivedBuffer[1] & 0xFF)+3;	//帧长度frameLen
-//						if (WelcomeWindow.welcomeWindow.getGuardianData() != null) {
-//							switch (receivedBuffer[0]) {
-//							case 0x01:
-//							WelcomeWindow.welcomeWindow.getGuardianData().heart_rate = ((receivedBuffer[14]<<8)+(receivedBuffer[15]&0xFF))+"";
-//							WelcomeWindow.welcomeWindow.getFos().write(receivedBuffer, 16, 3000);
-//							break;
-//							case 0x03:
-//							WelcomeWindow.welcomeWindow.getGuardianData().systolic_pressure = ((receivedBuffer[6]<<8)+(receivedBuffer[7]&0xFF))+"";
-//							WelcomeWindow.welcomeWindow.getGuardianData().diastolic_pressure = ((receivedBuffer[8]<<8)+(receivedBuffer[9]&0xFF))+"";
-//							break;
-//							case 0x04:
-//							WelcomeWindow.welcomeWindow.getGuardianData().blood_oxygen = receivedBuffer[8]+"";
-////							UpdateData.dataReadyFlag2 = true;
-//							break;
-//							}
-//						}
-//							if (WelcomeWindow.welcomeWindow.getALSMW() != null)
-//								switch (receivedBuffer[0]) {
-//								case 0x01:
-//									WelcomeWindow.welcomeWindow
-//										.getALSMW()
-//										.getjTextField26()
-//										.setText((receivedBuffer[14]<<8)+(receivedBuffer[15]&0xFF)+" bpm");
-//									if(WelcomeWindow.welcomeWindow.getALSMW().getMyECGShowUI() != null){
-//										WelcomeWindow.welcomeWindow.getALSMW().getMyECGShowUI().getDataReFresher().refreshData(Arrays.copyOfRange(receivedBuffer, 16, 3016));
-//									}
-//									break;
-//								case 0x03:
-//									WelcomeWindow.welcomeWindow
-//										.getALSMW()
-//										.getjTextField27()
-//										.setText((receivedBuffer[6]<<8)+(receivedBuffer[7]&0xFF)+" mmHg");
-//									WelcomeWindow.welcomeWindow
-//										.getALSMW()
-//										.getjTextField28()
-//										.setText((receivedBuffer[8]<<8)+(receivedBuffer[9]&0xFF)+" mmHg");
-//									break;
-//								case 0x04:
-//									WelcomeWindow.welcomeWindow
-//									.getALSMW()
-//									.getjTextField29()
-//									.setText(receivedBuffer[8]+"%");
-//									break;
-//								}
-					// readBuffer = Arrays.copyOfRange(readBuffer, frameLen, length);
 
 					if(receivedBuffer[0]==0x01){
 						MonitorActor.getFos().write(receivedBuffer, 16, 3000);
@@ -241,6 +159,5 @@ public class TCPClient extends Thread{  //跑多线程，私有变量只能在TC
 			}
 		}
 	}
-
 
 }

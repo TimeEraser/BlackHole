@@ -1,6 +1,5 @@
 import actor.BlackHoleActor;
 import actor.config.BlackHoleConfig;
-import command.MonitorRequest;
 
 /**
  * Created by zzq on 16/5/16.
