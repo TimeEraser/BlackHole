@@ -7,6 +7,7 @@
 package ecg.ecgshow;
 
 import java.awt.*;
+import java.util.Date;
 //import java.awt.event.ActionEvent;
 //import java.awt.event.ActionListener;
 //import java.awt.event.WindowAdapter;
@@ -25,14 +26,17 @@ import javax.swing.JFrame;
 import javax.swing.UIManager;
 import javax.swing.plaf.FontUIResource;
 
+import com.alee.graphics.strokes.ShapeStroke;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.DateAxis;
 import org.jfree.chart.axis.NumberAxis;
 import org.jfree.chart.plot.XYPlot;
 import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
+import org.jfree.chart.title.LegendTitle;
 import org.jfree.data.time.TimeSeries;
 import org.jfree.data.time.TimeSeriesCollection;
+import org.jfree.ui.RectangleEdge;
 import org.jfree.ui.RectangleInsets;
 
 import com.alee.laf.WebLookAndFeel;
@@ -80,7 +84,8 @@ public class MyECGShowUI extends JPanel {
 	private JLabel label_OP;
 
 	
-	private TimeSeries[] ecgSerises = new TimeSeries[LEAD_COUNT];
+	private TimeSeries[] ecgSerises = new TimeSeries[LEAD_COUNT*2];
+    private DateAxis[] dateAxises = new DateAxis[LEAD_COUNT];
 //	private Analizer analizer;	
 	
 	
@@ -301,34 +306,46 @@ public class MyECGShowUI extends JPanel {
 			TimeSeriesCollection timeseriescollection = new TimeSeriesCollection();
 			ecgSerises[i] = new TimeSeries("导联" + (i+1));
 			ecgSerises[i].setMaximumItemAge(timeZone);
+            ecgSerises[i].setMaximumItemCount(500);
+            ecgSerises[i+LEAD_COUNT]=new TimeSeries("");
+            ecgSerises[i+LEAD_COUNT].setMaximumItemAge(timeZone);
+            ecgSerises[i+LEAD_COUNT].setMaximumItemCount(2);
+
 			timeseriescollection.addSeries(ecgSerises[i]);
+            timeseriescollection.addSeries(ecgSerises[i+LEAD_COUNT]);
+
 			//DateAxis dateaxis = new DateAxis("Time");
-            DateAxis dateaxis = new DateAxis();
+            dateAxises[i] = new DateAxis();
+            dateAxises[i].setTickLabelFont(new Font("SansSerif", 0, 12));
+            dateAxises[i].setLabelFont(new Font("SansSerif", 0, 14));
+            dateAxises[i].setTickLabelsVisible(true);
+
 			//NumberAxis numberaxis = new NumberAxis("ecg");
             NumberAxis numberaxis = new NumberAxis();
-			dateaxis.setTickLabelFont(new Font("SansSerif", 0, 12));
 			numberaxis.setTickLabelFont(new Font("SansSerif", 0, 12));
-			dateaxis.setLabelFont(new Font("SansSerif", 0, 14));
 			numberaxis.setLabelFont(new Font("SansSerif", 0, 14));
+            numberaxis.setStandardTickUnits(NumberAxis.createIntegerTickUnits());
+            numberaxis.setLowerBound(1500D);
+            numberaxis.setUpperBound(3000D);
 
 			XYLineAndShapeRenderer xylineandshaperenderer = new XYLineAndShapeRenderer(true,false);
-			xylineandshaperenderer.setSeriesPaint(0, Color.green);  //线段颜色为绿
-			XYPlot xyplot = new XYPlot(timeseriescollection, dateaxis, numberaxis, xylineandshaperenderer);
-			xyplot.setBackgroundPaint(Color.LIGHT_GRAY);
-			xyplot.setDomainGridlinePaint(Color.red);
-			xyplot.setRangeGridlinePaint(Color.blue);
-			xyplot.setAxisOffset(new RectangleInsets(5D, 5D, 5D, 5D));
-            xyplot.setBackgroundPaint(Color.black);
+			xylineandshaperenderer.setSeriesPaint(0, Color.GREEN);  //线段颜色为绿
+            xylineandshaperenderer.setSeriesStroke(0,new BasicStroke(2));
+            xylineandshaperenderer.setSeriesPaint(1, Color.LIGHT_GRAY);  //线段颜色为红
+            xylineandshaperenderer.setSeriesStroke(1,new BasicStroke(5));
 
-			dateaxis.setAutoRange(true);
-			dateaxis.setLowerMargin(0.0D);
-			dateaxis.setUpperMargin(0.0D);
-			dateaxis.setTickLabelsVisible(true);
-			numberaxis.setStandardTickUnits(NumberAxis.createIntegerTickUnits());
-			numberaxis.setLowerBound(1500D);
-			numberaxis.setUpperBound(3000D);
+			XYPlot xyplot = new XYPlot(timeseriescollection, dateAxises[i], numberaxis, xylineandshaperenderer);
+			xyplot.setBackgroundPaint(Color.LIGHT_GRAY);
+			xyplot.setDomainGridlinePaint(Color.LIGHT_GRAY);
+			xyplot.setRangeGridlinePaint(Color.LIGHT_GRAY);
+			xyplot.setAxisOffset(new RectangleInsets(5D, 5D, 5D, 5D));
+            xyplot.setBackgroundPaint(Color.BLACK);
+
+
+
 			JFreeChart jfreechart = new JFreeChart(xyplot);
-			jfreechart.setBackgroundPaint(Color.LIGHT_GRAY);
+			jfreechart.setBackgroundPaint(Color.WHITE);
+            jfreechart.getLegend().setVisible(false);
 			ChartPanel chartpanel = new ChartPanel(jfreechart,
 				(int) lx * 10 / 20, (int) ly * 9 / 55, 0, 0,
 				Integer.MAX_VALUE, Integer.MAX_VALUE, true, true, false,
@@ -400,7 +417,7 @@ public class MyECGShowUI extends JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     public void ECGShow() {	
-		dataReFresher = new DataRefresher(ecgSerises);
+		dataReFresher = new DataRefresher(ecgSerises,dateAxises);
 		//stopRefresh.addActionListener(dataReFresher);
 		
 //		addWindowListener(new WindowAdapter() {
