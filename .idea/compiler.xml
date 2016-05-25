@@ -23,11 +23,9 @@
         <outputRelativeToContentRoot value="true" />
         <processorPath useClasspath="true" />
         <module name="blackhole" />
-        <module name="BlackHole" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel target="1.8">
-      <module name="BlackHole" target="1.8" />
+    <bytecodeTargetLevel>
       <module name="blackhole" target="1.8" />
     </bytecodeTargetLevel>
   </component>

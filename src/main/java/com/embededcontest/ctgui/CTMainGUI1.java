@@ -36,7 +36,8 @@ public class CTMainGUI1 extends JFrame {
     private int x1,y1,x2,y2;
     private double[] coordinate;
     public int type;
-    private JLabel rstShow;
+    private JLabel rstShow, saveUse;
+    private JPanel saveImgPanel;
 
 
 
@@ -78,9 +79,11 @@ public class CTMainGUI1 extends JFrame {
         c.fill = GridBagConstraints.BOTH;
         c.gridx = 0;
         c.gridy = 1;
-        c.gridwidth = 3;
+        c.gridwidth = 2;
         c.insets = new Insets(10,0,0,0);
         this.add(imgPanel,c);
+
+
 
         textPanel = new JPanel();
         rstShow = new JLabel();
@@ -88,10 +91,20 @@ public class CTMainGUI1 extends JFrame {
         c.fill = GridBagConstraints.BOTH;
         c.gridx = 0;
         c.gridy = 2;
-        c.weightx = 3;
+        c.gridwidth = 3;
         c.insets = new Insets(10,0,0,0);
+        textPanel.setBorder(BorderFactory.createEtchedBorder());
         c.anchor = GridBagConstraints.PAGE_END;
         container.add(textPanel,c);
+
+        saveImgPanel = new JPanel();
+        saveImgPanel.setSize(getPreferredSize());
+        c.fill = GridBagConstraints.BOTH;
+        c.gridx = 2;
+        c.gridy = 1;
+        saveUse = new JLabel();
+        saveImgPanel.setBorder(BorderFactory.createEtchedBorder());
+        container.add(saveImgPanel,c);
 
 
         //设置打开文件按钮监听事件
@@ -107,21 +120,15 @@ public class CTMainGUI1 extends JFrame {
                     imgPanel.setIMAGE_ADDR(imagePath);
                     imgPanel.makeDraw();
                 }
-                rstShow.setText("可能病症：肝癌");
+                rstShow.setText("可能病症：");
             }
         });
 
-        coordinate = imgPanel.getCoordinate();
-        x1 = (int) coordinate[0];
-        y1 = (int)coordinate[1];
-        x2 = (int)coordinate[2];
-        y2 = (int)coordinate[3];
+
         analysis.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
 
-                App app = new App();
-                app.testGenerateModel();
                 try {
 
                     //实例化ObjectInputStream对象
@@ -142,8 +149,33 @@ public class CTMainGUI1 extends JFrame {
                          * 参数：图像特征向量
                          * 返回：病变类型(int型)，1:正常;2:肝癌;3:肝血管瘤;4:肝囊肿;5:其他
                          */
+                        coordinate = imgPanel.getCoordinate();
+                        x1 = (int)coordinate[0];
+                        y1 = (int)coordinate[1];
+                        x2 = (int)coordinate[2];
+                        y2 = (int)coordinate[3];
                         type = randomForest.predictType(data);
+                        System.out.println("x1:"+x1+",y1:"+y1+",x2:"+x2+",y2:"+y2);
                         System.out.println("RandomForest predict:"+type);
+                        switch (type){
+                            case 1:
+                                rstShow.setText("可能病症：正常");
+                                break;
+                            case 2:
+                                rstShow.setText("可能病症：肝癌");
+                                break;
+                            case 3:
+                                rstShow.setText("可能病症：肝血管瘤");
+                                break;
+                            case 4:
+                                rstShow.setText("可能病症：肝囊肿");
+                                break;
+                            case 5:
+                                rstShow.setText("可能病症：其他");
+                        }
+
+                        saveUse.setIcon(new ImageIcon(imgPanel.getSaveImgPath()));
+                        saveImgPanel.add(saveUse);
                     } catch (ClassNotFoundException e_analysis) {
                         e_analysis.printStackTrace();
                     }
@@ -152,22 +184,7 @@ public class CTMainGUI1 extends JFrame {
                 } catch (IOException e_analysis) {
                     e_analysis.printStackTrace();
                 }
-                switch (type){
-                    case 1:
-                        rstShow.setText("可能病症：正常");
-                        break;
-                    case 2:
-                        rstShow.setText("可能病症：肝癌");
-                        break;
-                    case 3:
-                        rstShow.setText("可能病症：肝血管瘤");
-                        break;
-                    case 4:
-                        rstShow.setText("可能病症：肝囊肿");
-                        break;
-                    case 5:
-                        rstShow.setText("可能病症：其他");
-                }
+
 
             }
         });
@@ -183,6 +200,7 @@ public class CTMainGUI1 extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 imgPanel.removeImg();
+                saveImgPanel.remove(saveUse);
                 rstShow.setText("");
             }
         });
@@ -196,7 +214,7 @@ public class CTMainGUI1 extends JFrame {
     public static void main(String[] args) {
         CTMainGUI1 jf = new CTMainGUI1();
         jf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        jf.setSize(512,666);
+        jf.setExtendedState(JFrame.MAXIMIZED_BOTH);
         jf.setVisible(true);
     }
 
