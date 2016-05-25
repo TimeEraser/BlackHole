@@ -151,6 +151,7 @@ public class MyECGShowUI extends JPanel {
 
         javax.swing.GroupLayout ecgPanelLayout = new javax.swing.GroupLayout(ecgPanel);
         ecgPanel.setLayout(ecgPanelLayout);
+        //ecgPanel.setBorder(BorderFactory.createEmptyBorder());
         ecgPanelLayout.setHorizontalGroup(
           ecgPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(ecgPanelLayout.createSequentialGroup()
@@ -300,6 +301,7 @@ public class MyECGShowUI extends JPanel {
 		for (int i = 0; i < LEAD_COUNT; i++) {
 			TimeSeriesCollection timeseriescollection = new TimeSeriesCollection();
 			ecgSerises[i] = new TimeSeries("导联" + (i+1));
+            //ecgSerises[i] = new TimeSeries("");
 			ecgSerises[i].setMaximumItemAge(timeZone);
 			timeseriescollection.addSeries(ecgSerises[i]);
 			//DateAxis dateaxis = new DateAxis("Time");

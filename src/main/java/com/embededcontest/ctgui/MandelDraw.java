@@ -12,15 +12,19 @@ import java.net.MalformedURLException;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 
+import static com.sun.org.apache.xalan.internal.lib.ExsltDatetime.date;
+
 public class MandelDraw extends JPanel {
     public String IMAGE_ADDR;
     private static final Color DRAWING_RECT_COLOR = new Color(200, 200, 255);
     private static final Color DRAWN_RECT_COLOR = Color.blue;
 
-    private BufferedImage image;
+    private BufferedImage image,saveimage;
     private Rectangle rect = null;
     private boolean drawing = false;
-    public int x1,y1,x2,y2;
+    public int x1,y1,x2,y2,x,y,width,height;
+    private int serialNum = 0;
+    public String saveImgPath;
 
     public MandelDraw() {
 //        try {
@@ -102,10 +106,10 @@ public class MandelDraw extends JPanel {
         public void mouseDragged(MouseEvent e) {
 
             drawing = true;
-            int x = Math.min(mousePress.x, e.getPoint().x);
-            int y = Math.min(mousePress.y, e.getPoint().y);
-            int width = Math.abs(mousePress.x - e.getPoint().x);
-            int height = Math.abs(mousePress.y - e.getPoint().y);
+            x = Math.min(mousePress.x, e.getPoint().x);
+            y = Math.min(mousePress.y, e.getPoint().y);
+            width = Math.abs(mousePress.x - e.getPoint().x);
+            height = Math.abs(mousePress.y - e.getPoint().y);
 
             rect = new Rectangle(x, y, width, height);
             repaint();
@@ -118,6 +122,8 @@ public class MandelDraw extends JPanel {
             System.out.println("x2:"+x2+" y2:"+y2);
             drawing = false;
             repaint();
+            saveimage = image.getSubimage(x,y,width,height);
+            saveImage();
         }
 
         @Override
@@ -137,6 +143,23 @@ public class MandelDraw extends JPanel {
     public void removeImg(){
         if(image!=null){
             image = null;
+        }
+    }
+
+    public String getSaveImgPath(){
+        return saveImgPath;
+    }
+
+    public void saveImage(){
+        try{
+            serialNum++;
+            String name = date()+String.valueOf(serialNum)+"."+"jpg";
+            File f = new File("./src/main/resources",name);
+            System.out.println(name);
+            ImageIO.write(saveimage, "jpg", f);
+            saveImgPath = f.getAbsolutePath();
+        }catch (Exception ex) {
+            System.out.println(ex);
         }
     }
 

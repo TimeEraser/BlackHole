@@ -33,6 +33,9 @@ public class MainUiActor extends BaseActor{
 	private JFrame InitializationInterface;
 	private JPanel ECGAnalyse;
 	private JPanel ECGData;
+	private JPanel CTData;
+	private JPanel CTFocus;
+
 
 
 	public MainUiActor(MainUiActorConfig mainUiActorConfig){
@@ -72,7 +75,14 @@ public class MainUiActor extends BaseActor{
 			sendRequest(monitorActor,request);
 			return true;
 		}
-
+		if(request==MainUiRequest.MAIN_UI_CT_CONFIG){
+			sendRequest(ctActor,request,request.getConfig().getData());
+			return true;
+		}
+		if(request==MainUiRequest.MAIN_UI_CT_ANALYSIS){
+			sendRequest(ctActor,request,request.getConfig().getData());
+			return true;
+		}
 
 
 
@@ -213,7 +223,7 @@ public class MainUiActor extends BaseActor{
 		JPanel CTPanel= new JPanel(null);
 		Border etchedBorder = BorderFactory.createEtchedBorder(EtchedBorder.LOWERED,Color.LIGHT_GRAY,Color.LIGHT_GRAY);
 		CTPanel.setBounds(0,0,WIDTH,(int)(HEIGHT*0.9));
-		JPanel CTData = new JPanel();
+		CTData = new JPanel();
 		CTData.setBorder(etchedBorder);
 		CTData.setBounds((int)(WIDTH*0.05),(int)(HEIGHT*0.05),(int)(WIDTH*0.65),(int)(HEIGHT*0.8));
 		CTPanel.add(CTData);
@@ -223,18 +233,18 @@ public class MainUiActor extends BaseActor{
 		//CTControl.setBorder(etchedBorder);
 		CTControl.setBounds((int)(WIDTH*0.75),(int)(HEIGHT*0.05),(int)(WIDTH*0.2),(int)(HEIGHT*0.15));
 		JButton CTOpen = new JButton();
-		CTOpen.addActionListener(new NoticeListener(ctActor,MainUiRequest.MAIN_UI_CT_CONFIG));
 		CTOpen.setText("打开CT图片");
 		CTOpen.setIcon(new ImageIcon(getIconImage("Icon/open.png")));
+		CTOpen.addActionListener(new NoticeListener(this,MainUiRequest.MAIN_UI_CT_CONFIG,getMainUi()));
 		CTControl.add(CTOpen);
 		JButton CTAnalyse = new JButton();
-		CTAnalyse.addActionListener(new NoticeListener(ctActor,MainUiRequest.MAIN_UI_CT_ANALYSIS));
 		CTAnalyse.setText("分析CT病灶");
 		CTAnalyse.setIcon(new ImageIcon(getIconImage("Icon/analyse_min.png")));
+		CTAnalyse.addActionListener(new NoticeListener(this,MainUiRequest.MAIN_UI_CT_ANALYSIS,getMainUi()));
 		CTControl.add(CTAnalyse);
 		CTPanel.add(CTControl);
 
-		JPanel CTFocus = new JPanel();
+		CTFocus = new JPanel();
 		CTFocus.setBorder(etchedBorder);
 		CTFocus.setBounds((int)(WIDTH*0.75),(int)(HEIGHT*0.25),(int)(WIDTH*0.2),(int)(HEIGHT*0.6));
 		CTPanel.add(CTFocus);
@@ -291,4 +301,6 @@ public class MainUiActor extends BaseActor{
 	public JFrame getMainUi(){return this.InitializationInterface;}
 	public JPanel getECGAnalyse(){return this.ECGAnalyse;}
 	public JPanel getECGData(){return this.ECGData;}
+	public JPanel getCTData(){return this.CTData;}
+	public JPanel getCTFocus(){return this.CTFocus;}
 }
