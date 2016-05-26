@@ -294,7 +294,7 @@ public class MyECGShowUI extends JPanel {
 			ecgSerises[i] = new TimeSeries("导联" + (i+1));
 			ecgSerises[i].setMaximumItemAge(timeZone);
             ecgSerises[i].setMaximumItemCount(500);
-            ecgSerises[i+LEAD_COUNT]=new TimeSeries("导联" + (i+LEAD_COUNT+1));
+            ecgSerises[i+LEAD_COUNT]=new TimeSeries("");
             ecgSerises[i+LEAD_COUNT].setMaximumItemAge(timeZone);
             ecgSerises[i+LEAD_COUNT].setMaximumItemCount(2);
 
@@ -302,16 +302,18 @@ public class MyECGShowUI extends JPanel {
             timeseriescollection.addSeries(ecgSerises[i+LEAD_COUNT]);
 
 			//DateAxis dateaxis = new DateAxis("Time");
-            dateAxises[i] = new DateAxis("Time");
+            dateAxises[i] = new DateAxis("");
             dateAxises[i].setTickLabelFont(new Font("SansSerif", 0, 12));
             dateAxises[i].setLabelFont(new Font("SansSerif", 0, 14));
             dateAxises[i].setTickLabelsVisible(true);
+            dateAxises[i].setVisible(false);
 
 			//NumberAxis numberaxis = new NumberAxis("ecg");
             NumberAxis numberaxis = new NumberAxis("ecg");
 			numberaxis.setTickLabelFont(new Font("SansSerif", 0, 12));
 			numberaxis.setLabelFont(new Font("SansSerif", 0, 14));
             numberaxis.setStandardTickUnits(NumberAxis.createIntegerTickUnits());
+            numberaxis.setVisible(false);
             numberaxis.setLowerBound(1500D);
             numberaxis.setUpperBound(3000D);
 
@@ -330,7 +332,8 @@ public class MyECGShowUI extends JPanel {
 
 			JFreeChart jfreechart = new JFreeChart(xyplot);
 			jfreechart.setBackgroundPaint(new Color(237,237,237));//背景色为浅灰
-            jfreechart.getLegend().setVisible(false);
+            jfreechart.getLegend().setPosition(RectangleEdge.RIGHT);
+
 			ChartPanel chartpanel = new ChartPanel(jfreechart,
 				(int) lx * 10 / 20, (int) ly * 9 / 55, 0, 0,
 				Integer.MAX_VALUE, Integer.MAX_VALUE, true, true, false,
@@ -340,7 +343,6 @@ public class MyECGShowUI extends JPanel {
 				BorderFactory.createEmptyBorder(0, 0, 0, 0)     //边界线条间距为0
                 ,BorderFactory.createEmptyBorder()          //边界线条不可见
             ));
-
 			panel_charts.add(chartpanel);
 		}
 
