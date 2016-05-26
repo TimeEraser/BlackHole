@@ -19,7 +19,7 @@ import org.jfree.data.time.Millisecond;
 import org.jfree.data.time.TimeSeries;
 
 //数据刷新
-public class DataRefresher extends Observable implements Observer,ActionListener {
+public class ECGDataRefresher extends Observable implements Observer,ActionListener {
 	public static final int SAMPLING=500;		//取样时间
 	public static final int MAX_TIME=1;			//最大时间
 	public static final int DATA_LENGTH=SAMPLING*MAX_TIME;//数据长度
@@ -32,15 +32,16 @@ public class DataRefresher extends Observable implements Observer,ActionListener
 	private Millisecond time;				//几个毫秒
 	private short[][] datas=new short[MyECGShowUI.LEAD_COUNT][DATA_LENGTH];	//短整型二维数组
 	private volatile int currentPoint=2;	//用于多线程的变量，现在的点
-	private boolean stopFlag=false;			//停止标志
+	private boolean stopFlag=true;			//停止标志
+	private boolean everStop=false;
 
 
-	public DataRefresher(TimeSeries[] ecgSerises,String filePath){
+	public ECGDataRefresher(TimeSeries[] ecgSerises, String filePath){
 		this.ecgSerises=ecgSerises;
 		this.filePath=filePath;
 		timer=new Timer();
 	}
-	public DataRefresher(TimeSeries[] ecgSerises, DateAxis[] dateAxises){
+	public ECGDataRefresher(TimeSeries[] ecgSerises, DateAxis[] dateAxises){
 		this.ecgSerises=ecgSerises;
 		this.dateAxises=dateAxises;
 		timer=new Timer();
@@ -128,14 +129,16 @@ public class DataRefresher extends Observable implements Observer,ActionListener
 				for(int i=0;i<REFRESH_TIME/LOWSAMPLE/2;i++){
 					if(currentPoint< DATA_LENGTH){
 						if(stopFlag==false){
-							if(count==0) {
+							if(count==0 || everStop ==true) {
 								for (DateAxis d:dateAxises) {
 									long beginMilliSecond=time.getFirstMillisecond();
 									d.setRange(new Date(beginMilliSecond),new Date(beginMilliSecond+5000));
 								}
+								everStop=false;
+								count=0;
 							}
 							for(int j=0;j<MyECGShowUI.LEAD_COUNT;j++){
-								ecgSerises[j].add(time, datas[j][currentPoint]);//该方法在超过指定长度后会将最久的数据丢弃
+								ecgSerises[j].add(time, 2000);//该方法在超过指定长度后会将最久的数据丢弃
 								//ecgSerises[j].add(time, 2000);//该方法在超过指定长度后会将最久的数据丢弃
 								ecgSerises[j+MyECGShowUI.LEAD_COUNT].add(time, datas[j][currentPoint]);//该方法在超过指定长度后会将最久的数据丢弃
 							}
@@ -192,7 +195,13 @@ public class DataRefresher extends Observable implements Observer,ActionListener
 		button.setText(text);
 	}
 
-	public void setstopFlag(){stopFlag=!stopFlag;}
+	public void setStopFlag(){
+		stopFlag=true;
+		everStop=true;
+	}
+	public void setStartFlag(){
+		stopFlag=false;
+	}
 
 
 }

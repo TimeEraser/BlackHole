@@ -65,10 +65,10 @@ public class CtActor extends BaseActor{
             imgPanel.makeDraw();
         }
         rstShow.setText("可能病症：");
-        mainUiActor.getCTData().add(imgPanel);
+        //mainUiActor.getCTData().add(imgPanel);
             /*mainUiActor.getCTFocus().add(rstShow);*/
 
-        mainUiActor.getCTFocus().setLayout(new GridBagLayout());
+        //mainUiActor.getCTFocus().setLayout(new GridBagLayout());
         GridBagConstraints c = new GridBagConstraints();
 
         c.gridx = 0;
@@ -77,16 +77,16 @@ public class CtActor extends BaseActor{
         c.weighty = 0.5;
         c.fill = GridBagConstraints.BOTH;
         c.anchor = GridBagConstraints.FIRST_LINE_START;
-        mainUiActor.getCTFocus().add(ctSubFocus1,c);
+        //mainUiActor.getCTFocus().add(ctSubFocus1,c);
 
         ctSubFocus1.add(rstShow);
         c.gridx = 0;
         c.gridy = 1;
         c.fill = GridBagConstraints.BOTH;
-        mainUiActor.getCTFocus().add(ctSubFocus2,c);
+        //mainUiActor.getCTFocus().add(ctSubFocus2,c);
 
 
-        mainUiActor.getMainUi().setVisible(true);
+        //mainUiActor.getMainUi().setVisible(true);
         System.out.println("CtRequest.CT_OPEN_IMG");
     }
 

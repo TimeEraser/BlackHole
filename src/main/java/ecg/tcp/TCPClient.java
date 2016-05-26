@@ -7,6 +7,7 @@ import java.net.UnknownHostException;
 import java.util.Arrays;
 
 import actor.MonitorActor;
+import ecg.ecgshow.ECGDataRefresher;
 import ecg.ecgshow.MyECGShowUI;
 import actor.MainUiActor;
 
@@ -21,7 +22,7 @@ public class TCPClient extends Thread{  //跑多线程
 	private String Id;	//档案ID
 	private String Name;//姓名
 	private String Sex;	//性别
-	private MainUiActor mainUiActor;
+	private ECGDataRefresher ecgDataRefresher;
 
 	private byte[] receivedBuffer = new byte[40000];//接收缓存，40000个字节
 	private byte[] receivedTemp = new byte[1024];   //接收临时变量，1024个字节
@@ -66,13 +67,10 @@ public class TCPClient extends Thread{  //跑多线程
 	public String getSEX(){return Sex;}
 	public void setSEX(String Sex){this.Sex=Sex;}
 
-	public void setMainUiActor(MainUiActor mainUiActor){this.mainUiActor=mainUiActor;}
-
 	public MyECGShowUI getMyECGShowUI(){return myECGShowUI;}
 
-	public TCPClient(MyECGShowUI myECGShowUI){
-		this.myECGShowUI=myECGShowUI;
-
+	public TCPClient(ECGDataRefresher ecgDataRefresher){
+		this.ecgDataRefresher=ecgDataRefresher;
 	}
 
 
@@ -97,7 +95,6 @@ public class TCPClient extends Thread{  //跑多线程
 		try {
 			s = new Socket(host, port);	//用host和 port初始化Socket类的s变量
 			connectFlag = true;		//	连接标志为true
-
          /* Create and display the form */  //创建并且显示图表
 			java.awt.EventQueue.invokeLater(new Runnable() {
 				public void run() {
@@ -109,7 +106,7 @@ public class TCPClient extends Thread{  //跑多线程
 					myECGShowUI.setBorder(BorderFactory.createEmptyBorder());
 //					mainUiActor.getECGData().add(myECGShowUI.getpanel_charts());
 //					mainUiActor.getECGAnalyse().add(myECGShowUI.getecgPanel());
-					mainUiActor.getMainUi().setVisible(true);
+					//mainUiActor.getMainUi().setVisible(true);
 				}
 			});
 		} catch (UnknownHostException e) {		//public void connect()对应的异常处理。未知的主机异常
@@ -152,9 +149,8 @@ public class TCPClient extends Thread{  //跑多线程
 
 					if(receivedBuffer[0]==0x01){
 				//!!!		MonitorActor.getFos().write(receivedBuffer, 16, 3000);
-						myECGShowUI.getDataReFresher().refreshData(Arrays.copyOfRange(receivedBuffer, 16, 3016));
+						ecgDataRefresher.refreshData(Arrays.copyOfRange(receivedBuffer, 16, 3016));
 					}
-
 					System.out.println(len);
 					System.out.println(frameLen);
 					System.arraycopy(receivedBuffer, frameLen, receivedBuffer, 0, len - frameLen);	//更新receivedBuffer

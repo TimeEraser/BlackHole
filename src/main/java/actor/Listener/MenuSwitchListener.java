@@ -7,10 +7,10 @@ import java.awt.*;
 /**
  * Created by zzq on 16/5/24.
  */
-public class SwitchListener implements MenuListener {
+public class MenuSwitchListener implements MenuListener {
     Container contentPane;
     Component content;
-    public SwitchListener(Container contentPane,Component content){
+    public MenuSwitchListener(Container contentPane, Component content){
         this.contentPane=contentPane;
         this.content=content;
     }

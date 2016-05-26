@@ -8,6 +8,8 @@ import command.config.CommandConfig;
 public enum  MonitorRequest implements Request {
     MONITOR_DATA,
     MONITOR_ECG_DATA,
+    MONITOR_ECG_START,
+    MONITOR_ECG_STOP,
     MONITOR_BLOOD_OXYGEN,
     MONITOR_SHUTDOWM,
     MONITOR_PRESSURE_DATA;

@@ -2,11 +2,13 @@ package actor;
 
 import command.*;
 import actor.config.MonitorActorConfig;
+import ecg.ecgshow.ECGDataRefresher;
 import ecg.ecgshow.MyECGShowUI;
 import ecg.tcp.*;
 
 import javax.swing.*;
 import java.io.FileOutputStream;
+import java.util.Map;
 
 /**
  * Created by zzq on 16/5/16.
@@ -14,70 +16,62 @@ import java.io.FileOutputStream;
 public class MonitorActor extends BaseActor{
 
     private static FileOutputStream fos;
-    private  static TCPConfig TCPC;
-    private TCPClient client;
-    private MainUiActor mainUiActor;
+
     private MyECGShowUI myECGShowUI;
-    private JPanel ECGData;
 
-    private String host=null;   //主机域名
-    private String port=null;   //主机端口号
-    private String Id=null;	    //档案ID
-    private String Name=null;   //姓名
-    private String Sex=null;	//性别
-    private Object data;
+    public MyECGShowUI getMyECGShowUI() {
+        return myECGShowUI;
+    }
 
+    public void setMyECGShowUI(MyECGShowUI myECGShowUI) {
+        this.myECGShowUI = myECGShowUI;
+        ecgDataRefresher=new ECGDataRefresher(myECGShowUI.getECGSeries(),myECGShowUI.getDateAxises());
+    }
 
+    private ECGDataRefresher ecgDataRefresher;
+    private TCPClient client;
     public MonitorActor(MonitorActorConfig monitorActorConfig){
         //TO DO Initialize the MonitorActor
     }
 
     @Override
     protected boolean processActorRequest(Request request) {
-        if(request== MainUiRequest.MAIN_UI_ECG_CONFIG){
-            mainUiActor=(MainUiActor)request.getConfig().getSendActor();
-            myECGShowUI=mainUiActor.getMyECGShowUI();
-
-            data=request.getConfig().getData();
-            TCPC = new TCPConfig( (JFrame)data,true);
-            TCPC.setVisible(true);
-            host=TCPC.getjTextField1().getText();
-            port=TCPC.getjTextField2().getText();
-            Id=TCPC.getjTextField3().getText();
-            Name=TCPC.getjTextField4().getText();
-            Sex=TCPC.getJRadioButtonName();
-
+        if(request==MainUiRequest.MAIN_UI_ECG_STOP){
+            //client.stopFlag =true;
+            sendResponse(request,MonitorResponse.MONITOR_SHUTDOWM);
+            System.out.println("client.stopFlag =true");
+        }
+        if(request==MonitorRequest.MONITOR_ECG_DATA) {
+            Map connectInfo = (Map) request.getConfig().getData();
+            String host= (String) connectInfo.get("host");//主机域名
+            String port=(String) connectInfo.get("port");//主机端口号
+            String Id=(String) connectInfo.get("Id"); //档案ID
+            String Name = (String) connectInfo.get("Name");//姓名
+            String Sex = (String) connectInfo.get("Sex");
+            System.out.println("MonitorActor: host ="+host);
+            System.out.println("MonitorActor: port ="+port);
+            System.out.println("MonitorActor: id ="+Id);
+            System.out.println("MonitorActor: name ="+Name);
+            System.out.println("MonitorActor: sex ="+Sex);
+            System.out.println("MonitorRequest.MONITOR_ECG_DATA");
             if((host!=null)&&(port!=null)) {
-                System.out.println("MonitorActor: "+host);
-                System.out.println("MonitorActor: "+port);
-                System.out.println("MonitorActor: "+Id);
-                System.out.println("MonitorActor: "+Name);
-                System.out.println("MonitorActor: "+Sex);
-                System.out.println("MonitorRequest.MONITOR_ECG_DATA");
-
-                client = new TCPClient(myECGShowUI);        //新建一个TCPClient()方法的实例client
+                client = new TCPClient(ecgDataRefresher);        //新建一个TCPClient()方法的实例client
                 client.setHost(host);    //设置主机
                 client.setPort(Integer.parseInt(port));    //设置端口
                 client.setID(Id);
                 client.setNAME(Name);
                 client.setSEX(Sex);
-
                 client.stopFlag = false;
-                client.setMainUiActor((MainUiActor) request.getConfig().getSendActor());
+                //client.setMainUiActor((MainUiActor) request.getConfig().getSendActor());
                 client.start();        //客户端线程开始运行
             }
+            ecgDataRefresher.start();
         }
-
-        if(request==MainUiRequest.MAIN_UI_ECG_STOP){
-            client.stopFlag =true;
-            sendResponse(request,MonitorResponse.MONITOR_SHUTDOWM);
-            System.out.println("client.stopFlag =true");
+        if(request==MonitorRequest.MONITOR_ECG_START){
+            ecgDataRefresher.setStartFlag();
         }
-
-        if(request==MainUiRequest.MAIN_UI_ECG_START){
-            client.getMyECGShowUI().getDataReFresher().setstopFlag();
-        }
-
+        if(request==MonitorRequest.MONITOR_ECG_STOP)
+            ecgDataRefresher.setStopFlag();
         return false;
     }
 
@@ -96,11 +90,9 @@ public class MonitorActor extends BaseActor{
         return false;
     }
 
-    public  static TCPConfig getTCPC() {
-        return TCPC;
-    }
     public  static FileOutputStream getFos() {
         return fos;
     }
+
     // public static void setFos(FileOutputStream fos) {this.fos = fos;}
 }

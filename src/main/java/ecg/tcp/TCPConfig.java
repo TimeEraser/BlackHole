@@ -142,7 +142,7 @@ public class TCPConfig extends JDialog {		//TCP配置界面
             else if (jRadioButton2.isSelected()){
                 jRadioButtonName=jRadioButton2.getText();
             }
-            this.dispose() ;
+            this.dispose();
     }
 
     public JButton getjButton1() {

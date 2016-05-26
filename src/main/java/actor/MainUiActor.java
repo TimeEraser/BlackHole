@@ -2,17 +2,22 @@ package actor;
 
 import java.awt.*;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.EtchedBorder;
 import javax.swing.plaf.FontUIResource;
 
+import actor.Listener.ButtonSwitchListener;
 import actor.Listener.NoticeListener;
-import actor.Listener.SwitchListener;
+import actor.Listener.MenuSwitchListener;
 import actor.config.MainUiActorConfig;
 import com.alee.laf.WebLookAndFeel;
 import command.*;
+import ecg.ecgshow.ECGDataRefresher;
 import ecg.ecgshow.MyECGShowUI;
+import ecg.tcp.TCPConfig;
 
 public class MainUiActor extends BaseActor{
 
@@ -23,14 +28,9 @@ public class MainUiActor extends BaseActor{
 	private MonitorActor monitorActor;
 	private BlackHoleActor blackHoleActor;
 	private MobileActor mobileActor;
-	private MyECGShowUI myECGShowUI;
 
-	private JFrame InitializationInterface;
-	private JPanel ECGAnalyse;
-	private JPanel ECGData;
-	private JPanel CTData;
-	private JPanel CTFocus;
 	//Interface element
+	private JFrame InitializationInterface;
 	private Integer WIDTH;
 	private Integer HEIGHT;
 	private Integer MENU_FONT_SIZE;
@@ -52,40 +52,15 @@ public class MainUiActor extends BaseActor{
 		CONTENT_FONT_SIZE=mainUiActorConfig.getCONTENT_FONT_SIZE();
 		LEFT = mainUiActorConfig.getLEFT();
 		TOP = mainUiActorConfig.getTOP();
-		myECGShowUI=new MyECGShowUI("ecg", 5000L);
 	}
 
 
 	@Override
 	public boolean processActorRequest(Request  request) {
-		if(request == SystemRequest.BOOT){
-			sendResponse(request, SystemResponse.SYSTEM_MESSAGE,"mainUiActor收到SystemRequest.BOOT请求，启动mainUi");
+		if(request==SystemRequest.BOOT)
 			this.start();
-			return true;
-		}
-		if(request==GuardRequest.GUARD_START){
-			sendRequest(guardActor,request);
-			return true;
-		}
-		if(request==MainUiRequest.MAIN_UI_ECG_CONFIG){
-			sendRequest(monitorActor,request,request.getConfig().getData());
-			return true;
-		}
-		if(request==MainUiRequest.MAIN_UI_ECG_STOP){
-			sendRequest(monitorActor,request);
-			return true;
-		}
-		if(request==MainUiRequest.MAIN_UI_CT_CONFIG){
-			sendRequest(ctActor,request,request.getConfig().getData());
-			return true;
-		}
-		if(request==MainUiRequest.MAIN_UI_CT_ANALYSIS){
-			sendRequest(ctActor,request,request.getConfig().getData());
-			return true;
-		}
-		if(request==MainUiRequest.MAIN_UI_GUARD_START){
-			sendRequest(guardActor,GuardRequest.GUARD_START);
-		}
+		if(request==MainUiRequest.MAIN_UI_ECG_CONFIG)
+			createECGConfigDialog();
 		return false;
 	}
 
@@ -96,10 +71,6 @@ public class MainUiActor extends BaseActor{
 			return true;
 		}
 		if(responses==MonitorResponse.MONITOR_SHUTDOWM){
-			ECGData.removeAll();
-			ECGData.repaint();
-			ECGAnalyse.removeAll();
-			ECGAnalyse.repaint();
 			return true;
 		}
 		return false;
@@ -172,33 +143,33 @@ public class MainUiActor extends BaseActor{
 		JMenu sys = new JMenu();
 		ImageIcon beginIcon = new ImageIcon(getIconImage("Icon/sys.png"));
 		sys.setIcon(beginIcon);
-		mainMenu.add(sys);;
+		mainMenu.add(sys);
 
 		JMenu ct=new JMenu("");
-		ct.addMenuListener(new SwitchListener(contentPane,CTComponent));
+		ct.addMenuListener(new MenuSwitchListener(contentPane,CTComponent));
 		ImageIcon ctIcon = new ImageIcon(getIconImage("Icon/ct.png"));
 		ct.setIcon(ctIcon);
 		mainMenu.add(ct);
 
 
 		JMenu ecg=new JMenu("");
-		ecg.addMenuListener(new SwitchListener(contentPane,ECGComponent));
+		ecg.addMenuListener(new MenuSwitchListener(contentPane,ECGComponent));
 		ImageIcon ecgIcon = new ImageIcon(getIconImage("Icon/monitor.png"));
 		ecg.setIcon(ecgIcon);
 		mainMenu.add(ecg);
 
 		JMenu guard=new JMenu("");
-		guard.addMenuListener(new SwitchListener(contentPane,null));
+		guard.addMenuListener(new MenuSwitchListener(contentPane,null));
 		guard.setHorizontalTextPosition(SwingConstants.RIGHT);
 		ImageIcon guardIcon = new ImageIcon(getIconImage("Icon/guard.png"));
 		guard.setIcon(guardIcon);
 		JMenuItem guard_config=new JMenuItem("连接告警设备");
-		guard_config.addActionListener(new NoticeListener(this,MainUiRequest.MAIN_UI_GUARD_START,getMainUi()));
+		guard_config.addActionListener(new NoticeListener(this,guardActor,MainUiRequest.MAIN_UI_GUARD_START));
 		guard.add(guard_config);
 		mainMenu.add(guard);
 
 		JMenu mobile=new JMenu("");
-		mobile.addMenuListener(new SwitchListener(contentPane,null));
+		mobile.addMenuListener(new MenuSwitchListener(contentPane,null));
 		ImageIcon phoneIcon = new ImageIcon(getIconImage("Icon/phone.png"));
 		mobile.setIcon(phoneIcon);
 		JMenuItem mobile_config=new JMenuItem("连接手机");
@@ -218,7 +189,7 @@ public class MainUiActor extends BaseActor{
 		JPanel CTPanel= new JPanel(null);
 		Border etchedBorder = BorderFactory.createEtchedBorder(EtchedBorder.LOWERED,Color.LIGHT_GRAY,Color.LIGHT_GRAY);
 		CTPanel.setBounds(0,0,WIDTH,(int)(HEIGHT*0.9));
-		CTData = new JPanel();
+		JPanel CTData = new JPanel();
 		CTData.setBorder(etchedBorder);
 		CTData.setBounds((int)(WIDTH*0.05),(int)(HEIGHT*0.02),(int)(WIDTH*0.65),(int)(HEIGHT*0.81));
 		CTPanel.add(CTData);
@@ -230,16 +201,16 @@ public class MainUiActor extends BaseActor{
 		JButton CTOpen = new JButton();
 		CTOpen.setText("打开CT图片");
 		CTOpen.setIcon(new ImageIcon(getIconImage("Icon/open.png")));
-		CTOpen.addActionListener(new NoticeListener(this,MainUiRequest.MAIN_UI_CT_CONFIG,getMainUi()));
+		CTOpen.addActionListener(new NoticeListener(this,ctActor,MainUiRequest.MAIN_UI_CT_CONFIG));
 		CTControl.add(CTOpen);
 		JButton CTAnalyse = new JButton();
 		CTAnalyse.setText("分析CT病灶");
 		CTAnalyse.setIcon(new ImageIcon(getIconImage("Icon/analyse_min.png")));
-		CTAnalyse.addActionListener(new NoticeListener(this,MainUiRequest.MAIN_UI_CT_ANALYSIS,getMainUi()));
+		CTAnalyse.addActionListener(new NoticeListener(this,ctActor,MainUiRequest.MAIN_UI_CT_ANALYSIS));
 		CTControl.add(CTAnalyse);
 		CTPanel.add(CTControl);
 
-		CTFocus = new JPanel();
+		JPanel CTFocus = new JPanel();
 		CTFocus.setBorder(etchedBorder);
 		CTFocus.setBounds((int)(WIDTH*0.75),(int)(HEIGHT*0.25),(int)(WIDTH*0.2),(int)(HEIGHT*0.6));
 		CTFocus.setLayout(new GridLayout(2,1));
@@ -248,7 +219,7 @@ public class MainUiActor extends BaseActor{
 		CTPanel.setVisible(false);
 		return CTPanel;
 	}
-
+	private ECGDataRefresher ecgDataRefresher;
 	private JPanel createECGJPanel(){
 		JPanel ECGPanel= new JPanel(null);
 		Border etchedBorder = BorderFactory.createEtchedBorder(EtchedBorder.LOWERED,Color.LIGHT_GRAY,Color.LIGHT_GRAY);
@@ -262,17 +233,25 @@ public class MainUiActor extends BaseActor{
 		JButton ecgConfig = new JButton();
 		ecgConfig.setText("监护仪配置");
 		ecgConfig.setIcon(new ImageIcon(getIconImage("Icon/config.png")));
-		ecgConfig.addActionListener(new NoticeListener(this,MainUiRequest.MAIN_UI_ECG_CONFIG,getMainUi()));
+		ecgConfig.addActionListener(new NoticeListener(this,MainUiRequest.MAIN_UI_ECG_CONFIG,this));
 		ECGControl.add(ecgConfig);
 		JButton ecgStart = new JButton();
 		ecgStart.setText("开始传输");
 		ecgStart.setIcon(new ImageIcon(getIconImage("Icon/start.png")));
-		ecgStart.addActionListener(new NoticeListener(monitorActor,MainUiRequest.MAIN_UI_ECG_START));
+		ecgStart.addActionListener(new NoticeListener(monitorActor,MonitorRequest.MONITOR_ECG_START));
+		ButtonSwitchListener buttonSwitchListener=new ButtonSwitchListener();
+		buttonSwitchListener.setText(0,"开始传输");
+		buttonSwitchListener.setIcon(0,new ImageIcon(getIconImage("Icon/start.png")));
+		buttonSwitchListener.setActionListener(0,new NoticeListener(monitorActor,MonitorRequest.MONITOR_ECG_START));
+		buttonSwitchListener.setText(1,"暂停传输");
+		buttonSwitchListener.setIcon(1,new ImageIcon(getIconImage("Icon/pause.png")));
+		buttonSwitchListener.setActionListener(1,new NoticeListener(monitorActor,MonitorRequest.MONITOR_ECG_STOP));
+		ecgStart.addActionListener(buttonSwitchListener);
 		ECGControl.add(ecgStart);
 		JButton ecgStop = new JButton();
 		ecgStop.setText("停止传输");
 		ecgStop.setIcon(new ImageIcon(getIconImage("Icon/stop.png")));
-		ecgStop.addActionListener(new NoticeListener(this,MainUiRequest.MAIN_UI_ECG_STOP));
+		ecgStop.addActionListener(new NoticeListener(monitorActor,MonitorRequest.MONITOR_SHUTDOWM));
 		ECGControl.add(ecgStop);
 		JButton ecgAnalyse = new JButton();
 		ecgAnalyse.setText("心电图分析");
@@ -281,13 +260,15 @@ public class MainUiActor extends BaseActor{
 		ECGControl.add(ecgAnalyse);
 		ECGPanel.add(ECGControl);
 
-		ECGData = new JPanel();
+		JPanel ECGData = new JPanel();
 		ECGData.setBorder(etchedBorder);
 		ECGData.setBounds((int)(WIDTH*0.05),(int)(HEIGHT*0.20),(int)(WIDTH*0.65),(int)(HEIGHT*0.65));
-		ECGData.add(myECGShowUI.getpanel_charts());
+		MyECGShowUI ecgShowUI=new MyECGShowUI("ecg", 5000L);
+		ECGData.add(ecgShowUI.getECGData());
+		monitorActor.setMyECGShowUI(ecgShowUI);
 		ECGPanel.add(ECGData);
 
-		ECGAnalyse = new JPanel();
+		JPanel ECGAnalyse = new JPanel();
 		ECGAnalyse.setBorder(etchedBorder);
 		ECGAnalyse.setBounds((int)(WIDTH*0.75),(int)(HEIGHT*0.05),(int)(WIDTH*0.2),(int)(HEIGHT*0.8));
 		ECGPanel.add(ECGAnalyse);
@@ -295,11 +276,20 @@ public class MainUiActor extends BaseActor{
 		ECGPanel.setVisible(false);
 		return ECGPanel;
 	}
-
-	public JFrame getMainUi(){return this.InitializationInterface;}
-	public JPanel getECGAnalyse(){return this.ECGAnalyse;}
-	public JPanel getECGData(){return this.ECGData;}
-	public JPanel getCTData(){return this.CTData;}
-	public JPanel getCTFocus(){return this.CTFocus;}
-	public MyECGShowUI getMyECGShowUI(){return this.myECGShowUI;}
+	private void createECGConfigDialog(){
+		TCPConfig tcpConfig = new TCPConfig(InitializationInterface,true);
+		tcpConfig.setVisible(true);
+		String host=tcpConfig.getjTextField1().getText();//主机域名
+		String port=tcpConfig.getjTextField2().getText();//主机端口号
+		String Id=tcpConfig.getjTextField3().getText(); //档案ID
+		String Name=tcpConfig.getjTextField4().getText();//姓名
+		String Sex=tcpConfig.getJRadioButtonName();//性别
+		Map<String,String> connectInfo = new HashMap<>();
+		connectInfo.put("host",host);
+		connectInfo.put("port",port);
+		connectInfo.put("Id",Id);
+		connectInfo.put("Name",Name);
+		connectInfo.put("Sex",Sex);
+		sendRequest(monitorActor,MonitorRequest.MONITOR_ECG_DATA,connectInfo);
+	}
 }
