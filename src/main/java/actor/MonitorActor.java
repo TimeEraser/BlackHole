@@ -2,6 +2,7 @@ package actor;
 
 import command.*;
 import actor.config.MonitorActorConfig;
+import ecg.ecgshow.MyECGShowUI;
 import ecg.tcp.*;
 
 import javax.swing.*;
@@ -15,6 +16,9 @@ public class MonitorActor extends BaseActor{
     private static FileOutputStream fos;
     private  static TCPConfig TCPC;
     private TCPClient client;
+    private MainUiActor mainUiActor;
+    private MyECGShowUI myECGShowUI;
+    private JPanel ECGData;
 
     private String host=null;   //主机域名
     private String port=null;   //主机端口号
@@ -31,6 +35,9 @@ public class MonitorActor extends BaseActor{
     @Override
     protected boolean processActorRequest(Request request) {
         if(request== MainUiRequest.MAIN_UI_ECG_CONFIG){
+            mainUiActor=(MainUiActor)request.getConfig().getSendActor();
+            myECGShowUI=mainUiActor.getMyECGShowUI();
+
             data=request.getConfig().getData();
             TCPC = new TCPConfig( (JFrame)data,true);
             TCPC.setVisible(true);
@@ -48,7 +55,7 @@ public class MonitorActor extends BaseActor{
                 System.out.println("MonitorActor: "+Sex);
                 System.out.println("MonitorRequest.MONITOR_ECG_DATA");
 
-                client = new TCPClient();        //新建一个TCPClient()方法的实例client
+                client = new TCPClient(myECGShowUI);        //新建一个TCPClient()方法的实例client
                 client.setHost(host);    //设置主机
                 client.setPort(Integer.parseInt(port));    //设置端口
                 client.setID(Id);

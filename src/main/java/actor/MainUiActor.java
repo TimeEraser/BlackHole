@@ -12,6 +12,7 @@ import actor.Listener.SwitchListener;
 import actor.config.MainUiActorConfig;
 import com.alee.laf.WebLookAndFeel;
 import command.*;
+import ecg.ecgshow.MyECGShowUI;
 
 public class MainUiActor extends BaseActor{
 
@@ -22,6 +23,7 @@ public class MainUiActor extends BaseActor{
 	private MonitorActor monitorActor;
 	private BlackHoleActor blackHoleActor;
 	private MobileActor mobileActor;
+	private MyECGShowUI myECGShowUI;
 
 	private JFrame InitializationInterface;
 	private JPanel ECGAnalyse;
@@ -50,6 +52,7 @@ public class MainUiActor extends BaseActor{
 		CONTENT_FONT_SIZE=mainUiActorConfig.getCONTENT_FONT_SIZE();
 		LEFT = mainUiActorConfig.getLEFT();
 		TOP = mainUiActorConfig.getTOP();
+		myECGShowUI=new MyECGShowUI("ecg", 5000L);
 	}
 
 
@@ -281,6 +284,7 @@ public class MainUiActor extends BaseActor{
 		ECGData = new JPanel();
 		ECGData.setBorder(etchedBorder);
 		ECGData.setBounds((int)(WIDTH*0.05),(int)(HEIGHT*0.20),(int)(WIDTH*0.65),(int)(HEIGHT*0.65));
+		ECGData.add(myECGShowUI.getpanel_charts());
 		ECGPanel.add(ECGData);
 
 		ECGAnalyse = new JPanel();
@@ -297,4 +301,5 @@ public class MainUiActor extends BaseActor{
 	public JPanel getECGData(){return this.ECGData;}
 	public JPanel getCTData(){return this.CTData;}
 	public JPanel getCTFocus(){return this.CTFocus;}
+	public MyECGShowUI getMyECGShowUI(){return this.myECGShowUI;}
 }

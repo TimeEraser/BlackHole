@@ -332,7 +332,7 @@ public class MyECGShowUI extends JPanel {
 
 			JFreeChart jfreechart = new JFreeChart(xyplot);
 			jfreechart.setBackgroundPaint(new Color(237,237,237));//背景色为浅灰
-            jfreechart.getLegend().setPosition(RectangleEdge.RIGHT);
+            jfreechart.getLegend().setVisible(false);
 
 			ChartPanel chartpanel = new ChartPanel(jfreechart,
 				(int) lx * 10 / 20, (int) ly * 9 / 55, 0, 0,

@@ -135,9 +135,9 @@ public class DataRefresher extends Observable implements Observer,ActionListener
 								}
 							}
 							for(int j=0;j<MyECGShowUI.LEAD_COUNT;j++){
-								//ecgSerises[j].add(time, datas[j][currentPoint]);//该方法在超过指定长度后会将最久的数据丢弃
-								ecgSerises[j].add(time, 2000);//该方法在超过指定长度后会将最久的数据丢弃
-								ecgSerises[j+MyECGShowUI.LEAD_COUNT].add(time, 2000);//该方法在超过指定长度后会将最久的数据丢弃
+								ecgSerises[j].add(time, datas[j][currentPoint]);//该方法在超过指定长度后会将最久的数据丢弃
+								//ecgSerises[j].add(time, 2000);//该方法在超过指定长度后会将最久的数据丢弃
+								ecgSerises[j+MyECGShowUI.LEAD_COUNT].add(time, datas[j][currentPoint]);//该方法在超过指定长度后会将最久的数据丢弃
 							}
 							count++;
 							if(count==500){

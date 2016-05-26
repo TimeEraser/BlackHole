@@ -70,6 +70,12 @@ public class TCPClient extends Thread{  //跑多线程
 
 	public MyECGShowUI getMyECGShowUI(){return myECGShowUI;}
 
+	public TCPClient(MyECGShowUI myECGShowUI){
+		this.myECGShowUI=myECGShowUI;
+
+	}
+
+
 	@Override
 	public void run() {
 		// TODO Auto-generated method stub
@@ -95,13 +101,14 @@ public class TCPClient extends Thread{  //跑多线程
          /* Create and display the form */  //创建并且显示图表
 			java.awt.EventQueue.invokeLater(new Runnable() {
 				public void run() {
-					if (myECGShowUI == null) {
-						myECGShowUI = new MyECGShowUI("ecg", 5000L);
-						myECGShowUI.setBorder(BorderFactory.createEmptyBorder());
-
-					}
-					mainUiActor.getECGData().add(myECGShowUI.getpanel_charts());
-					mainUiActor.getECGAnalyse().add(myECGShowUI.getecgPanel());
+//					if (myECGShowUI == null) {
+//						myECGShowUI = new MyECGShowUI("ecg", 5000L);
+//						myECGShowUI.setBorder(BorderFactory.createEmptyBorder());
+//
+//					}
+					myECGShowUI.setBorder(BorderFactory.createEmptyBorder());
+//					mainUiActor.getECGData().add(myECGShowUI.getpanel_charts());
+//					mainUiActor.getECGAnalyse().add(myECGShowUI.getecgPanel());
 					mainUiActor.getMainUi().setVisible(true);
 				}
 			});
@@ -124,7 +131,7 @@ public class TCPClient extends Thread{  //跑多线程
 		int len = 0;	//初始化长度为0
 		int lenTemp;	//长度len的临时变量
 		while(true){		//这个方法就是做这个while循环
-			System.out.print(stopFlag);
+			//System.out.print(stopFlag);
 			if(stopFlag){		//如果停止传输
 				try {
 					MonitorActor.getFos().close();	//关闭（信息获取？）
@@ -144,7 +151,7 @@ public class TCPClient extends Thread{  //跑多线程
 					int frameLen = (receivedBuffer[2] & 0xFF)*256 + (receivedBuffer[1] & 0xFF)+3;	//帧长度frameLen
 
 					if(receivedBuffer[0]==0x01){
-						MonitorActor.getFos().write(receivedBuffer, 16, 3000);
+				//!!!		MonitorActor.getFos().write(receivedBuffer, 16, 3000);
 						myECGShowUI.getDataReFresher().refreshData(Arrays.copyOfRange(receivedBuffer, 16, 3016));
 					}
 
