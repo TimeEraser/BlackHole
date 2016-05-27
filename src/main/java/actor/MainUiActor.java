@@ -141,8 +141,12 @@ public class MainUiActor extends BaseActor{
 		Container contentPane = InitializationInterface.getContentPane();	//容器
 		Component CTComponent = createCTJPanel();							//内容块
 		Component ECGComponent = createECGJPanel();
+		Component GUARDComponent = createGUARDJPanel();
+		Component MOBILEComponent = createMOBILEJPanel();
 		contentPane.add(CTComponent);
 		contentPane.add(ECGComponent);
+		contentPane.add(GUARDComponent);
+		contentPane.add(MOBILEComponent);
 
 		JMenuBar mainMenu=new JMenuBar();
 		JMenu sys = new JMenu();
@@ -164,7 +168,7 @@ public class MainUiActor extends BaseActor{
 		mainMenu.add(ecg);
 
 		JMenu guard=new JMenu("");
-		guard.addMenuListener(new MenuSwitchListener(contentPane,null));
+		guard.addMenuListener(new MenuSwitchListener(contentPane,GUARDComponent));
 		guard.setHorizontalTextPosition(SwingConstants.RIGHT);
 		ImageIcon guardIcon = new ImageIcon(getIconImage("Icon/guard.png"));
 		guard.setIcon(guardIcon);
@@ -174,7 +178,7 @@ public class MainUiActor extends BaseActor{
 		mainMenu.add(guard);
 
 		JMenu mobile=new JMenu("");
-		mobile.addMenuListener(new MenuSwitchListener(contentPane,null));
+		mobile.addMenuListener(new MenuSwitchListener(contentPane,MOBILEComponent));
 		ImageIcon phoneIcon = new ImageIcon(getIconImage("Icon/phone.png"));
 		mobile.setIcon(phoneIcon);
 		JMenuItem mobile_config=new JMenuItem("连接手机");
@@ -203,6 +207,7 @@ public class MainUiActor extends BaseActor{
 		CTData.add(mandelDraw);
 		sendRequest(ctActor,CtRequest.CT_UI_CONFIG,mandelDraw);
 		CTPanel.add(CTData);
+
 		JPanel CTControl = new JPanel();
 		CTControl.setLayout(new FlowLayout(FlowLayout.CENTER));
 		//CTControl.setBorder(etchedBorder);
@@ -227,6 +232,7 @@ public class MainUiActor extends BaseActor{
 		CTPanel.setVisible(false);
 		return CTPanel;
 	}
+
 	private JPanel createECGJPanel(){
 		JPanel ECGPanel= new JPanel(null);
 		Border etchedBorder = BorderFactory.createEtchedBorder(EtchedBorder.LOWERED,Color.LIGHT_GRAY,Color.LIGHT_GRAY);
@@ -242,6 +248,7 @@ public class MainUiActor extends BaseActor{
 		ecgConfig.setIcon(new ImageIcon(getIconImage("Icon/config.png")));
 		ecgConfig.addActionListener(new NoticeListener(this,MainUiRequest.MAIN_UI_ECG_CONFIG,this));
 		ECGControl.add(ecgConfig);
+
 		JButton ecgStart = new JButton();
 		ecgStart.setText("开始传输");
 		ecgStart.setIcon(new ImageIcon(getIconImage("Icon/start.png")));
@@ -254,13 +261,14 @@ public class MainUiActor extends BaseActor{
 		buttonSwitchListener.setIcon(1,new ImageIcon(getIconImage("Icon/pause.png")));
 		buttonSwitchListener.setActionListener(1,new NoticeListener(monitorActor,MonitorRequest.MONITOR_ECG_STOP));
 		ecgStart.addActionListener(buttonSwitchListener);
-
 		ECGControl.add(ecgStart);
+
 		JButton ecgStop = new JButton();
 		ecgStop.setText("停止传输");
 		ecgStop.setIcon(new ImageIcon(getIconImage("Icon/stop.png")));
 		ecgStop.addActionListener(new NoticeListener(monitorActor,MonitorRequest.MONITOR_SHUTDOWM));
 		ECGControl.add(ecgStop);
+
 		JButton ecgAnalyse = new JButton();
 		ecgAnalyse.setText("心电图分析");
 		ecgAnalyse.setIcon(new ImageIcon(getIconImage("Icon/analyse.png")));
@@ -269,7 +277,7 @@ public class MainUiActor extends BaseActor{
 		ECGPanel.add(ECGControl);
 
 		JPanel ECGData = new JPanel();
-		ECGData.setBorder(etchedBorder);
+		//ECGData.setBorder(etchedBorder);
 		ECGData.setBounds((int)(WIDTH*0.05),(int)(HEIGHT*0.20),(int)(WIDTH*0.65),(int)(HEIGHT*0.65));
 		ECGShowUI ecgShowUI=new ECGShowUI("ecg", 5000L);
 		ECGData.add(ecgShowUI.getECGData());
@@ -277,13 +285,25 @@ public class MainUiActor extends BaseActor{
 		ECGPanel.add(ECGData);
 
 		JPanel ECGAnalyse = new JPanel();
-		ECGAnalyse.setBorder(etchedBorder);
+		//ECGAnalyse.setBorder(etchedBorder);
 		ECGAnalyse.setBounds((int)(WIDTH*0.75),(int)(HEIGHT*0.05),(int)(WIDTH*0.2),(int)(HEIGHT*0.8));
 		ECGPanel.add(ECGAnalyse);
 
 		ECGPanel.setVisible(false);
 		return ECGPanel;
 	}
+	private JPanel createGUARDJPanel(){
+		JPanel GUARDPanel= new JPanel(null);
+		GUARDPanel.setVisible(false);
+		return GUARDPanel;
+	}
+
+	private JPanel createMOBILEJPanel(){
+		JPanel MOBILEPanel= new JPanel(null);
+		MOBILEPanel.setVisible(false);
+		return MOBILEPanel;
+	}
+
 	private Map<String, String> getECGConnectInfo(){
 		TCPConfig tcpConfig = new TCPConfig(InitializationInterface,true);
 		tcpConfig.setVisible(true);

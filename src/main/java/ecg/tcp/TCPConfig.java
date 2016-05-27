@@ -32,8 +32,8 @@ public class TCPConfig extends JDialog {		//TCP配置界面
         jLabel3 = new JLabel();
         jLabel4 = new JLabel();
         jLabel5 = new JLabel();
-        jTextField1 = new JTextField();
-        jTextField2 = new JTextField();
+        jTextField1 = new JTextField("192.168.1.101");
+        jTextField2 = new JTextField("60129");
         jTextField3 = new JTextField();
         jTextField4 = new JTextField();
         jRadioButton1=new JRadioButton("男") ;

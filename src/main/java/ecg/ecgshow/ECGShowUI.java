@@ -36,7 +36,8 @@ public class ECGShowUI extends JPanel {
     private javax.swing.JScrollPane jScrollPane1;
     // End of variables declaration//GEN-END:variables
     public static final int LEAD_COUNT=3;
-	private JPanel ecgPanel;
+	private JPanel ECGInfo;
+
     //Init Element
     private Integer WIDTH;
     private Integer HEIGHT;
@@ -74,7 +75,7 @@ public class ECGShowUI extends JPanel {
 	
     public ECGShowUI(String title, long timeZone) {		//构造方法
     	super();
-       // initComponents(timeZone);
+        initComponents(timeZone);
         WIDTH = (int)Toolkit.getDefaultToolkit().getScreenSize().getWidth();
         HEIGHT = (int)Toolkit.getDefaultToolkit().getScreenSize().getHeight();
         createECGData(timeZone);
@@ -130,7 +131,7 @@ public class ECGShowUI extends JPanel {
             jfreechart.getLegend().setVisible(false);
 
             ChartPanel chartpanel = new ChartPanel(jfreechart,
-                    (int) (WIDTH * 10 / 20), (int) (HEIGHT * 9 / 55), 0, 0,
+                    (int) (WIDTH * 51/ 100), (int) (HEIGHT * 17/100), 0, 0,
                     Integer.MAX_VALUE, Integer.MAX_VALUE, true, true, false,
                     true, false, false);
 
@@ -173,7 +174,7 @@ public class ECGShowUI extends JPanel {
         lblId = new JLabel();
         label_OP = new JLabel();
         
-        ecgPanel = new JPanel();
+        ECGInfo = new JPanel();
         panel_PI = new JPanel();
         panel_OP = new JPanel();
 
@@ -200,175 +201,75 @@ public class ECGShowUI extends JPanel {
         lblId.setText("id");
         label_OP.setText("操作：");
 
-        javax.swing.GroupLayout ecgPanelLayout = new javax.swing.GroupLayout(ecgPanel);
-        ecgPanel.setLayout(ecgPanelLayout);
-        ecgPanelLayout.setHorizontalGroup(
-          ecgPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(ecgPanelLayout.createSequentialGroup()
-                .addGroup(ecgPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                	.addGroup(ecgPanelLayout.createSequentialGroup()
+        javax.swing.GroupLayout ECGInfoLayout = new javax.swing.GroupLayout(ECGInfo);
+        ECGInfo.setLayout(ECGInfoLayout);
+        ECGInfoLayout.setHorizontalGroup(
+          ECGInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(ECGInfoLayout.createSequentialGroup()
+                .addGroup(ECGInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                	.addGroup(ECGInfoLayout.createSequentialGroup()
                          .addGap(20, 20, 20)
                          .addComponent(label_HI))
-                    .addGroup(ecgPanelLayout.createSequentialGroup()
+                    .addGroup(ECGInfoLayout.createSequentialGroup()
                         .addGap(20, 20, 20)
                         .addComponent(label_HB)
                         .addGap(2, 2, 2)
                         .addComponent(lblBeat))
-                    .addGroup(ecgPanelLayout.createSequentialGroup()
+                    .addGroup(ECGInfoLayout.createSequentialGroup()
                         .addGap(20, 20, 20)
                         .addComponent(label_APB)
                         .addGap(2, 2, 2)
                         .addComponent(isAPCLabel))
-                    .addGroup(ecgPanelLayout.createSequentialGroup()
+                    .addGroup(ECGInfoLayout.createSequentialGroup()
                         .addGap(20, 20, 20)
                         .addComponent(label_VPB)
                         .addGap(2, 2, 2)
                         .addComponent(isPVCLabel))
-                    .addGroup(ecgPanelLayout.createSequentialGroup()
+                    .addGroup(ECGInfoLayout.createSequentialGroup()
                         .addGap(20, 20, 20)
                         .addComponent(label_HT)
                         .addGap(2, 2, 2)
                         .addComponent(isBeatLabel)))
                 .addContainerGap(2, Short.MAX_VALUE))
         );
-        ecgPanelLayout.setVerticalGroup(
-        	ecgPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-             .addGroup(ecgPanelLayout.createSequentialGroup()
-                .addGroup(ecgPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(ecgPanelLayout.createSequentialGroup()
+        ECGInfoLayout.setVerticalGroup(
+        	ECGInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+             .addGroup(ECGInfoLayout.createSequentialGroup()
+                .addGroup(ECGInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(ECGInfoLayout.createSequentialGroup()
                         .addGap(10, 10, 10)
                         .addComponent(label_HI)))
-                .addGroup(ecgPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(ecgPanelLayout.createSequentialGroup()
+                .addGroup(ECGInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(ECGInfoLayout.createSequentialGroup()
                         .addGap(10, 10, 10)
                         .addComponent(label_HB))
-                    .addGroup(ecgPanelLayout.createSequentialGroup()
+                    .addGroup(ECGInfoLayout.createSequentialGroup()
                         .addGap(10, 10, 10)
                         .addComponent(lblBeat)))
-                .addGroup(ecgPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(ecgPanelLayout.createSequentialGroup()
+                .addGroup(ECGInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(ECGInfoLayout.createSequentialGroup()
                         .addGap(10, 10, 10)
                         .addComponent(label_APB))
-                    .addGroup(ecgPanelLayout.createSequentialGroup()
+                    .addGroup(ECGInfoLayout.createSequentialGroup()
                         .addGap(10, 10, 10)
                         .addComponent(isAPCLabel)))
-                .addGroup(ecgPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(ecgPanelLayout.createSequentialGroup()
+                .addGroup(ECGInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(ECGInfoLayout.createSequentialGroup()
                         .addGap(10, 10, 10)
                         .addComponent(label_VPB))
-                    .addGroup(ecgPanelLayout.createSequentialGroup()
+                    .addGroup(ECGInfoLayout.createSequentialGroup()
                         .addGap(10, 10, 10)
                         .addComponent(isPVCLabel)))
-                .addGroup(ecgPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(ecgPanelLayout.createSequentialGroup()
+                .addGroup(ECGInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(ECGInfoLayout.createSequentialGroup()
                         .addGap(10, 10, 10)
                         .addComponent(label_HT))
-                    .addGroup(ecgPanelLayout.createSequentialGroup()
+                    .addGroup(ECGInfoLayout.createSequentialGroup()
                         .addGap(10, 10, 10)
                         .addComponent(isBeatLabel)))
                 .addContainerGap(10, Short.MAX_VALUE))
         );
 
-        
-        javax.swing.GroupLayout panel_PILayout = new javax.swing.GroupLayout(panel_PI);
-        panel_PI.setLayout(panel_PILayout);
-        panel_PILayout.setHorizontalGroup(
-        	panel_PILayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panel_PILayout.createSequentialGroup()
-                .addGroup(panel_PILayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                	.addGroup(panel_PILayout.createSequentialGroup()
-                         .addGap(20, 20, 20)
-                         .addComponent(label_PI))
-                    .addGroup(panel_PILayout.createSequentialGroup()
-                        .addGap(20, 20, 20)
-                        .addComponent(label_Name)
-                        .addGap(2, 2, 2)
-                        .addComponent(lblName))
-                    .addGroup(panel_PILayout.createSequentialGroup()
-                        .addGap(20, 20, 20)
-                        .addComponent(label_ID)
-                        .addGap(2, 2, 2)
-                        .addComponent(lblId)))
-                .addContainerGap(90, Short.MAX_VALUE))
-        );
-        panel_PILayout.setVerticalGroup(
-        	panel_PILayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panel_PILayout.createSequentialGroup()
-                .addGroup(panel_PILayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(panel_PILayout.createSequentialGroup()
-                        .addGap(10, 10, 10)
-                        .addComponent(label_PI)))
-                .addGroup(panel_PILayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(panel_PILayout.createSequentialGroup()
-                        .addGap(10, 10, 10)
-                        .addComponent(label_Name))
-                    .addGroup(panel_PILayout.createSequentialGroup()
-                        .addGap(10, 10, 10)
-                        .addComponent(lblName)))
-                .addGroup(panel_PILayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(panel_PILayout.createSequentialGroup()
-                        .addGap(10, 10, 10)
-                        .addComponent(label_ID))
-                    .addGroup(panel_PILayout.createSequentialGroup()
-                        .addGap(10, 10, 10)
-                        .addComponent(lblId)))
-                .addContainerGap(10, Short.MAX_VALUE))
-        );
-        
-        javax.swing.GroupLayout panel_OPLayout = new javax.swing.GroupLayout(panel_OP);
-        panel_OP.setLayout(panel_OPLayout);
-        panel_OPLayout.setHorizontalGroup(
-        	panel_OPLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panel_OPLayout.createSequentialGroup()
-                .addGroup(panel_OPLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                	.addGroup(panel_OPLayout.createSequentialGroup()
-                         .addGap(20, 20, 20)
-                         .addComponent(label_OP))
-                    .addGroup(panel_OPLayout.createSequentialGroup()
-                        .addGap(20, 20, 20)
-                        .addComponent(showException)
-                        .addGap(2, 2, 2)
-                        .addComponent(stopRefresh)))
-                .addContainerGap(90, Short.MAX_VALUE))
-        );
-        panel_OPLayout.setVerticalGroup(
-        	panel_OPLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panel_OPLayout.createSequentialGroup()
-                .addGroup(panel_OPLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(panel_OPLayout.createSequentialGroup()
-                        .addGap(10, 10, 10)
-                        .addComponent(label_OP)))
-                .addGroup(panel_OPLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(panel_OPLayout.createSequentialGroup()
-                        .addGap(10, 10, 10)
-                        .addComponent(showException))
-                    .addGroup(panel_OPLayout.createSequentialGroup()
-                        .addGap(10, 10, 10)
-                        .addComponent(stopRefresh)))
-                .addContainerGap(10, Short.MAX_VALUE))
-        );
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        //
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(30, 30, 30)
-                        .addComponent(ECGData, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        )
-                    )
-                .addContainerGap(20, Short.MAX_VALUE))
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                    //
-                .addGap(10, 10, 10)
-                .addComponent(ECGData, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(20, Short.MAX_VALUE))
-        );
 
         jScrollPane1.setViewportView(jPanel1);
 
@@ -392,7 +293,7 @@ public class ECGShowUI extends JPanel {
     public static void main(String args[]) {
         /* Create and display the form */
         JFrame jFrame=new JFrame();
-        jFrame.setContentPane(new ECGShowUI("",5000L));
+        jFrame.setContentPane(new ECGShowUI("",5000L).ECGInfo);
         jFrame.pack();
         jFrame.setVisible(true);
         java.awt.EventQueue.invokeLater(new Runnable() {
@@ -402,7 +303,7 @@ public class ECGShowUI extends JPanel {
         });
     }
 
-    public JPanel getecgPanel(){return ecgPanel;}
+    public JPanel getECGInfo(){return ECGInfo;}
     public JPanel getECGData(){return ECGData;}
 
     public TimeSeries[] getECGSeries() {

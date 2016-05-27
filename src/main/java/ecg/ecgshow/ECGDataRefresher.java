@@ -19,7 +19,7 @@ import org.jfree.data.time.Millisecond;
 import org.jfree.data.time.TimeSeries;
 
 //数据刷新
-public class ECGDataRefresher extends Observable implements Observer,ActionListener {
+public class ECGDataRefresher extends Observable implements Observer{
 	public static final int SAMPLING=500;		//取样时间
 	public static final int MAX_TIME=1;			//最大时间
 	public static final int DATA_LENGTH=SAMPLING*MAX_TIME;//数据长度
@@ -161,7 +161,7 @@ public class ECGDataRefresher extends Observable implements Observer,ActionListe
 			else{
 				System.out.println("数据尚未准备好！");
 			}
-		}	
+		}	//run()  end
 	}
 
 	class ReadFileDataTask extends TimerTask{
@@ -186,14 +186,7 @@ public class ECGDataRefresher extends Observable implements Observer,ActionListe
 		System.out.println("已更新");
 		
 	}
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		System.out.println("get it");
-		stopFlag=!stopFlag;
-		JButton button=(JButton) e.getSource();
-		String text=stopFlag?"开始":"暂停";
-		button.setText(text);
-	}
+
 
 	public void setStopFlag(){
 		stopFlag=true;

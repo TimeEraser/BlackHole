@@ -30,9 +30,9 @@ public class MonitorActor extends BaseActor{
 
     @Override
     protected boolean processActorRequest(Request request) {
-        if(request==MainUiRequest.MAIN_UI_ECG_STOP){
-            //client.stopFlag =true;
-            sendResponse(request,MonitorResponse.MONITOR_SHUTDOWM);
+        if(request==MonitorRequest.MONITOR_SHUTDOWM){
+            client.stopFlag =true;
+            ecgDataRefresher.setStopFlag();
             System.out.println("client.stopFlag =true");
         }
         if(request==MonitorRequest.MONITOR_ECG_DATA) {
@@ -44,6 +44,7 @@ public class MonitorActor extends BaseActor{
             ecgDataRefresher=new ECGDataRefresher(ecgShowUI.getECGSeries(),ecgShowUI.getDateAxises());
         }
         if(request==MonitorRequest.MONITOR_ECG_START){
+            client.stopFlag = false;
             ecgDataRefresher.setStartFlag();
         }
         if(request==MonitorRequest.MONITOR_ECG_STOP)
@@ -79,6 +80,9 @@ public class MonitorActor extends BaseActor{
             client.stopFlag = false;
             //client.setMainUiActor((MainUiActor) request.getConfig().getSendActor());
             client.start();        //客户端线程开始运行
+        }
+        else{
+            return false;
         }
         ecgDataRefresher.start();
         return false;

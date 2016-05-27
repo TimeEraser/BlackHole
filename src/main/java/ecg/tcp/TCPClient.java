@@ -82,6 +82,7 @@ public class TCPClient extends Thread{  //跑多线程
 			//is.close();
 			s.shutdownInput();
 			s.close();
+			connectFlag =false;
 			System.out.println("关闭成功！");
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -94,12 +95,6 @@ public class TCPClient extends Thread{  //跑多线程
 		try {
 			s = new Socket(host, port);	//用host和 port初始化Socket类的s变量
 			connectFlag = true;		//	连接标志为true
-         /* Create and display the form */  //创建并且显示图表
-			java.awt.EventQueue.invokeLater(new Runnable() {
-				public void run() {
-					ecgShowUI.setBorder(BorderFactory.createEmptyBorder());
-				}
-			});
 		} catch (UnknownHostException e) {		//public void connect()对应的异常处理。未知的主机异常
 			// TODO Auto-generated catch block
 			e.printStackTrace();	//打印栈的跟踪
@@ -113,7 +108,7 @@ public class TCPClient extends Thread{  //跑多线程
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-	}
+	}  //connect() end
 
 	public void startReceive(){		//开始接收,startReceive方法
 		int len = 0;	//初始化长度为0
@@ -121,13 +116,13 @@ public class TCPClient extends Thread{  //跑多线程
 		while(true){		//这个方法就是做这个while循环
 			//System.out.print(stopFlag);
 			if(stopFlag){		//如果停止传输
-				try {
-					MonitorActor.getFos().close();	//关闭（信息获取？）
-					ecgShowUI.setVisible(false);
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+//				try {
+//					MonitorActor.getFos().close();	//关闭（信息获取？）
+//					ecgShowUI.setVisible(false);
+//				} catch (IOException e) {
+//					// TODO Auto-generated catch block
+//					e.printStackTrace();
+//				}
 				break;	//停止传输的话就跳出循环
 			}
 			try {		//如果没有停止传输
@@ -142,8 +137,8 @@ public class TCPClient extends Thread{  //跑多线程
 				//!!!		MonitorActor.getFos().write(receivedBuffer, 16, 3000);
 						ecgDataRefresher.refreshData(Arrays.copyOfRange(receivedBuffer, 16, 3016));
 					}
-					System.out.println(len);
-					System.out.println(frameLen);
+//					System.out.println(len);		//打印接收到的信息
+//					System.out.println(frameLen);	//打印接收到的信息
 					System.arraycopy(receivedBuffer, frameLen, receivedBuffer, 0, len - frameLen);	//更新receivedBuffer
 					len = len - frameLen;
 				}
@@ -152,6 +147,6 @@ public class TCPClient extends Thread{  //跑多线程
 				e.printStackTrace();
 			}
 		}
-	}
+	}  //startReceive()  end
 
 }
