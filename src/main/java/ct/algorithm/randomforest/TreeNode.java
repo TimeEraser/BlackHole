@@ -1,4 +1,4 @@
-package com.zju.lab.ct.algorithm.randomforest;
+package ct.algorithm.randomforest;
 
 import java.io.Serializable;
 

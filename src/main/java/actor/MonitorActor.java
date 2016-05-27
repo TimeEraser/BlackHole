@@ -3,10 +3,9 @@ package actor;
 import command.*;
 import actor.config.MonitorActorConfig;
 import ecg.ecgshow.ECGDataRefresher;
-import ecg.ecgshow.MyECGShowUI;
+import ecg.ecgshow.ECGShowUI;
 import ecg.tcp.*;
 
-import javax.swing.*;
 import java.io.FileOutputStream;
 import java.util.Map;
 
@@ -16,16 +15,11 @@ import java.util.Map;
 public class MonitorActor extends BaseActor{
 
     private static FileOutputStream fos;
+    Map connectInfo;
+    private ECGShowUI ecgShowUI;
 
-    private MyECGShowUI myECGShowUI;
-
-    public MyECGShowUI getMyECGShowUI() {
-        return myECGShowUI;
-    }
-
-    public void setMyECGShowUI(MyECGShowUI myECGShowUI) {
-        this.myECGShowUI = myECGShowUI;
-        ecgDataRefresher=new ECGDataRefresher(myECGShowUI.getECGSeries(),myECGShowUI.getDateAxises());
+    public ECGShowUI getMyECGShowUI() {
+        return ecgShowUI;
     }
 
     private ECGDataRefresher ecgDataRefresher;
@@ -42,30 +36,12 @@ public class MonitorActor extends BaseActor{
             System.out.println("client.stopFlag =true");
         }
         if(request==MonitorRequest.MONITOR_ECG_DATA) {
-            Map connectInfo = (Map) request.getConfig().getData();
-            String host= (String) connectInfo.get("host");//主机域名
-            String port=(String) connectInfo.get("port");//主机端口号
-            String Id=(String) connectInfo.get("Id"); //档案ID
-            String Name = (String) connectInfo.get("Name");//姓名
-            String Sex = (String) connectInfo.get("Sex");
-            System.out.println("MonitorActor: host ="+host);
-            System.out.println("MonitorActor: port ="+port);
-            System.out.println("MonitorActor: id ="+Id);
-            System.out.println("MonitorActor: name ="+Name);
-            System.out.println("MonitorActor: sex ="+Sex);
-            System.out.println("MonitorRequest.MONITOR_ECG_DATA");
-            if((host!=null)&&(port!=null)) {
-                client = new TCPClient(ecgDataRefresher);        //新建一个TCPClient()方法的实例client
-                client.setHost(host);    //设置主机
-                client.setPort(Integer.parseInt(port));    //设置端口
-                client.setID(Id);
-                client.setNAME(Name);
-                client.setSEX(Sex);
-                client.stopFlag = false;
-                //client.setMainUiActor((MainUiActor) request.getConfig().getSendActor());
-                client.start();        //客户端线程开始运行
-            }
-            ecgDataRefresher.start();
+            connectInfo= (Map) request.getConfig().getData();
+            start();
+        }
+        if(request==MonitorRequest.ECG_UI_CONFIG){
+            ecgShowUI = (ECGShowUI)request.getConfig().getData();
+            ecgDataRefresher=new ECGDataRefresher(ecgShowUI.getECGSeries(),ecgShowUI.getDateAxises());
         }
         if(request==MonitorRequest.MONITOR_ECG_START){
             ecgDataRefresher.setStartFlag();
@@ -82,6 +58,29 @@ public class MonitorActor extends BaseActor{
 
     @Override
     public boolean start() {
+        String host= (String) connectInfo.get("host");//主机域名
+        String port=(String) connectInfo.get("port");//主机端口号
+        String Id=(String) connectInfo.get("Id"); //档案ID
+        String Name = (String) connectInfo.get("Name");//姓名
+        String Sex = (String) connectInfo.get("Sex");
+        System.out.println("MonitorActor: host ="+host);
+        System.out.println("MonitorActor: port ="+port);
+        System.out.println("MonitorActor: id ="+Id);
+        System.out.println("MonitorActor: name ="+Name);
+        System.out.println("MonitorActor: sex ="+Sex);
+        System.out.println("MonitorRequest.MONITOR_ECG_DATA");
+        if((host!=null)&&(port!=null)) {
+            client = new TCPClient(ecgDataRefresher);        //新建一个TCPClient()方法的实例client
+            client.setHost(host);    //设置主机
+            client.setPort(Integer.parseInt(port));    //设置端口
+            client.setID(Id);
+            client.setNAME(Name);
+            client.setSEX(Sex);
+            client.stopFlag = false;
+            //client.setMainUiActor((MainUiActor) request.getConfig().getSendActor());
+            client.start();        //客户端线程开始运行
+        }
+        ecgDataRefresher.start();
         return false;
     }
 

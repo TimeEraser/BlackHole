@@ -10,6 +10,7 @@ public enum  MonitorRequest implements Request {
     MONITOR_ECG_DATA,
     MONITOR_ECG_START,
     MONITOR_ECG_STOP,
+    ECG_UI_CONFIG,
     MONITOR_BLOOD_OXYGEN,
     MONITOR_SHUTDOWM,
     MONITOR_PRESSURE_DATA;

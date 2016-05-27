@@ -30,7 +30,7 @@ public class ECGDataRefresher extends Observable implements Observer,ActionListe
 	private DateAxis[] dateAxises;          //时间轴
 	private String filePath;				//文件路径
 	private Millisecond time;				//几个毫秒
-	private short[][] datas=new short[MyECGShowUI.LEAD_COUNT][DATA_LENGTH];	//短整型二维数组
+	private short[][] datas=new short[ECGShowUI.LEAD_COUNT][DATA_LENGTH];	//短整型二维数组
 	private volatile int currentPoint=2;	//用于多线程的变量，现在的点
 	private boolean stopFlag=true;			//停止标志
 	private boolean everStop=false;
@@ -64,22 +64,22 @@ public class ECGDataRefresher extends Observable implements Observer,ActionListe
 	
 	private short[][] readFileByBytes(String fileName) {
 		//三导联。每导联10秒，采样率为500/s
-		short[][] res=new short[MyECGShowUI.LEAD_COUNT][DATA_LENGTH];
+		short[][] res=new short[ECGShowUI.LEAD_COUNT][DATA_LENGTH];
         InputStream in = null;
         
         try {
         	//每次读三导联的一秒
-        	byte[] tempbytes = new byte[SAMPLING*MyECGShowUI.LEAD_COUNT*2];
+        	byte[] tempbytes = new byte[SAMPLING* ECGShowUI.LEAD_COUNT*2];
             in = new FileInputStream(fileName);
             int num=0;
             int numOfBytes;
             while ((numOfBytes=in.read(tempbytes))!= -1) {
-            	for (int i = 0; i < MyECGShowUI.LEAD_COUNT; i++) {
-            		for (int j = i*numOfBytes/MyECGShowUI.LEAD_COUNT; j < (i+1)*numOfBytes/MyECGShowUI.LEAD_COUNT; j+=2) {
-            			res[i][num+(j-i*numOfBytes/MyECGShowUI.LEAD_COUNT)/2]=(short)(((tempbytes[j]&0xff)<<8)|(tempbytes[j+1]&0xff));
+            	for (int i = 0; i < ECGShowUI.LEAD_COUNT; i++) {
+            		for (int j = i*numOfBytes/ ECGShowUI.LEAD_COUNT; j < (i+1)*numOfBytes/ ECGShowUI.LEAD_COUNT; j+=2) {
+            			res[i][num+(j-i*numOfBytes/ ECGShowUI.LEAD_COUNT)/2]=(short)(((tempbytes[j]&0xff)<<8)|(tempbytes[j+1]&0xff));
             		}
 				}
-            	num+=numOfBytes/MyECGShowUI.LEAD_COUNT/2;
+            	num+=numOfBytes/ ECGShowUI.LEAD_COUNT/2;
             }
             
         }catch (FileNotFoundException e){
@@ -108,9 +108,9 @@ public class ECGDataRefresher extends Observable implements Observer,ActionListe
 	
 	public void refreshData(byte[] message){
 		int numOfBytes=message.length;
-		for (int i = 0; i < MyECGShowUI.LEAD_COUNT; i++) {
-    		for (int j = i*numOfBytes/MyECGShowUI.LEAD_COUNT; j < (i+1)*numOfBytes/MyECGShowUI.LEAD_COUNT; j+=2) {
-    			datas[i][(j-i*numOfBytes/MyECGShowUI.LEAD_COUNT)/2]=(short)(((message[j]&0xff)<<8)|(message[j+1]&0xff));
+		for (int i = 0; i < ECGShowUI.LEAD_COUNT; i++) {
+    		for (int j = i*numOfBytes/ ECGShowUI.LEAD_COUNT; j < (i+1)*numOfBytes/ ECGShowUI.LEAD_COUNT; j+=2) {
+    			datas[i][(j-i*numOfBytes/ ECGShowUI.LEAD_COUNT)/2]=(short)(((message[j]&0xff)<<8)|(message[j+1]&0xff));
     		}
 		}
 	}
@@ -137,10 +137,10 @@ public class ECGDataRefresher extends Observable implements Observer,ActionListe
 								everStop=false;
 								count=0;
 							}
-							for(int j=0;j<MyECGShowUI.LEAD_COUNT;j++){
+							for(int j = 0; j< ECGShowUI.LEAD_COUNT; j++){
 								ecgSerises[j].add(time, 2000);//该方法在超过指定长度后会将最久的数据丢弃
 								//ecgSerises[j].add(time, 2000);//该方法在超过指定长度后会将最久的数据丢弃
-								ecgSerises[j+MyECGShowUI.LEAD_COUNT].add(time, datas[j][currentPoint]);//该方法在超过指定长度后会将最久的数据丢弃
+								ecgSerises[j+ ECGShowUI.LEAD_COUNT].add(time, datas[j][currentPoint]);//该方法在超过指定长度后会将最久的数据丢弃
 							}
 							count++;
 							if(count==500){

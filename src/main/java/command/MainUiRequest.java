@@ -4,6 +4,7 @@ import command.config.CommandConfig;
 
 public enum  MainUiRequest implements Request {
 	MAIN_UI_CT_CONFIG,
+	MAIN_UI_CT_OPEN,
 	MAIN_UI_CT_ANALYSIS,
 	MAIN_UI_ECG_CONFIG,
 	MAIN_UI_ECG_ANALYSIS,

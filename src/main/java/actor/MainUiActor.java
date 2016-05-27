@@ -15,8 +15,9 @@ import actor.Listener.MenuSwitchListener;
 import actor.config.MainUiActorConfig;
 import com.alee.laf.WebLookAndFeel;
 import command.*;
+import ct.ctshow.MandelDraw;
 import ecg.ecgshow.ECGDataRefresher;
-import ecg.ecgshow.MyECGShowUI;
+import ecg.ecgshow.ECGShowUI;
 import ecg.tcp.TCPConfig;
 
 public class MainUiActor extends BaseActor{
@@ -38,7 +39,6 @@ public class MainUiActor extends BaseActor{
 	private Integer LEFT;
 	private Integer TOP;
 
-
 	public MainUiActor(MainUiActorConfig mainUiActorConfig){
 		ctActor=mainUiActorConfig.getCtActor();
 		guardActor=mainUiActorConfig.getGuardActor();
@@ -58,20 +58,25 @@ public class MainUiActor extends BaseActor{
 	@Override
 	public boolean processActorRequest(Request  request) {
 		if(request==SystemRequest.BOOT)
-			this.start();
+			start();
 		if(request==MainUiRequest.MAIN_UI_ECG_CONFIG)
-			createECGConfigDialog();
+			sendRequest(monitorActor,MonitorRequest.MONITOR_ECG_DATA,getECGConnectInfo());
+		if(request==MainUiRequest.MAIN_UI_CT_OPEN)
+			sendRequest(ctActor,CtRequest.CT_OPEN_IMG,getCTImagePath());
 		return false;
 	}
 
 	@Override
-	public boolean processActorResponse(Response responses) {
-		if(responses==GuardResponse.GUARD_ERROR){
+	public boolean processActorResponse(Response response) {
+		if(response==GuardResponse.GUARD_ERROR){
 			System.out.print("GuardResponse.GUARD_ERROR");
 			return true;
 		}
-		if(responses==MonitorResponse.MONITOR_SHUTDOWM){
+		if(response==MonitorResponse.MONITOR_SHUTDOWM){
 			return true;
+		}
+		if(response==CtResponse.CT_OPEN_IMG) {
+			System.out.print(response.getConfig().getData());
 		}
 		return false;
 	}
@@ -189,11 +194,15 @@ public class MainUiActor extends BaseActor{
 		JPanel CTPanel= new JPanel(null);
 		Border etchedBorder = BorderFactory.createEtchedBorder(EtchedBorder.LOWERED,Color.LIGHT_GRAY,Color.LIGHT_GRAY);
 		CTPanel.setBounds(0,0,WIDTH,(int)(HEIGHT*0.9));
-		JPanel CTData = new JPanel();
+		MandelDraw mandelDraw=new MandelDraw();
+
+		JPanel CTData = new JPanel(new FlowLayout(FlowLayout.CENTER));
 		CTData.setBorder(etchedBorder);
 		CTData.setBounds((int)(WIDTH*0.05),(int)(HEIGHT*0.02),(int)(WIDTH*0.65),(int)(HEIGHT*0.81));
+		GridBagConstraints c = new GridBagConstraints();
+		CTData.add(mandelDraw);
+		sendRequest(ctActor,CtRequest.CT_UI_CONFIG,mandelDraw);
 		CTPanel.add(CTData);
-
 		JPanel CTControl = new JPanel();
 		CTControl.setLayout(new FlowLayout(FlowLayout.CENTER));
 		//CTControl.setBorder(etchedBorder);
@@ -201,7 +210,7 @@ public class MainUiActor extends BaseActor{
 		JButton CTOpen = new JButton();
 		CTOpen.setText("打开CT图片");
 		CTOpen.setIcon(new ImageIcon(getIconImage("Icon/open.png")));
-		CTOpen.addActionListener(new NoticeListener(this,ctActor,MainUiRequest.MAIN_UI_CT_CONFIG));
+		CTOpen.addActionListener(new NoticeListener(this,MainUiRequest.MAIN_UI_CT_OPEN));
 		CTControl.add(CTOpen);
 		JButton CTAnalyse = new JButton();
 		CTAnalyse.setText("分析CT病灶");
@@ -215,11 +224,9 @@ public class MainUiActor extends BaseActor{
 		CTFocus.setBounds((int)(WIDTH*0.75),(int)(HEIGHT*0.25),(int)(WIDTH*0.2),(int)(HEIGHT*0.6));
 		CTFocus.setLayout(new GridLayout(2,1));
 		CTPanel.add(CTFocus);
-
 		CTPanel.setVisible(false);
 		return CTPanel;
 	}
-	private ECGDataRefresher ecgDataRefresher;
 	private JPanel createECGJPanel(){
 		JPanel ECGPanel= new JPanel(null);
 		Border etchedBorder = BorderFactory.createEtchedBorder(EtchedBorder.LOWERED,Color.LIGHT_GRAY,Color.LIGHT_GRAY);
@@ -247,6 +254,7 @@ public class MainUiActor extends BaseActor{
 		buttonSwitchListener.setIcon(1,new ImageIcon(getIconImage("Icon/pause.png")));
 		buttonSwitchListener.setActionListener(1,new NoticeListener(monitorActor,MonitorRequest.MONITOR_ECG_STOP));
 		ecgStart.addActionListener(buttonSwitchListener);
+
 		ECGControl.add(ecgStart);
 		JButton ecgStop = new JButton();
 		ecgStop.setText("停止传输");
@@ -263,9 +271,9 @@ public class MainUiActor extends BaseActor{
 		JPanel ECGData = new JPanel();
 		ECGData.setBorder(etchedBorder);
 		ECGData.setBounds((int)(WIDTH*0.05),(int)(HEIGHT*0.20),(int)(WIDTH*0.65),(int)(HEIGHT*0.65));
-		MyECGShowUI ecgShowUI=new MyECGShowUI("ecg", 5000L);
+		ECGShowUI ecgShowUI=new ECGShowUI("ecg", 5000L);
 		ECGData.add(ecgShowUI.getECGData());
-		monitorActor.setMyECGShowUI(ecgShowUI);
+		sendRequest(monitorActor,MonitorRequest.ECG_UI_CONFIG,ecgShowUI);
 		ECGPanel.add(ECGData);
 
 		JPanel ECGAnalyse = new JPanel();
@@ -276,7 +284,7 @@ public class MainUiActor extends BaseActor{
 		ECGPanel.setVisible(false);
 		return ECGPanel;
 	}
-	private void createECGConfigDialog(){
+	private Map<String, String> getECGConnectInfo(){
 		TCPConfig tcpConfig = new TCPConfig(InitializationInterface,true);
 		tcpConfig.setVisible(true);
 		String host=tcpConfig.getjTextField1().getText();//主机域名
@@ -290,6 +298,16 @@ public class MainUiActor extends BaseActor{
 		connectInfo.put("Id",Id);
 		connectInfo.put("Name",Name);
 		connectInfo.put("Sex",Sex);
-		sendRequest(monitorActor,MonitorRequest.MONITOR_ECG_DATA,connectInfo);
+		return connectInfo;
+	}
+	private  String getCTImagePath(){
+		String imagePath=null;
+		JFileChooser fileChooser = new JFileChooser();
+		fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+		int returnVal = fileChooser.showOpenDialog(null);
+		if(returnVal==fileChooser.APPROVE_OPTION){
+			imagePath = fileChooser.getSelectedFile().getAbsolutePath();
+		}
+		return imagePath;
 	}
 }

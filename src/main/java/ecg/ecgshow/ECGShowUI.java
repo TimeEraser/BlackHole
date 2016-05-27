@@ -7,8 +7,6 @@
 package ecg.ecgshow;
 
 import java.awt.*;
-import java.util.HashMap;
-import java.util.Map;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -29,7 +27,7 @@ import org.jfree.ui.RectangleInsets;
  *
  * @author MCH
  */
-public class MyECGShowUI extends JPanel {
+public class ECGShowUI extends JPanel {
 
 	// Variables declaration - do not modify//GEN-BEGIN:variables
     private JPanel contentPane=new JPanel();
@@ -38,7 +36,6 @@ public class MyECGShowUI extends JPanel {
     private javax.swing.JScrollPane jScrollPane1;
     // End of variables declaration//GEN-END:variables
     public static final int LEAD_COUNT=3;
-	private ECGDataRefresher ECGDataReFresher;
 	private JPanel ecgPanel;
     //Init Element
     private Integer WIDTH;
@@ -75,7 +72,7 @@ public class MyECGShowUI extends JPanel {
 //	private Analizer analizer;	
 	
 	
-    public MyECGShowUI(String title, long timeZone) {		//构造方法
+    public ECGShowUI(String title, long timeZone) {		//构造方法
     	super();
        // initComponents(timeZone);
         WIDTH = (int)Toolkit.getDefaultToolkit().getScreenSize().getWidth();
@@ -395,19 +392,16 @@ public class MyECGShowUI extends JPanel {
     public static void main(String args[]) {
         /* Create and display the form */
         JFrame jFrame=new JFrame();
-        jFrame.setContentPane(new MyECGShowUI("",5000L));
+        jFrame.setContentPane(new ECGShowUI("",5000L));
         jFrame.pack();
         jFrame.setVisible(true);
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-            	new MyECGShowUI("ecg",5000L).setVisible(true);
+            	new ECGShowUI("ecg",5000L).setVisible(true);
             }
         });
     }
 
-    public ECGDataRefresher getECGDataReFresher() {
-		return ECGDataReFresher;
-	}
     public JPanel getecgPanel(){return ecgPanel;}
     public JPanel getECGData(){return ECGData;}
 

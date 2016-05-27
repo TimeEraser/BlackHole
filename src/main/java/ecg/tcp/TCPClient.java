@@ -8,8 +8,7 @@ import java.util.Arrays;
 
 import actor.MonitorActor;
 import ecg.ecgshow.ECGDataRefresher;
-import ecg.ecgshow.MyECGShowUI;
-import actor.MainUiActor;
+import ecg.ecgshow.ECGShowUI;
 
 import javax.swing.*;
 
@@ -28,7 +27,7 @@ public class TCPClient extends Thread{  //跑多线程
 	private byte[] receivedTemp = new byte[1024];   //接收临时变量，1024个字节
 	public boolean connectFlag = false;//布尔变量型 连接标志，初始时设为false没有连接
 	public boolean stopFlag = false;   //布尔变量型 停止标志，初始时设为false 连接依旧存在
-	private MyECGShowUI myECGShowUI;   //图形化界面
+	private ECGShowUI ecgShowUI;   //图形化界面
 
 	public Socket getS() {	//获得socket
 		return s;
@@ -67,7 +66,7 @@ public class TCPClient extends Thread{  //跑多线程
 	public String getSEX(){return Sex;}
 	public void setSEX(String Sex){this.Sex=Sex;}
 
-	public MyECGShowUI getMyECGShowUI(){return myECGShowUI;}
+	public ECGShowUI getECGShowUI(){return ecgShowUI;}
 
 	public TCPClient(ECGDataRefresher ecgDataRefresher){
 		this.ecgDataRefresher=ecgDataRefresher;
@@ -98,15 +97,7 @@ public class TCPClient extends Thread{  //跑多线程
          /* Create and display the form */  //创建并且显示图表
 			java.awt.EventQueue.invokeLater(new Runnable() {
 				public void run() {
-//					if (myECGShowUI == null) {
-//						myECGShowUI = new MyECGShowUI("ecg", 5000L);
-//						myECGShowUI.setBorder(BorderFactory.createEmptyBorder());
-//
-//					}
-					myECGShowUI.setBorder(BorderFactory.createEmptyBorder());
-//					mainUiActor.getECGData().add(myECGShowUI.getpanel_charts());
-//					mainUiActor.getECGAnalyse().add(myECGShowUI.getecgPanel());
-					//mainUiActor.getMainUi().setVisible(true);
+					ecgShowUI.setBorder(BorderFactory.createEmptyBorder());
 				}
 			});
 		} catch (UnknownHostException e) {		//public void connect()对应的异常处理。未知的主机异常
@@ -132,7 +123,7 @@ public class TCPClient extends Thread{  //跑多线程
 			if(stopFlag){		//如果停止传输
 				try {
 					MonitorActor.getFos().close();	//关闭（信息获取？）
-					myECGShowUI.setVisible(false);
+					ecgShowUI.setVisible(false);
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();

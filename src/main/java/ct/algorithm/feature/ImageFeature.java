@@ -1,4 +1,4 @@
-package com.zju.lab.ct.algorithm.feature;
+package ct.algorithm.feature;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;

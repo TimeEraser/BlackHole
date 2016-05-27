@@ -1,4 +1,4 @@
-package com.embededcontest.ctgui;
+package ct.ctshow;
 
 /**
  * Created by ChaomingGu on 2016/5/19.
@@ -15,36 +15,60 @@ import javax.swing.*;
 import static com.sun.org.apache.xalan.internal.lib.ExsltDatetime.date;
 
 public class MandelDraw extends JPanel {
-    public String IMAGE_ADDR;
     private static final Color DRAWING_RECT_COLOR = new Color(200, 200, 255);
     private static final Color DRAWN_RECT_COLOR = Color.blue;
 
-    private BufferedImage image,saveimage;
+    public BufferedImage image=null,focus=null;
     private Rectangle rect = null;
     private boolean drawing = false;
     public int x1,y1,x2,y2,x,y,width,height;
     private int serialNum = 0;
-    public String saveImgPath;
+    private String saveImgPath;
+    private String imagePath;
+
 
     public MandelDraw() {
-
     }
-
-    public void makeDraw(){
+    public void refreshImage(String imagePath){
         try {
-            image = ImageIO.read(new File(getIMAGE_ADDR()));
+            this.imagePath=imagePath;
+            image = ImageIO.read(new File(imagePath));
             MyMouseAdapter mouseAdapter = new MyMouseAdapter();
             addMouseListener(mouseAdapter);
             addMouseMotionListener(mouseAdapter);
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-            System.exit(-1);
+            this.setVisible(true);
+            this.getParent().getHeight();
+            Integer imageX,imageY;
+            imageX=(this.getParent().getWidth()-image.getWidth())/2;
+            imageY=(this.getParent().getHeight()-image.getHeight())/2;
+            setBounds(imageX,imageY,image.getWidth(),image.getHeight());
+            this.repaint();
         } catch (IOException e) {
             e.printStackTrace();
-            System.exit(-1);
         }
     }
-
+    public void refreshResult(String result){
+        removeAll();
+        JPanel resultImageJPanel =new JPanel();
+        resultImageJPanel.setLayout(null);
+        resultImageJPanel.setBackground(Color.BLACK);
+        resultImageJPanel.setBounds(0,0,image.getWidth()/6,image.getHeight()/6+40);
+        JLabel resultImage = new JLabel();
+        resultImage.setBounds(focus.getWidth()>image.getWidth()/6?0:(image.getWidth()/6-focus.getWidth())/2,
+                focus.getHeight()>image.getHeight()/6?0:(image.getHeight()/6-focus.getHeight())/2,
+               focus.getWidth(),
+               focus.getHeight());
+        resultImage.setIcon(new ImageIcon(focus));
+        resultImageJPanel.add(resultImage);
+        JLabel resultText = new JLabel("病症 : "+result);
+        resultText.setForeground(Color.RED);
+        resultText.setOpaque(false);
+        resultText.setFont(new Font("Dialog",0,14));
+        resultText.setBounds(0,image.getHeight()/6,image.getWidth()/6,40);
+        resultImageJPanel.add(resultText);
+        add(resultImageJPanel);
+        this.repaint();
+    }
     @Override
     public Dimension getPreferredSize() {
         if (image != null) {
@@ -71,25 +95,19 @@ public class MandelDraw extends JPanel {
         }
     }
 
-    public void setIMAGE_ADDR(String IMAGE_ADDR){
-        this.IMAGE_ADDR = IMAGE_ADDR;
+    public String getImagePath() {
+        return imagePath;
     }
 
-    public String getIMAGE_ADDR(){
-        return IMAGE_ADDR;
-    }
-
-    public class MyMouseAdapter extends MouseAdapter {
+    class MyMouseAdapter extends MouseAdapter {
         private Point mousePress = null;
         @Override
         public void mousePressed(MouseEvent e) {
-
             mousePress = e.getPoint();
             x1 = e.getX();
             y1 = e.getY();
             System.out.println("x1:"+x1+" y1:"+y1);
         }
-
         @Override
         public void mouseDragged(MouseEvent e) {
             drawing = true;
@@ -109,8 +127,7 @@ public class MandelDraw extends JPanel {
             System.out.println("x2:"+x2+" y2:"+y2);
             drawing = false;
             repaint();
-            saveimage = image.getSubimage(x,y,width,height);
-            saveImage();
+            focus = image.getSubimage(x,y,width,height);
         }
 
         @Override
@@ -124,7 +141,6 @@ public class MandelDraw extends JPanel {
     public double[] getCoordinate(){
         double[] getCoordinate = {x1,y1,x2,y2};
         return getCoordinate;
-
     }
 
     public void removeImg(){
@@ -132,11 +148,6 @@ public class MandelDraw extends JPanel {
             image = null;
         }
     }
-
-    public String getSaveImgPath(){
-        return saveImgPath;
-    }
-
     public void saveImage(){
         try{
             serialNum++;
@@ -145,28 +156,10 @@ public class MandelDraw extends JPanel {
             File f = new File("./src/main/resources",name);
 
             System.out.println(name);
-            ImageIO.write(saveimage, "jpg", f);
+            ImageIO.write(focus, "jpg", f);
             saveImgPath = f.getAbsolutePath();
         }catch (Exception ex) {
             System.out.println(ex);
         }
-    }
-
-    private static void createAndShowGui() {
-        JFrame frame = new JFrame("MandelDraw");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.getContentPane().add(new MandelDraw());
-        frame.pack();
-        frame.setLocationRelativeTo(null);
-        frame.setVisible(true);
-
-    }
-
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                createAndShowGui();
-            }
-        });
     }
 }

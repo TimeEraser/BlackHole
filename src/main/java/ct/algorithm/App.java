@@ -1,7 +1,7 @@
-package com.zju.lab.ct.algorithm;
+package ct.algorithm;
 
-import com.zju.lab.ct.algorithm.feature.ImageFeature;
-import com.zju.lab.ct.algorithm.randomforest.RandomForest;
+import ct.algorithm.feature.ImageFeature;
+import ct.algorithm.randomforest.RandomForest;
 
 import java.io.*;
 import java.sql.Connection;
@@ -26,7 +26,7 @@ public class App {
         RandomForest randomforest = null;
         try {
             Class.forName("org.sqlite.JDBC");
-            c = DriverManager.getConnection("jdbc:sqlite:db/cad");
+            c = DriverManager.getConnection("jdbc:sqlite:/Users/macbook/Documents/IdeaProject/BlackHole/db/cad");
             stmt = c.createStatement();
             ResultSet rs = stmt.executeQuery("select * from feature");
             samples = new ArrayList<Double[]>(rs.getRow());
@@ -231,6 +231,6 @@ public class App {
     }
 
     public static void main(String[] args) {
-        new App().test2();
+        new App().testGenerateModel();
     }
 }
