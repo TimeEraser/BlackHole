@@ -35,15 +35,18 @@ public class ECGDataRefresher extends Observable implements Observer{
 	private boolean stopFlag=true;			//停止标志
 	private boolean everStop=false;
 
+	private ECGOtherData ecgOtherData;
+
 
 	public ECGDataRefresher(TimeSeries[] ecgSerises, String filePath){
 		this.ecgSerises=ecgSerises;
 		this.filePath=filePath;
 		timer=new Timer();
 	}
-	public ECGDataRefresher(TimeSeries[] ecgSerises, DateAxis[] dateAxises){
+	public ECGDataRefresher(TimeSeries[] ecgSerises, DateAxis[] dateAxises,ECGOtherData ecgOtherData){
 		this.ecgSerises=ecgSerises;
 		this.dateAxises=dateAxises;
+		this.ecgOtherData=ecgOtherData;
 		timer=new Timer();
 	}
 	public void cancel(){
@@ -114,6 +117,8 @@ public class ECGDataRefresher extends Observable implements Observer{
     		}
 		}
 	}
+
+	public void setEcgOtherData(ECGOtherData ecgOtherData){this.ecgOtherData=ecgOtherData;}
 	
 	/**
 	 * 显示必须采用降采样的方法，

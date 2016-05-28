@@ -3,6 +3,7 @@ package actor;
 import command.*;
 import actor.config.MonitorActorConfig;
 import ecg.ecgshow.ECGDataRefresher;
+import ecg.ecgshow.ECGOtherData;
 import ecg.ecgshow.ECGShowUI;
 import ecg.tcp.*;
 
@@ -24,6 +25,7 @@ public class MonitorActor extends BaseActor{
 
     private ECGDataRefresher ecgDataRefresher;
     private TCPClient client;
+
     public MonitorActor(MonitorActorConfig monitorActorConfig){
         //TO DO Initialize the MonitorActor
     }
@@ -41,7 +43,7 @@ public class MonitorActor extends BaseActor{
         }
         if(request==MonitorRequest.ECG_UI_CONFIG){
             ecgShowUI = (ECGShowUI)request.getConfig().getData();
-            ecgDataRefresher=new ECGDataRefresher(ecgShowUI.getECGSeries(),ecgShowUI.getDateAxises());
+            ecgDataRefresher=new ECGDataRefresher(ecgShowUI.getECGSeries(),ecgShowUI.getDateAxises(),ecgShowUI.getECGOtherData());
         }
         if(request==MonitorRequest.MONITOR_ECG_START){
             client.stopFlag = false;
