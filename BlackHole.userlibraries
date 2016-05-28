@@ -1,37 +1,85 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <eclipse-userlibraries>
-  <library name="Maven: com.weblookandfeel:weblaf-core:1.2.8">
-    <archive path="/Users/macbook/.m2/repository/com/weblookandfeel/weblaf-core/1.2.8/weblaf-core-1.2.8.jar" />
+  <library name="Maven: com.fifesoft:rsyntaxtextarea:2.5.3">
+    <archive path="C:/apache-maven-3.3.3/Maven/com/fifesoft/rsyntaxtextarea/2.5.3/rsyntaxtextarea-2.5.3.jar" />
   </library>
-  <library name="Maven: com.thoughtworks.xstream:xstream:1.4.7">
-    <archive path="/Users/macbook/.m2/repository/com/thoughtworks/xstream/xstream/1.4.7/xstream-1.4.7.jar" />
-  </library>
-  <library name="Maven: net.htmlparser.jericho:jericho-html:3.3">
-    <archive path="/Users/macbook/.m2/repository/net/htmlparser/jericho/jericho-html/3.3/jericho-html-3.3.jar" />
-  </library>
-  <library name="Maven: com.mortennobel:java-image-scaling:0.8.5">
-    <archive path="/Users/macbook/.m2/repository/com/mortennobel/java-image-scaling/0.8.5/java-image-scaling-0.8.5.jar" />
+  <library name="Maven: com.google.android.tools:dx:1.7">
+    <archive path="C:/apache-maven-3.3.3/Maven/com/google/android/tools/dx/1.7/dx-1.7.jar" />
   </library>
   <library name="Maven: com.jhlabs:filters:2.0.235">
-    <archive path="/Users/macbook/.m2/repository/com/jhlabs/filters/2.0.235/filters-2.0.235.jar" />
+    <archive path="C:/apache-maven-3.3.3/Maven/com/jhlabs/filters/2.0.235/filters-2.0.235.jar" />
   </library>
-  <library name="Maven: org.slf4j:slf4j-api:1.7.7">
-    <archive path="/Users/macbook/.m2/repository/org/slf4j/slf4j-api/1.7.7/slf4j-api-1.7.7.jar" />
+  <library name="Maven: com.mortennobel:java-image-scaling:0.8.5">
+    <archive path="C:/apache-maven-3.3.3/Maven/com/mortennobel/java-image-scaling/0.8.5/java-image-scaling-0.8.5.jar" />
   </library>
-  <library name="Maven: org.slf4j:slf4j-simple:1.7.7">
-    <archive path="/Users/macbook/.m2/repository/org/slf4j/slf4j-simple/1.7.7/slf4j-simple-1.7.7.jar" />
+  <library name="Maven: com.nativelibs4java:bridj:0.7-20140918">
+    <archive path="C:/apache-maven-3.3.3/Maven/com/nativelibs4java/bridj/0.7-20140918/bridj-0.7-20140918.jar" />
+  </library>
+  <library name="Maven: com.neuronrobotics:nrjavaserial:3.12.1">
+    <archive path="C:/apache-maven-3.3.3/Maven/com/neuronrobotics/nrjavaserial/3.12.1/nrjavaserial-3.12.1.jar" />
+  </library>
+  <library name="Maven: com.thoughtworks.xstream:xstream:1.4.7">
+    <archive path="C:/apache-maven-3.3.3/Maven/com/thoughtworks/xstream/xstream/1.4.7/xstream-1.4.7.jar" />
+  </library>
+  <library name="Maven: com.weblookandfeel:weblaf-core:1.2.8">
+    <archive path="C:/apache-maven-3.3.3/Maven/com/weblookandfeel/weblaf-core/1.2.8/weblaf-core-1.2.8.jar" />
   </library>
   <library name="Maven: com.weblookandfeel:weblaf-ui:1.2.8">
-    <archive path="/Users/macbook/.m2/repository/com/weblookandfeel/weblaf-ui/1.2.8/weblaf-ui-1.2.8.jar" />
+    <archive path="C:/apache-maven-3.3.3/Maven/com/weblookandfeel/weblaf-ui/1.2.8/weblaf-ui-1.2.8.jar" />
   </library>
-  <library name="Maven: com.fifesoft:rsyntaxtextarea:2.5.3">
-    <archive path="/Users/macbook/.m2/repository/com/fifesoft/rsyntaxtextarea/2.5.3/rsyntaxtextarea-2.5.3.jar" />
+  <library name="Maven: commons-net:commons-net:3.3">
+    <archive path="C:/apache-maven-3.3.3/Maven/commons-net/commons-net/3.3/commons-net-3.3.jar" />
   </library>
-  <library name="Maven: org.jfree:jfreechart:1.0.19">
-    <archive path="/Users/macbook/.m2/repository/org/jfree/jfreechart/1.0.19/jfreechart-1.0.19.jar" />
+  <library name="Maven: javassist:javassist:3.12.1.GA">
+    <archive path="C:/apache-maven-3.3.3/Maven/javassist/javassist/3.12.1.GA/javassist-3.12.1.GA.jar" />
+  </library>
+  <library name="Maven: log4j:log4j:1.2.14">
+    <archive path="C:/apache-maven-3.3.3/Maven/log4j/log4j/1.2.14/log4j-1.2.14.jar" />
+  </library>
+  <library name="Maven: net.htmlparser.jericho:jericho-html:3.3">
+    <archive path="C:/apache-maven-3.3.3/Maven/net/htmlparser/jericho/jericho-html/3.3/jericho-html-3.3.jar" />
+  </library>
+  <library name="Maven: net.sf.trove4j:trove4j:3.0.2">
+    <archive path="C:/apache-maven-3.3.3/Maven/net/sf/trove4j/trove4j/3.0.2/trove4j-3.0.2.jar" />
+  </library>
+  <library name="Maven: org.apache.commons:commons-lang3:3.2.1">
+    <archive path="C:/apache-maven-3.3.3/Maven/org/apache/commons/commons-lang3/3.2.1/commons-lang3-3.2.1.jar" />
+  </library>
+  <library name="Maven: org.jbibtex:jbibtex:1.0.2">
+    <archive path="C:/apache-maven-3.3.3/Maven/org/jbibtex/jbibtex/1.0.2/jbibtex-1.0.2.jar" />
   </library>
   <library name="Maven: org.jfree:jcommon:1.0.23">
-    <archive path="/Users/macbook/.m2/repository/org/jfree/jcommon/1.0.23/jcommon-1.0.23.jar" />
+    <archive path="C:/apache-maven-3.3.3/Maven/org/jfree/jcommon/1.0.23/jcommon-1.0.23.jar" />
+  </library>
+  <library name="Maven: org.jfree:jfreechart:1.0.19">
+    <archive path="C:/apache-maven-3.3.3/Maven/org/jfree/jfreechart/1.0.19/jfreechart-1.0.19.jar" />
+  </library>
+  <library name="Maven: org.openimaj:core-aop-support:1.3.1">
+    <archive path="C:/apache-maven-3.3.3/Maven/org/openimaj/core-aop-support/1.3.1/core-aop-support-1.3.1.jar" />
+  </library>
+  <library name="Maven: org.openimaj:core-citation:1.3.1">
+    <archive path="C:/apache-maven-3.3.3/Maven/org/openimaj/core-citation/1.3.1/core-citation-1.3.1.jar" />
+  </library>
+  <library name="Maven: org.openimaj.hardware:serial-driver:1.3.1">
+    <archive path="C:/apache-maven-3.3.3/Maven/org/openimaj/hardware/serial-driver/1.3.1/serial-driver-1.3.1.jar" />
+  </library>
+  <library name="Maven: org.ow2.asm:asm:4.0">
+    <archive path="C:/apache-maven-3.3.3/Maven/org/ow2/asm/asm/4.0/asm-4.0.jar" />
+  </library>
+  <library name="Maven: org.rxtx:rxtx:2.2pre2">
+    <archive path="C:/apache-maven-3.3.3/Maven/org/rxtx/rxtx/2.2pre2/rxtx-2.2pre2.jar" />
+  </library>
+  <library name="Maven: org.rxtx:rxtx-native:2.2pre2">
+    <archive path="C:/apache-maven-3.3.3/Maven/org/rxtx/rxtx-native/2.2pre2/rxtx-native-2.2pre2.jar" />
+  </library>
+  <library name="Maven: org.slf4j:slf4j-api:1.7.7">
+    <archive path="C:/apache-maven-3.3.3/Maven/org/slf4j/slf4j-api/1.7.7/slf4j-api-1.7.7.jar" />
+  </library>
+  <library name="Maven: org.slf4j:slf4j-simple:1.7.7">
+    <archive path="C:/apache-maven-3.3.3/Maven/org/slf4j/slf4j-simple/1.7.7/slf4j-simple-1.7.7.jar" />
+  </library>
+  <library name="Maven: org.xerial:sqlite-jdbc:3.8.11">
+    <archive path="C:/apache-maven-3.3.3/Maven/org/xerial/sqlite-jdbc/3.8.11/sqlite-jdbc-3.8.11.jar" />
   </library>
 </eclipse-userlibraries>
 
