@@ -186,7 +186,6 @@ public class MainUiActor extends BaseActor{
 		mobile.add(mobile_config);
 		mainMenu.add(mobile);
 		InitializationInterface.setJMenuBar(mainMenu);
-
 		InitializationInterface.setVisible(true);
 	}
 

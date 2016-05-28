@@ -56,14 +56,14 @@ public class MandelDraw extends JPanel {
         JLabel resultImage = new JLabel();
         resultImage.setBounds(focus.getWidth()>image.getWidth()/6?0:(image.getWidth()/6-focus.getWidth())/2,
                 focus.getHeight()>image.getHeight()/6?0:(image.getHeight()/6-focus.getHeight())/2,
-               focus.getWidth(),
-               focus.getHeight());
+                focus.getWidth()>image.getWidth()/6?image.getWidth()/6:focus.getWidth(),
+                focus.getHeight()>image.getHeight()/6?image.getHeight()/6:focus.getHeight());
         resultImage.setIcon(new ImageIcon(focus));
         resultImageJPanel.add(resultImage);
         JLabel resultText = new JLabel("病症 : "+result);
         resultText.setForeground(Color.RED);
         resultText.setOpaque(false);
-        resultText.setFont(new Font("Dialog",0,14));
+        resultText.setFont(new Font("Dialog",0,12));
         resultText.setBounds(0,image.getHeight()/6,image.getWidth()/6,40);
         resultImageJPanel.add(resultText);
         add(resultImageJPanel);

@@ -23,13 +23,13 @@ public class CtActor extends BaseActor{
     //读取对象people,反序列化
     private ImageFeature imageFeature;
     public CtActor(CtActorConfig ctActorConfig){
-        //TO DO Initialize the GuardActor
+        //获取图像特征
+        imageFeature = new ImageFeature();
         //实例化ObjectInputStream对象
             /*ObjectInputStream ois = new ObjectInputStream(App.class.getResourceAsStream("RandomForest"));*/
         try {
             ois = new ObjectInputStream(new FileInputStream("conf/RandomForest"));
             randomForest= (RandomForest) ois.readObject();
-            imageFeature = new ImageFeature();
         } catch (IOException e) {
             e.printStackTrace();
         } catch (ClassNotFoundException e) {
@@ -76,7 +76,7 @@ public class CtActor extends BaseActor{
                  * 图像局部特征提取,参数：图象文件路径，划取区域坐标(x1,y1),(x2,y2)
                  * 返回:图像特征向量
                  */
-                double[] data = imageFeature.getFeature(ctDataRefresher.getImagePath(), x1, y1, x2, y2);
+                double[] data = imageFeature.getFeature(ctDataRefresher.getImagePath(), x1>x2?x2:x1, y1>y2?y2:y1, x1<x2?x2:x1, y1<y2?y2:y1);
                 int type = randomForest.predictType(data);
                 System.out.println("x1:"+x1+",y1:"+y1+",x2:"+x2+",y2:"+y2);
                 System.out.println("RandomForest predict:"+type);
