@@ -5,7 +5,7 @@ import javax.swing.*;
 /**
  * Created by zzq on 16/5/26.
  */
-public class CTDataRefresher {
+public class CTDataRefresher  {
     MandelDraw mandelDraw ;
     public CTDataRefresher(MandelDraw mandelDraw){
        this.mandelDraw=mandelDraw;
@@ -23,4 +23,7 @@ public class CTDataRefresher {
     public void refreshResult(String result){
         mandelDraw.refreshResult(result);
     }
+    public MandelDraw getMandelDraw(){return mandelDraw;}
+
+
 }
