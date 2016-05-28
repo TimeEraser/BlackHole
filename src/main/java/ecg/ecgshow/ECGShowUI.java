@@ -44,6 +44,7 @@ public class ECGShowUI extends JPanel {
     //ECGData
     private JPanel ECGData;
     private DateAxis[] dateAxises ;
+    private ECGOtherData ecgOtherData=new ECGOtherData();
 
     private TimeSeries[] ECGSeries ;
 	private JLabel label_HI;
@@ -187,13 +188,13 @@ public class ECGShowUI extends JPanel {
         
         label_HI.setText("健康信息：");
         label_HB.setText("心率：");
-        lblBeat.setText("beat");
-        label_APB.setText("房性早搏：");
-        label_VPB.setText("室性早搏：");
-        label_HT.setText("心动过速：");
-        isAPCLabel.setText("否");
-        isPVCLabel.setText("否");
-        isBeatLabel.setText("否");
+        lblBeat.setText(ecgOtherData.getHeart_rate());
+        label_APB.setText("收缩压：");
+        label_VPB.setText("舒张压：");
+        label_HT.setText("血氧：");
+        isAPCLabel.setText(ecgOtherData.getSystolic_pressure());
+        isPVCLabel.setText(ecgOtherData.getDiastolic_pressure());
+        isBeatLabel.setText(ecgOtherData.getBlood_oxygen());
         label_PI.setText("个人信息：");
         label_Name.setText("姓名：");
         lblName.setText("name");
@@ -309,7 +310,6 @@ public class ECGShowUI extends JPanel {
     public TimeSeries[] getECGSeries() {
         return ECGSeries;
     }
-
     public void setECGSeries(TimeSeries[] ECGSeries) {
         this.ECGSeries = ECGSeries;
     }
@@ -317,9 +317,11 @@ public class ECGShowUI extends JPanel {
     public DateAxis[] getDateAxises() {
         return dateAxises;
     }
-
     public void setDateAxises(DateAxis[] dateAxises) {
         this.dateAxises = dateAxises;
     }
+
+    public ECGOtherData getECGOtherData(){return ecgOtherData;}
+    public void setEcgOtherData(ECGOtherData ecgOtherData){this.ecgOtherData=ecgOtherData;}
 
 }
