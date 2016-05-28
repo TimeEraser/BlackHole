@@ -286,6 +286,7 @@ public class MainUiActor extends BaseActor{
 		JPanel ECGAnalyse = new JPanel();
 		//ECGAnalyse.setBorder(etchedBorder);
 		ECGAnalyse.setBounds((int)(WIDTH*0.75),(int)(HEIGHT*0.05),(int)(WIDTH*0.2),(int)(HEIGHT*0.8));
+		ECGAnalyse.add(ecgShowUI.getECGInfo());
 		ECGPanel.add(ECGAnalyse);
 
 		ECGPanel.setVisible(false);

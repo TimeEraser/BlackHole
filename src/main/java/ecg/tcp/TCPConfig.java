@@ -1,6 +1,7 @@
 package ecg.tcp;
 
 import javax.swing.*;
+import java.io.*;
 
 public class TCPConfig extends JDialog {		//TCP配置界面
 
@@ -18,6 +19,12 @@ public class TCPConfig extends JDialog {		//TCP配置界面
     private JRadioButton jRadioButton1;
     private JRadioButton jRadioButton2;
     private String jRadioButtonName;
+    private String [] fileContent=new String[5];
+
+    private   String filename = "./TCPConfig.txt";
+    FileWriter fwriter = null;
+    BufferedReader reader = null;
+    File file=new File(filename );
     // End of variables declaration
 
     public TCPConfig(JFrame jFrame,Boolean model) {		//构造方法
@@ -34,8 +41,8 @@ public class TCPConfig extends JDialog {		//TCP配置界面
         jLabel5 = new JLabel();
         jTextField1 = new JTextField("192.168.1.101");
         jTextField2 = new JTextField("60129");
-        jTextField3 = new JTextField();
-        jTextField4 = new JTextField();
+        jTextField3 = new JTextField(null);
+        jTextField4 = new JTextField(null);
         jRadioButton1=new JRadioButton("男") ;
         jRadioButton2=new JRadioButton("女") ;
         jButton1 = new JButton();
@@ -50,8 +57,66 @@ public class TCPConfig extends JDialog {		//TCP配置界面
         jLabel3.setText("档案ID");
         jLabel4.setText("姓名");
         jLabel5.setText("性别");
-
         jButton1.setText("确定");
+
+        if(!file.exists()){
+            try {
+                fwriter= new FileWriter(filename);
+                fwriter.write(jTextField1.getText());
+                fwriter.write("\r\n");
+                fwriter.write(jTextField2.getText());
+                fwriter.write("\r\n");
+                fwriter.write(jTextField3.getText());
+                fwriter.write("\r\n");
+                fwriter.write(jTextField4.getText());
+                fwriter.write("\r\n");
+//              fwriter.write(jRadioButtonName);
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            finally {
+                try {
+                    fwriter.flush();
+                    fwriter.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        else {
+            File file = new File(filename);
+            try {
+                reader = new BufferedReader(new FileReader(file));
+                String tempString = null;
+                int line = 1;   // 一次读入一行，直到读入null为文件结束
+                while ((tempString = reader.readLine()) != null) {
+                    System.out.println("line" + line + ": " + tempString);
+                    // content=tempString;
+                    fileContent[line-1]=tempString;
+                    line++;
+                }
+                reader.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            finally {
+                if (reader != null) {
+                    try {
+                        reader.close();
+                    } catch (IOException e1) {
+                    }
+                }
+            }
+            jTextField1.setText(fileContent[0]);
+            jTextField2.setText(fileContent[1]);
+            jTextField3.setText(fileContent[2]);
+            jTextField4.setText(fileContent[3]);
+
+        }
+
+
+
         jButton1.addActionListener(new java.awt.event.ActionListener() {
                                        public void actionPerformed(java.awt.event.ActionEvent evt) {
                                            jButton1ActionPerformed(evt);       //jButton1ActionPerformed这个方法在后面定义
@@ -142,6 +207,27 @@ public class TCPConfig extends JDialog {		//TCP配置界面
             else if (jRadioButton2.isSelected()){
                 jRadioButtonName=jRadioButton2.getText();
             }
+        try {
+            fwriter= new FileWriter(filename);
+            fwriter.write(jTextField1.getText());
+            fwriter.write("\r\n");
+            fwriter.write(jTextField2.getText());
+            fwriter.write("\r\n");
+            fwriter.write(jTextField3.getText());
+            fwriter.write("\r\n");
+            fwriter.write(jTextField4.getText());
+            fwriter.write("\r\n");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        finally {
+            try {
+                fwriter.flush();
+                fwriter.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
             this.dispose();
     }
 
