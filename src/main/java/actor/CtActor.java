@@ -2,26 +2,38 @@ package actor;
 
 import actor.config.CtActorConfig;
 
+import actor.config.MainUiActorConfig;
 import ct.ctshow.CTDataRefresher;
+import ct.ctshow.ListFile;
 import ct.ctshow.MandelDraw;
 import ct.algorithm.feature.ImageFeature;
 import ct.algorithm.randomforest.RandomForest;
 import command.*;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.ObjectInputStream;
+import java.awt.image.BufferedImage;
+import java.io.*;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Map;
 
 public class CtActor extends BaseActor{
     private CTDataRefresher ctDataRefresher;
+
+    private MandelDraw mandelDraw;
     private ObjectInputStream ois = null;
     private RandomForest randomForest ;
     //读取对象people,反序列化
     private ImageFeature imageFeature;
+    private String result=null;
+    private String filename=null;
+    private ListFile listFile = new ListFile();
+    //private JList CTList = new JList();
+    int serialNum=0;
+
+
     public CtActor(CtActorConfig ctActorConfig){
         //获取图像特征
         imageFeature = new ImageFeature();
@@ -46,6 +58,14 @@ public class CtActor extends BaseActor{
         }
         if(request==MainUiRequest.MAIN_UI_CT_ANALYSIS){
             ctAnalysis();
+            //CTList = listFile.getList();
+
+
+        }
+        if(request==MainUiRequest.MAIN_UI_CT_SAVE){
+//            serialNum++;
+            saveImg();
+
         }
         return false;
     }
@@ -80,7 +100,7 @@ public class CtActor extends BaseActor{
                 int type = randomForest.predictType(data);
                 System.out.println("x1:"+x1+",y1:"+y1+",x2:"+x2+",y2:"+y2);
                 System.out.println("RandomForest predict:"+type);
-                String result=null;
+//                String result=null;
                 switch (type){
                     case 1:
                         result="正常";
@@ -104,7 +124,37 @@ public class CtActor extends BaseActor{
             e_analysis.printStackTrace();
         }
     }
+    public void saveImg() {
+        int response = JOptionPane.showConfirmDialog(null, "是否保存文件？", "保存文件", JOptionPane.YES_NO_OPTION);
+        if (response == 0) {
+            Date now = new Date(System.currentTimeMillis());
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
+            String time = dateFormat.format(now);
+            Dimension size = ctDataRefresher.getMandelDraw().getSize();
+            BufferedImage savedHistory = new BufferedImage(size.width, size.height, BufferedImage.TYPE_INT_RGB);
+            Graphics2D g = savedHistory.createGraphics();
+            ctDataRefresher.getMandelDraw().paint(g);
+            filename = result+time+".png";
+            try {
+                ImageIO.write(savedHistory, "png", new File("./res",filename));
+                System.out.println("Saved Successfully!");
+            } catch (Exception ex) {
+                System.out.println(ex);
+            }
+        }
+    }
+    /*public String getFileName(){
+        return filename;
+    }
+*/
+    public String getResult(){
+        return result;
+    }
 
+    /*public JList getCTList(){
+        return CTList;
+    }
+*/
 
 
 }

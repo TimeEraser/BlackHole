@@ -34,7 +34,7 @@ public class MonitorActor extends BaseActor{
     protected boolean processActorRequest(Request request) {
         if(request==MonitorRequest.MONITOR_SHUTDOWM){
             client.stopFlag =true;
-            ecgDataRefresher.setStopFlag();
+            if(ecgDataRefresher!=null) ecgDataRefresher.setStopFlag();
             System.out.println("client.stopFlag =true");
         }
         if(request==MonitorRequest.MONITOR_ECG_DATA) {
@@ -47,10 +47,11 @@ public class MonitorActor extends BaseActor{
         }
         if(request==MonitorRequest.MONITOR_ECG_START){
             client.stopFlag = false;
-            ecgDataRefresher.setStartFlag();
+            if(ecgDataRefresher!=null) ecgDataRefresher.setStartFlag();
         }
-        if(request==MonitorRequest.MONITOR_ECG_STOP)
-            ecgDataRefresher.setStopFlag();
+        if(request==MonitorRequest.MONITOR_ECG_STOP) {
+            if(ecgDataRefresher!=null)ecgDataRefresher.setStopFlag();
+        }
         return false;
     }
 

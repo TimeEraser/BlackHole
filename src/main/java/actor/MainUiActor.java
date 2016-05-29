@@ -15,6 +15,7 @@ import actor.Listener.MenuSwitchListener;
 import actor.config.MainUiActorConfig;
 import com.alee.laf.WebLookAndFeel;
 import command.*;
+import ct.ctshow.ListFile;
 import ct.ctshow.MandelDraw;
 import ecg.ecgshow.ECGDataRefresher;
 import ecg.ecgshow.ECGShowUI;
@@ -38,6 +39,8 @@ public class MainUiActor extends BaseActor{
 	private Integer CONTENT_FONT_SIZE;
 	private Integer LEFT;
 	private Integer TOP;
+
+
 
 	public MainUiActor(MainUiActorConfig mainUiActorConfig){
 		ctActor=mainUiActorConfig.getCtActor();
@@ -210,7 +213,7 @@ public class MainUiActor extends BaseActor{
 		JPanel CTControl = new JPanel();
 		CTControl.setLayout(new FlowLayout(FlowLayout.CENTER));
 		//CTControl.setBorder(etchedBorder);
-		CTControl.setBounds((int)(WIDTH*0.75),(int)(HEIGHT*0.05),(int)(WIDTH*0.2),(int)(HEIGHT*0.15));
+		CTControl.setBounds((int)(WIDTH*0.75),(int)(HEIGHT*0.01),(int)(WIDTH*0.2),(int)(HEIGHT*0.22));
 		JButton CTOpen = new JButton();
 		CTOpen.setText("打开CT图片");
 		CTOpen.setIcon(new ImageIcon(getIconImage("Icon/open.png")));
@@ -221,16 +224,32 @@ public class MainUiActor extends BaseActor{
 		CTAnalyse.setIcon(new ImageIcon(getIconImage("Icon/analyse_min.png")));
 		CTAnalyse.addActionListener(new NoticeListener(this,ctActor,MainUiRequest.MAIN_UI_CT_ANALYSIS));
 		CTControl.add(CTAnalyse);
+		JButton CTSave = new JButton();
+		CTSave.setText("   保存结果   ");
+		CTSave.setIcon(new ImageIcon(getIconImage("Icon/CTSave.png")));
+		CTSave.addActionListener(new NoticeListener(this,ctActor,MainUiRequest.MAIN_UI_CT_SAVE));
+		CTControl.add(CTSave);
 		CTPanel.add(CTControl);
 
 		JPanel CTFocus = new JPanel();
 		CTFocus.setBorder(etchedBorder);
-		CTFocus.setBounds((int)(WIDTH*0.75),(int)(HEIGHT*0.25),(int)(WIDTH*0.2),(int)(HEIGHT*0.6));
-		CTFocus.setLayout(new GridLayout(2,1));
+		CTFocus.setBounds((int)(WIDTH*0.75),(int)(HEIGHT*0.25),(int)(WIDTH*0.2),(int)(HEIGHT*0.58));
+		//CTFocus.setLayout(new GridLayout(2,1));
 		CTPanel.add(CTFocus);
+
+		JScrollPane CTHistoryPane = new JScrollPane(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
+				ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+		CTFocus.add(CTHistoryPane);
+
+		/**这里需要将list添加到滚动面板中
+		 * 问题是如何将我自己写的类应用进来而不起冲突
+		 */
+
 		CTPanel.setVisible(false);
 		return CTPanel;
 	}
+
+
 
 	private JPanel createECGJPanel(){
 		JPanel ECGPanel= new JPanel(null);
