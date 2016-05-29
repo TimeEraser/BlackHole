@@ -2,13 +2,12 @@ package actor;
 
 import actor.config.CtActorConfig;
 
-import actor.config.MainUiActorConfig;
 import ct.ctshow.CTDataRefresher;
-import ct.ctshow.ListFile;
-import ct.ctshow.MandelDraw;
+import ct.ctshow.CTCurrentData;
 import ct.algorithm.feature.ImageFeature;
 import ct.algorithm.randomforest.RandomForest;
 import command.*;
+import util.FileUtil;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -17,24 +16,21 @@ import java.awt.image.BufferedImage;
 import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Map;
 
 public class CtActor extends BaseActor{
+    private  String CT_ANALYSE_RESULT_SAVE_ROOT;
+    private  String CT_ANALYSE_RESULT_SAVE_FORMAT;
     private CTDataRefresher ctDataRefresher;
-
-    private MandelDraw mandelDraw;
     private ObjectInputStream ois = null;
     private RandomForest randomForest ;
     //读取对象people,反序列化
     private ImageFeature imageFeature;
-    private String result=null;
-    private String filename=null;
-    private ListFile listFile = new ListFile();
-    //private JList CTList = new JList();
-    int serialNum=0;
-
-
+    //分析结果
+    private String CTAnalyseResult=null;
     public CtActor(CtActorConfig ctActorConfig){
+        //Result ROOT
+        this.CT_ANALYSE_RESULT_SAVE_ROOT=ctActorConfig.getCT_ANALYSE_RESULT_SAVE_ROOT();
+        this.CT_ANALYSE_RESULT_SAVE_FORMAT=ctActorConfig.getCT_ANALYSE_RESULT_SAVE_FORMAT();
         //获取图像特征
         imageFeature = new ImageFeature();
         //实例化ObjectInputStream对象
@@ -51,21 +47,18 @@ public class CtActor extends BaseActor{
     @Override
     public boolean processActorRequest(Request  request ) {
         if(request== CtRequest.CT_OPEN_IMG){
+            CTAnalyseResult=null;
             ctDataRefresher.refreshCTData((String) request.getConfig().getData());
         }
         if(request== CtRequest.CT_UI_CONFIG){
-            ctDataRefresher=new CTDataRefresher((MandelDraw)request.getConfig().getData());
+            ctDataRefresher=new CTDataRefresher((CTCurrentData)request.getConfig().getData());
         }
         if(request==MainUiRequest.MAIN_UI_CT_ANALYSIS){
             ctAnalysis();
             //CTList = listFile.getList();
-
-
         }
         if(request==MainUiRequest.MAIN_UI_CT_SAVE){
-//            serialNum++;
-            saveImg();
-
+            saveCTAnalyseResult();
         }
         return false;
     }
@@ -81,65 +74,75 @@ public class CtActor extends BaseActor{
 
 
     public void ctAnalysis(){
-        try {
+        if(!ctDataRefresher.Initialized()){
+            JOptionPane.showMessageDialog(null,"请打开CT图片","操作错误",JOptionPane.ERROR_MESSAGE);
+        }else {
+            try {
                 /**
                  * 识别算法调用
                  * 参数：图像特征向量
                  * 返回：病变类型(int型)，1:正常;2:肝癌;3:肝血管瘤;4:肝囊肿;5:其他
                  */
-                double[]coordinate = ctDataRefresher.getCoordinate();
-                int x1 = (int)coordinate[0];
-                int y1 = (int)coordinate[1];
-                int x2 = (int)coordinate[2];
-                int y2 = (int)coordinate[3];
+                double[] coordinate = ctDataRefresher.getCoordinate();
+                int x1 = (int) coordinate[0];
+                int y1 = (int) coordinate[1];
+                int x2 = (int) coordinate[2];
+                int y2 = (int) coordinate[3];
                 /**
                  * 图像局部特征提取,参数：图象文件路径，划取区域坐标(x1,y1),(x2,y2)
                  * 返回:图像特征向量
                  */
-                double[] data = imageFeature.getFeature(ctDataRefresher.getImagePath(), x1>x2?x2:x1, y1>y2?y2:y1, x1<x2?x2:x1, y1<y2?y2:y1);
+                double[] data = imageFeature.getFeature(ctDataRefresher.getImagePath(), x1 > x2 ? x2 : x1, y1 > y2 ? y2 : y1, x1 < x2 ? x2 : x1, y1 < y2 ? y2 : y1);
                 int type = randomForest.predictType(data);
-                System.out.println("x1:"+x1+",y1:"+y1+",x2:"+x2+",y2:"+y2);
-                System.out.println("RandomForest predict:"+type);
-//                String result=null;
-                switch (type){
+                System.out.println("x1:" + x1 + ",y1:" + y1 + ",x2:" + x2 + ",y2:" + y2);
+                switch (type) {
                     case 1:
-                        result="正常";
+                        CTAnalyseResult = "正   常";
                         break;
                     case 2:
-                        result="肝癌";
+                        CTAnalyseResult = "肝   癌";
                         break;
                     case 3:
-                        result="肝血管瘤";
+                        CTAnalyseResult = "肝血管瘤";
                         break;
                     case 4:
-                        result="肝囊肿";
+                        CTAnalyseResult = "肝  囊肿";
                         break;
                     case 5:
-                        result="其他";
+                        CTAnalyseResult = "其   他";
                 }
-                ctDataRefresher.refreshResult(result);
-        } catch (FileNotFoundException e_analysis) {
-            e_analysis.printStackTrace();
-        } catch (IOException e_analysis) {
-            e_analysis.printStackTrace();
+                System.out.println("RandomForest predict:" + CTAnalyseResult);
+                ctDataRefresher.refreshResult(CTAnalyseResult);
+            } catch (FileNotFoundException e_analysis) {
+                e_analysis.printStackTrace();
+            } catch (IOException e_analysis) {
+                e_analysis.printStackTrace();
+            }
         }
     }
-    public void saveImg() {
-        int response = JOptionPane.showConfirmDialog(null, "是否保存文件？", "保存文件", JOptionPane.YES_NO_OPTION);
-        if (response == 0) {
-            Date now = new Date(System.currentTimeMillis());
-            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
-            String time = dateFormat.format(now);
-            Dimension size = ctDataRefresher.getMandelDraw().getSize();
-            BufferedImage savedHistory = new BufferedImage(size.width, size.height, BufferedImage.TYPE_INT_RGB);
-            Graphics2D g = savedHistory.createGraphics();
-            ctDataRefresher.getMandelDraw().paint(g);
-            filename = result+time+".png";
-            try {
-                ImageIO.write(savedHistory, "png", new File("./res",filename));
-                System.out.println("Saved Successfully!");
-            } catch (Exception ex) {
-                System.out.println(ex);
+    public void saveCTAnalyseResult() {
+        if(CTAnalyseResult==null){
+            JOptionPane.showMessageDialog(null,"请分析CT病灶","操作错误",JOptionPane.ERROR_MESSAGE);
+        }else {
+            Object[] options = {"是", "否"};
+            int response = JOptionPane.showOptionDialog(null, "是否保存分析结果？", "保存分析结果", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
+            if (response == JOptionPane.YES_OPTION) {
+                Date now = new Date(System.currentTimeMillis());
+                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
+                String time = dateFormat.format(now);
+                Dimension size = ctDataRefresher.getMandelDraw().getSize();
+                BufferedImage savedHistory = new BufferedImage(size.width, size.height, BufferedImage.TYPE_INT_RGB);
+                Graphics2D g = savedHistory.createGraphics();
+                ctDataRefresher.getMandelDraw().paint(g);
+                String folderPath=CT_ANALYSE_RESULT_SAVE_ROOT+"/"+CTAnalyseResult;
+                FileUtil.makeDirs(folderPath);
+                String filename = CTAnalyseResult + time +"."+CT_ANALYSE_RESULT_SAVE_FORMAT;
+                try {
+                    ImageIO.write(savedHistory, CT_ANALYSE_RESULT_SAVE_FORMAT, new File(folderPath, filename));
+                    System.out.println("Saved Successfully!");
+                } catch (Exception ex) {
+                    System.out.println(ex);
+                }
             }
         }
     }
@@ -148,7 +151,7 @@ public class CtActor extends BaseActor{
     }
 */
     public String getResult(){
-        return result;
+        return CTAnalyseResult;
     }
 
     /*public JList getCTList(){

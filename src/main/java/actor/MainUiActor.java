@@ -15,9 +15,8 @@ import actor.Listener.MenuSwitchListener;
 import actor.config.MainUiActorConfig;
 import com.alee.laf.WebLookAndFeel;
 import command.*;
-import ct.ctshow.ListFile;
-import ct.ctshow.MandelDraw;
-import ecg.ecgshow.ECGDataRefresher;
+import ct.ctshow.CTCurrentData;
+import ct.ctshow.CTHistoryData;
 import ecg.ecgshow.ECGShowUI;
 import ecg.tcp.TCPConfig;
 
@@ -121,6 +120,8 @@ public class MainUiActor extends BaseActor{
 		UIManager.put("TableHeader.font", new Font("Dialog", 0, CONTENT_FONT_SIZE));
 		UIManager.put("TextField.font", new Font("Dialog", 0, CONTENT_FONT_SIZE));
 		UIManager.put("TextArea.font", new Font("Dialog", 0, CONTENT_FONT_SIZE));
+		UIManager.put("OptionPane.yesButtonText", "是");
+		UIManager.put("OptionPane.noButtonText", "否");
 		try {
 			UIManager.setLookAndFeel( "com.alee.laf.WebLookAndFeel" );
 		} catch (ClassNotFoundException e) {
@@ -140,6 +141,7 @@ public class MainUiActor extends BaseActor{
 		InitializationInterface.setLocation(LEFT,TOP);
 		InitializationInterface.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		InitializationInterface.setLayout(null);
+		JOptionPane.setRootFrame(InitializationInterface);
 
 		Container contentPane = InitializationInterface.getContentPane();	//容器
 		Component CTComponent = createCTJPanel();							//内容块
@@ -200,7 +202,7 @@ public class MainUiActor extends BaseActor{
 		JPanel CTPanel= new JPanel(null);
 		Border etchedBorder = BorderFactory.createEtchedBorder(EtchedBorder.LOWERED,Color.LIGHT_GRAY,Color.LIGHT_GRAY);
 		CTPanel.setBounds(0,0,WIDTH,(int)(HEIGHT*0.9));
-		MandelDraw mandelDraw=new MandelDraw();
+		CTCurrentData mandelDraw=new CTCurrentData();
 
 		JPanel CTData = new JPanel(new FlowLayout(FlowLayout.CENTER));
 		CTData.setBorder(etchedBorder);
@@ -225,25 +227,20 @@ public class MainUiActor extends BaseActor{
 		CTAnalyse.addActionListener(new NoticeListener(this,ctActor,MainUiRequest.MAIN_UI_CT_ANALYSIS));
 		CTControl.add(CTAnalyse);
 		JButton CTSave = new JButton();
-		CTSave.setText("   保存结果   ");
-		CTSave.setIcon(new ImageIcon(getIconImage("Icon/CTSave.png")));
+		CTSave.setText("保存CT结果");
+		CTSave.setIcon(new ImageIcon(getIconImage("Icon/save_min.png")));
 		CTSave.addActionListener(new NoticeListener(this,ctActor,MainUiRequest.MAIN_UI_CT_SAVE));
 		CTControl.add(CTSave);
 		CTPanel.add(CTControl);
 
-		JPanel CTFocus = new JPanel();
-		CTFocus.setBorder(etchedBorder);
-		CTFocus.setBounds((int)(WIDTH*0.75),(int)(HEIGHT*0.25),(int)(WIDTH*0.2),(int)(HEIGHT*0.58));
-		//CTFocus.setLayout(new GridLayout(2,1));
-		CTPanel.add(CTFocus);
-
-		JScrollPane CTHistoryPane = new JScrollPane(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
-				ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-		CTFocus.add(CTHistoryPane);
-
-		/**这里需要将list添加到滚动面板中
-		 * 问题是如何将我自己写的类应用进来而不起冲突
-		 */
+		JPanel CTHistory = new JPanel();
+		CTHistory.setLayout(null);
+		CTHistory.setBorder(etchedBorder);
+		CTHistory.setBounds((int)(WIDTH*0.75),(int)(HEIGHT*0.25),(int)(WIDTH*0.2),(int)(HEIGHT*0.58));
+			CTHistoryData ctHistoryData=new CTHistoryData();
+			ctHistoryData.refresh("肝   癌");
+			CTHistory.add(ctHistoryData);
+		CTPanel.add(CTHistory);
 
 		CTPanel.setVisible(false);
 		return CTPanel;

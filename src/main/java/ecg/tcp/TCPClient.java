@@ -98,7 +98,6 @@ public class TCPClient extends Thread{  //跑多线程
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
 		connect();
 		startReceive();
 		try {
