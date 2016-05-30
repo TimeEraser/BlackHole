@@ -11,7 +11,7 @@ public class GuardActorConfig {
     public void  setSerialPortNum(int serialPortNum){
         this.serialPortNum=serialPortNum;
     }
-    public int readSerialPortNum(){
+    public int getSerialPortNum(){
         return  this.serialPortNum;
     }
 }

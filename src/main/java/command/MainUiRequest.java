@@ -14,6 +14,7 @@ public enum  MainUiRequest implements Request {
 	MAIN_UI_ECG_STOP,
 	MAIN_UI_ECG_START,
 	MAIN_UI_GUARD_START,
+	MAIN_UI_GUARD_SERIAL_PORT_SET,
 	MAIN_UI_SHUTDOWN;
 
 	   //if CommandConfig==null abandon the request

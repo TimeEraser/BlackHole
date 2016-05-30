@@ -13,6 +13,10 @@ import actor.Listener.ButtonSwitchListener;
 import actor.Listener.NoticeListener;
 import actor.Listener.MenuSwitchListener;
 import actor.config.MainUiActorConfig;
+import actor.guard.AlarmShow;
+import actor.guard.GuardConfig;
+import actor.guard.GuardError;
+import actor.guard.TemperatureShow;
 import com.alee.laf.WebLookAndFeel;
 import command.*;
 import ct.ctshow.CTCurrentData;
@@ -59,12 +63,29 @@ public class MainUiActor extends BaseActor{
 
 	@Override
 	public boolean processActorRequest(Request  request) {
+
 		if(request==SystemRequest.BOOT)
 			start();
 		if(request==MainUiRequest.MAIN_UI_ECG_CONFIG)
+<<<<<<< HEAD
 			sendRequest(monitorActor,MonitorRequest.MONITOR_ECG_DATA,getECGConnectInfo());
 		if(request==MainUiRequest.MAIN_UI_CT_OPEN)
 			sendRequest(ctActor,CtRequest.CT_OPEN_IMG,getCTImagePath());
+=======
+			createECGConfigDialog();
+		if(request==MainUiRequest.MAIN_UI_GUARD_SERIAL_PORT_SET)
+			createGuardConfigDialog();
+		if(request==GuardRequest.GUARD_BLOOD_LEAK) {
+			createGuardErrorgDialog("发生漏血!!!");
+		}
+		if(request==GuardRequest.GUARD_BUBBLE) {
+			createGuardErrorgDialog("出现气泡!!!");
+			System.out.println("BUBBLE_Accept");
+		}
+		if(request==MainUiRequest.MAIN_UI_GUARD_START){
+			sendRequest(guardActor,MainUiRequest.MAIN_UI_GUARD_START);
+		}
+>>>>>>> 71b835b55faac1e6559408ebc69396a0469e4ab2
 		return false;
 	}
 
@@ -72,6 +93,7 @@ public class MainUiActor extends BaseActor{
 	public boolean processActorResponse(Response response) {
 		if(response==GuardResponse.GUARD_ERROR){
 			System.out.print("GuardResponse.GUARD_ERROR");
+			createGuardErrorgDialog("无设备");
 			return true;
 		}
 		if(response==MonitorResponse.MONITOR_SHUTDOWM){
@@ -146,12 +168,19 @@ public class MainUiActor extends BaseActor{
 		Container contentPane = InitializationInterface.getContentPane();	//容器
 		Component CTComponent = createCTJPanel();							//内容块
 		Component ECGComponent = createECGJPanel();
+<<<<<<< HEAD
 		Component GUARDComponent = createGUARDJPanel();
 		Component MOBILEComponent = createMOBILEJPanel();
 		contentPane.add(CTComponent);
 		contentPane.add(ECGComponent);
 		contentPane.add(GUARDComponent);
 		contentPane.add(MOBILEComponent);
+=======
+		Component GuardComponent=createGuardPanel();
+		contentPane.add(CTComponent);
+		contentPane.add(ECGComponent);
+		contentPane.add(GuardComponent);
+>>>>>>> 71b835b55faac1e6559408ebc69396a0469e4ab2
 
 		JMenuBar mainMenu=new JMenuBar();
 		JMenu sys = new JMenu();
@@ -173,12 +202,20 @@ public class MainUiActor extends BaseActor{
 		mainMenu.add(ecg);
 
 		JMenu guard=new JMenu("");
+<<<<<<< HEAD
 		guard.addMenuListener(new MenuSwitchListener(contentPane,GUARDComponent));
 		guard.setHorizontalTextPosition(SwingConstants.RIGHT);
+=======
+		guard.addMenuListener(new MenuSwitchListener(contentPane,GuardComponent));
+//		guard.setHorizontalTextPosition(SwingConstants.RIGHT);
+>>>>>>> 71b835b55faac1e6559408ebc69396a0469e4ab2
 		ImageIcon guardIcon = new ImageIcon(getIconImage("Icon/guard.png"));
 		guard.setIcon(guardIcon);
-		JMenuItem guard_config=new JMenuItem("连接告警设备");
-		guard_config.addActionListener(new NoticeListener(this,guardActor,MainUiRequest.MAIN_UI_GUARD_START));
+		JMenuItem guard_start=new JMenuItem("连接告警设备");
+		guard_start.addActionListener(new NoticeListener(this,guardActor,MainUiRequest.MAIN_UI_GUARD_START));
+		JMenuItem guard_config=new JMenuItem("告警设备串口号设置");
+		guard_config.addActionListener(new NoticeListener(this,MainUiRequest.MAIN_UI_GUARD_SERIAL_PORT_SET));
+		guard.add(guard_start);
 		guard.add(guard_config);
 		mainMenu.add(guard);
 
@@ -198,6 +235,45 @@ public class MainUiActor extends BaseActor{
 		return this.getClass().getClassLoader().getResource(path);
 	}
 
+	private JPanel createGuardPanel(){
+		JPanel GuardPanel=new JPanel(null);
+
+		Border etchedBorder = BorderFactory.createEtchedBorder(EtchedBorder.LOWERED,Color.LIGHT_GRAY,Color.LIGHT_GRAY);
+		GuardPanel.setBounds(0,0,WIDTH,(int)(HEIGHT*0.9));
+
+		JPanel GUARDShow = new JPanel();
+		TemperatureShow temperatureShow=new TemperatureShow();
+		guardActor.temperatureDataRefresh.addObserver(temperatureShow);
+		GUARDShow.setBounds((int)(WIDTH*0.002),(int)(HEIGHT*0.005),(int)(WIDTH*0.7),(int)(HEIGHT*0.85));
+		GUARDShow.setLayout(new BorderLayout());
+		GUARDShow.add(temperatureShow);
+		GuardPanel.add(GUARDShow);
+
+		JPanel ALARMShow=new JPanel();
+		AlarmShow alarmShow=new AlarmShow();
+		guardActor.alarmDataRefresh.addObserver(alarmShow);
+		ALARMShow.setBorder(BorderFactory.createBevelBorder(EtchedBorder.LOWERED,Color.BLACK,Color.BLACK));
+		ALARMShow.setBounds((int)(WIDTH*0.71),(int)(HEIGHT*0.005),(int)(WIDTH*0.27),(int)(HEIGHT*0.85));
+		ALARMShow.setLayout(new BorderLayout());
+		ALARMShow.add(alarmShow);
+		GuardPanel.add(ALARMShow);
+
+		GuardPanel.setVisible(false);
+		return GuardPanel;
+	}
+	private void createGuardConfigDialog(){
+		GuardConfig guardConfig = new GuardConfig(InitializationInterface,true);
+		guardConfig.setSerialNum(guardActor.guardActorConfig.serialPortNum);
+		guardConfig.initComponents();
+		guardConfig.setVisible(true);
+		int serialNum=guardConfig.getSerialNum();
+		sendRequest(guardActor,GuardRequest.GUARD_SERIAL_NUM,serialNum);
+		sendRequest(guardActor,MainUiRequest.MAIN_UI_GUARD_START);
+	}
+	private void createGuardErrorgDialog(String displayString){
+		GuardError guardError=new GuardError(InitializationInterface,true,displayString);
+		guardError.setVisible(true);
+	}
 	private JPanel createCTJPanel(){
 		JPanel CTPanel= new JPanel(null);
 		Border etchedBorder = BorderFactory.createEtchedBorder(EtchedBorder.LOWERED,Color.LIGHT_GRAY,Color.LIGHT_GRAY);

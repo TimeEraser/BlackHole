@@ -38,7 +38,12 @@ public class NoticeListener extends BaseActor implements ActionListener{
     }
     @Override
     public void actionPerformed(ActionEvent e) {
-        sendRequest(receiver,request,data);
+        if(redirect){
+            sendRequest(responseRedirectActor,request,data);
+        }
+        else {
+            sendRequest(receiver, request, data);
+        }
     }
 
     @Override

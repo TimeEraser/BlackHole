@@ -4,6 +4,7 @@ import command.config.CommandConfig;
 
 public enum MobileResponse  implements Response{
     MOBILE_CONNECT,
+    MOBILE_CONNECT_FAILED,
     MOBILE_SYNCHRONIZE,
     MOBILE_DISCONNECT;
     //if CommandConfig==null abandon the response
@@ -17,3 +18,4 @@ public enum MobileResponse  implements Response{
     }
 
 }
+

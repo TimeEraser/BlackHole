@@ -19,18 +19,17 @@ import java.io.IOException;
 public class CTHistoryData extends JScrollPane{
     private String ROOT= ConfigCenter.getString("ct.analyse.result.save.root");
     private String filterFormat=ConfigCenter.getString("ct.analyse.result.save.format");
-    private Integer imageWidth = 200;
-    private Integer imageHeight = 200;
+    private Integer imageWidth = 100;
+    private Integer imageHeight = 100;
     private JTable showTable;
 
     public CTHistoryData(){
-        setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-        setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
         setBounds(0,0,200,300);
     }
     public void refresh(String result){
         removeAll();
         showTable = new JTable();
+        showTable.setBounds(0,0,200,200);
         File folder = new File(ROOT+"/"+result);
         if(!folder.exists()||!folder.isDirectory())
             return;
@@ -47,20 +46,21 @@ public class CTHistoryData extends JScrollPane{
                 ImagePanel show = new ImagePanel(zoomImage);
                 show.setBounds(0,0,200,200);
                 show.setVisible(true);
-                add(show);
-                ImagePanel show1 = new ImagePanel(zoomImage);
-                //show.setBounds(0,220,200,200);
-                show.setVisible(true);
-                add(show1);
+                showTable.add(show);
+                showTable.setVisible(true);
+                setViewportView(show);
             } catch (IOException e) {
                 System.out.println(e);
             }
         }
+        //showTable.setVisible(true);
         //this.add(showTable);
-        this.setVisible(true);
+        //setViewportView(showTable);
+        //setModel(showTable);
+        setVisible(true);
         repaint();
     }
     public void addHistory(String path){
-        repaint();
+        ;
     }
 }
