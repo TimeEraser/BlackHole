@@ -67,12 +67,9 @@ public class MainUiActor extends BaseActor{
 		if(request==SystemRequest.BOOT)
 			start();
 		if(request==MainUiRequest.MAIN_UI_ECG_CONFIG)
-<<<<<<< HEAD
 			sendRequest(monitorActor,MonitorRequest.MONITOR_ECG_DATA,getECGConnectInfo());
 		if(request==MainUiRequest.MAIN_UI_CT_OPEN)
 			sendRequest(ctActor,CtRequest.CT_OPEN_IMG,getCTImagePath());
-=======
-			createECGConfigDialog();
 		if(request==MainUiRequest.MAIN_UI_GUARD_SERIAL_PORT_SET)
 			createGuardConfigDialog();
 		if(request==GuardRequest.GUARD_BLOOD_LEAK) {
@@ -85,7 +82,6 @@ public class MainUiActor extends BaseActor{
 		if(request==MainUiRequest.MAIN_UI_GUARD_START){
 			sendRequest(guardActor,MainUiRequest.MAIN_UI_GUARD_START);
 		}
->>>>>>> 71b835b55faac1e6559408ebc69396a0469e4ab2
 		return false;
 	}
 
@@ -168,19 +164,16 @@ public class MainUiActor extends BaseActor{
 		Container contentPane = InitializationInterface.getContentPane();	//容器
 		Component CTComponent = createCTJPanel();							//内容块
 		Component ECGComponent = createECGJPanel();
-<<<<<<< HEAD
 		Component GUARDComponent = createGUARDJPanel();
 		Component MOBILEComponent = createMOBILEJPanel();
 		contentPane.add(CTComponent);
 		contentPane.add(ECGComponent);
 		contentPane.add(GUARDComponent);
 		contentPane.add(MOBILEComponent);
-=======
 		Component GuardComponent=createGuardPanel();
 		contentPane.add(CTComponent);
 		contentPane.add(ECGComponent);
 		contentPane.add(GuardComponent);
->>>>>>> 71b835b55faac1e6559408ebc69396a0469e4ab2
 
 		JMenuBar mainMenu=new JMenuBar();
 		JMenu sys = new JMenu();
@@ -202,13 +195,9 @@ public class MainUiActor extends BaseActor{
 		mainMenu.add(ecg);
 
 		JMenu guard=new JMenu("");
-<<<<<<< HEAD
 		guard.addMenuListener(new MenuSwitchListener(contentPane,GUARDComponent));
 		guard.setHorizontalTextPosition(SwingConstants.RIGHT);
-=======
 		guard.addMenuListener(new MenuSwitchListener(contentPane,GuardComponent));
-//		guard.setHorizontalTextPosition(SwingConstants.RIGHT);
->>>>>>> 71b835b55faac1e6559408ebc69396a0469e4ab2
 		ImageIcon guardIcon = new ImageIcon(getIconImage("Icon/guard.png"));
 		guard.setIcon(guardIcon);
 		JMenuItem guard_start=new JMenuItem("连接告警设备");
