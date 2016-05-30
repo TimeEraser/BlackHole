@@ -12,7 +12,7 @@ logs/
 .idea/
 *.git/
 *.iml
-
+data/*
 # temp ignore
 *.log
 *.cache
