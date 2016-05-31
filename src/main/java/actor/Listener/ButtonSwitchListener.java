@@ -1,5 +1,11 @@
 package actor.Listener;
 
+import actor.BaseActor;
+import command.Command;
+import command.Request;
+import command.Response;
+import command.SystemResponse;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -10,56 +16,89 @@ import java.util.Arrays;
 /**
  * Created by zzq on 16/5/26.
  */
-public class ButtonSwitchListener implements ActionListener {
+public class ButtonSwitchListener extends BaseActor implements ActionListener {
+    //involved button
+    JButton involvedButton;
+    //change element
     private ArrayList<String> textField;
     private ArrayList<ImageIcon> iconField;
-    private ArrayList<ActionListener> actionListenerField;
+    private ArrayList<BaseActor> receiverField;
+    private ArrayList<Request> requestField;
+
     private Boolean ICON_CHANGE=false;
-    private Boolean LISTENER_CHANGE=false;
     private Boolean TEXT_CHANGE=false;
+    private Boolean MESSAGE_CHANGE=false;
     private Integer size=0;
-    private Integer count=0;
+    private Integer current=0;
     public ButtonSwitchListener(){
         textField=new ArrayList<>();
         iconField=new ArrayList<>();
-        actionListenerField=new ArrayList<>();
+        receiverField=new ArrayList<>();
+        requestField=new ArrayList<>();
+
     }
     @Override
     public void actionPerformed(ActionEvent e) {
-        JButton involvedButton = (JButton) e.getSource();
-        count++;
-        count=count%size;
-        if(LISTENER_CHANGE){
-            for (ActionListener a:
-                 involvedButton.getActionListeners()) {
-                if(a instanceof NoticeListener){
-                    involvedButton.removeActionListener(a);
-                }
-            }
-            involvedButton.addActionListener(actionListenerField.get(count));
-        }
-        if(TEXT_CHANGE){
-            involvedButton.setText(textField.get(count));
-        }
-        if(ICON_CHANGE){
-            involvedButton.setIcon(iconField.get(count));
-        }
+        involvedButton = (JButton) e.getSource();
+        involvedButton.setEnabled(false);
+        if(MESSAGE_CHANGE)
+            sendRequest(receiverField.get(current),requestField.get(current));
     }
     public void setText(Integer index ,String text){
         textField.add(index,text);
-        size = Math.min(Math.min(textField.size(),iconField.size()),actionListenerField.size());
+        size = Math.min(
+                Math.min(textField.size(),iconField.size()),
+                Math.min(receiverField.size(),receiverField.size()));
         TEXT_CHANGE=true;
     }
     public void setIcon(Integer index,ImageIcon imageIcon){
         iconField.add(index,imageIcon);
-        size = Math.min(Math.min(textField.size(),iconField.size()),actionListenerField.size());
+        size = Math.min(
+                Math.min(textField.size(),iconField.size()),
+                Math.min(receiverField.size(),receiverField.size()));
         ICON_CHANGE=true;
     }
-    public void setActionListener(Integer integer,ActionListener actionListener){
-        actionListenerField.add(integer,actionListener);
-        size = Math.min(Math.min(textField.size(),iconField.size()),actionListenerField.size());
-        LISTENER_CHANGE=true;
+    public void setMessage(Integer index,BaseActor receiver ,Request request){
+        receiverField.add(index,receiver);
+        requestField.add(index,request);
+        size = Math.min(
+                Math.min(textField.size(),iconField.size()),
+                Math.min(receiverField.size(),receiverField.size()));
+        MESSAGE_CHANGE=true;
     }
 
 
+    @Override
+    protected boolean processActorRequest(Request requests) {
+        return false;
+    }
+
+    @Override
+    protected boolean processActorResponse(Response responses) {
+        if(responses == SystemResponse.SYSTEM_SUCCESS) {
+            current++;
+            current = current % size;
+            if (TEXT_CHANGE) {
+                involvedButton.setText(textField.get(current));
+            }
+            if (ICON_CHANGE) {
+                involvedButton.setIcon(iconField.get(current));
+            }
+        }
+        if(responses == SystemResponse.SYSTEM_FAILURE){
+            JOptionPane.showMessageDialog(null,responses.getConfig().getData(),"系统错误",JOptionPane.ERROR_MESSAGE);
+        }
+        involvedButton.setEnabled(true);
+        return false;
+    }
+
+    @Override
+    public boolean start() {
+        return false;
+    }
+
+    @Override
+    public boolean shutdown() {
+        return false;
+    }
 }

@@ -21,7 +21,6 @@ public class MenuSwitchListener implements MenuListener {
         }
         if(content!= null) content.setVisible(true);
     }
-
     @Override
     public void menuDeselected(MenuEvent e) {
 

@@ -336,10 +336,10 @@ public class MainUiActor extends BaseActor{
 		ButtonSwitchListener buttonSwitchListener=new ButtonSwitchListener();
 		buttonSwitchListener.setText(0,"开始传输");
 		buttonSwitchListener.setIcon(0,new ImageIcon(getIconImage("Icon/start.png")));
-		buttonSwitchListener.setActionListener(0,new NoticeListener(monitorActor,MonitorRequest.MONITOR_ECG_START));
+		buttonSwitchListener.setMessage(0,monitorActor,MonitorRequest.MONITOR_ECG_START);
 		buttonSwitchListener.setText(1,"暂停传输");
 		buttonSwitchListener.setIcon(1,new ImageIcon(getIconImage("Icon/pause.png")));
-		buttonSwitchListener.setActionListener(1,new NoticeListener(monitorActor,MonitorRequest.MONITOR_ECG_STOP));
+		buttonSwitchListener.setMessage(1,monitorActor,MonitorRequest.MONITOR_ECG_STOP);
 		ecgStart.addActionListener(buttonSwitchListener);
 		ECGControl.add(ecgStart);
 
