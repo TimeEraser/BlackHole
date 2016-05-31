@@ -1,4 +1,4 @@
-package actor.serialPort;
+package guard.guardDataProcess;
 
 import actor.BaseActor;
 import command.GuardRequest;
@@ -15,17 +15,15 @@ import java.util.TooManyListenersException;
  * Created by xuda on 2016/5/25/025.
  */
 public class SerialComm extends BaseActor implements SerialPortEventListener,Runnable {
-    protected static CommPortIdentifier portId;
-    protected static Enumeration portList;
-    protected InputStream inputStream;
-    protected SerialPort serialPort;
-    protected Thread readthread;
-    protected BaseActor commActor;
-    protected Request commRequest;
-    public SerialComm(BaseActor commActor,CommPortIdentifier portId,Enumeration portList,Request commRequest){
+    private CommPortIdentifier portId;
+    private InputStream inputStream;
+    private SerialPort serialPort;
+    private Thread readThread;
+    private BaseActor commActor;
+    private Request commRequest;
+    public SerialComm(BaseActor commActor,CommPortIdentifier portId,Request commRequest){
         this.commActor=commActor;
         this.portId=portId;
-        this.portList=portList;
         this.commRequest=commRequest;
         try {
 /* open方法打开通讯端口，获得一个CommPort对象。它使程序独占端口。如果端口正被其他应用程序占用，将使用
@@ -52,8 +50,8 @@ InputStream和一个OutputStream。如果端口是用open方法打开的，那�
                     SerialPort.STOPBITS_1,
                     SerialPort.PARITY_NONE);
         } catch (UnsupportedCommOperationException e) {}
-        readthread = new Thread(this);
-        readthread.start();
+        readThread = new Thread(this);
+        readThread.start();
     }
     protected boolean processActorRequest(Request requests) {
         return false;
@@ -76,7 +74,10 @@ InputStream和一个OutputStream。如果端口是用open方法打开的，那�
             Thread.sleep(2000);
         } catch (InterruptedException e) {}
     }
-
+    public void stopRun(){
+        readThread.interrupt();
+        serialPort.close();
+    }
     public void serialEvent(SerialPortEvent serialPortEvent) {
         switch(serialPortEvent.getEventType()) {
             case SerialPortEvent.BI:/*Break interrupt,通讯中断*/
@@ -107,4 +108,5 @@ InputStream和一个OutputStream。如果端口是用open方法打开的，那�
                 break;
         }
     }
+
 }

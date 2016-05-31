@@ -1,5 +1,9 @@
 package actor.Listener;
 
+import actor.BaseActor;
+import command.Request;
+import command.Response;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -10,7 +14,7 @@ import java.util.Arrays;
 /**
  * Created by zzq on 16/5/26.
  */
-public class ButtonSwitchListener implements ActionListener {
+public class ButtonSwitchListener extends BaseActor implements ActionListener {
     private ArrayList<String> textField;
     private ArrayList<ImageIcon> iconField;
     private ArrayList<ActionListener> actionListenerField;
@@ -62,4 +66,24 @@ public class ButtonSwitchListener implements ActionListener {
     }
 
 
+    @Override
+    protected boolean processActorRequest(Request requests) {
+        return false;
+    }
+
+    @Override
+    protected boolean processActorResponse(Response responses) {
+
+        return false;
+    }
+
+    @Override
+    public boolean start() {
+        return false;
+    }
+
+    @Override
+    public boolean shutdown() {
+        return false;
+    }
 }

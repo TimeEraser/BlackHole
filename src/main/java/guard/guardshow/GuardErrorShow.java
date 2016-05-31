@@ -1,4 +1,4 @@
-package actor.guard;
+package guard.guardshow;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -7,9 +7,9 @@ import java.awt.event.ActionListener;
 /**
  * Created by adminstrator on 2016/5/29.
  */
-public class GuardError extends JDialog {
+public class GuardErrorShow extends JDialog {
     private String displayString;
-    public GuardError(JFrame jFrame, Boolean model,String displayString) {
+    public GuardErrorShow(JFrame jFrame, Boolean model,String displayString) {
         super(jFrame, model);
         this.displayString=displayString;
         initComponents();

@@ -1,4 +1,4 @@
-package actor.guard;
+package guard.guardshow;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -7,12 +7,12 @@ import java.awt.event.ActionListener;
 /**
  * Created by adminstrator on 2016/5/29.
  */
-public class GuardConfig extends JDialog{
+public class GuardConfigShow extends JDialog{
     private JButton comFirmButton;
     private JLabel serialPortLable;
     private JTextField serialPortNumText;
     private int serialNum;
-    public GuardConfig(JFrame jFrame,Boolean model){
+    public GuardConfigShow(JFrame jFrame,Boolean model){
         super(jFrame,model);
     }
     //初始化构件

@@ -1,4 +1,4 @@
-package actor.fileOperation;
+package guard.guardDataProcess;
 
 import org.jfree.chart.axis.DateAxis;
 
@@ -12,8 +12,8 @@ import java.util.Observer;
 public class AlarmDataRefresh extends  Observable implements Observer {
     private String result;
     private void dataRefresh(){
-        if(result.contains("B")) {
-            String alarmData = result.substring(result.indexOf("\r\n") + 1,result.lastIndexOf("\r\n")+1);
+        if(result.contains("_")) {
+            String alarmData = result.substring(result.indexOf("\r\n") +2);
             setChanged();
             notifyObservers(alarmData);
         }
@@ -21,6 +21,9 @@ public class AlarmDataRefresh extends  Observable implements Observer {
     @Override
     public void update(Observable o, Object arg) {
         result=(String)arg;
+//        if(result.contains("_")) {
+//            System.out.println("begin" + result + "end");
+//        }
         dataRefresh();
     }
 }

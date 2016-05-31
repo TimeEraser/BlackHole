@@ -2,11 +2,13 @@ package actor;
 
 
 import actor.config.GuardActorConfig;
-import actor.fileOperation.AlarmDataRefresh;
-import actor.fileOperation.TemperatureDataRefresh;
-import actor.guard.TemperatureShow;
-import actor.serialPort.GuardSerialDataProcess;
-import actor.serialPort.SerialComm;
+import com.sun.corba.se.spi.orbutil.fsm.Guard;
+import config.ConfigCenter;
+import guard.guardDataProcess.AlarmDataRefresh;
+import guard.guardDataProcess.TemperatureDataRefresh;
+import guard.guardshow.TemperatureShow;
+import guard.guardDataProcess.GuardSerialDataProcess;
+import guard.guardDataProcess.SerialComm;
 import command.*;
 
 import ecg.realtime.RealTime;
@@ -20,23 +22,22 @@ import java.util.Enumeration;
  * Created by zzq on 16/5/16.
  */
 public class GuardActor extends BaseActor {
-    public GuardActorConfig guardActorConfig;
-    public TemperatureDataRefresh temperatureDataRefresh;
-    public AlarmDataRefresh alarmDataRefresh;
+    private GuardActorConfig guardActorConfig;
+    private TemperatureDataRefresh temperatureDataRefresh;
+    private AlarmDataRefresh alarmDataRefresh;
     private byte readFlag=0;
     private byte[] data = new byte[2];
-    private static Request startRequest;
     private GuardSerialDataProcess guardSerialDataProcess;
-    private TemperatureShow guardShow;
+    private SerialComm serialComm;
 
     public GuardActor(GuardActorConfig guardActorConfig){
         RealTime realTime=new RealTime();
         String time=realTime.getRealTime().substring(0,realTime.getRealTime().indexOf(' '));
-        File cataloguePath= new File(".\\data");
-        File temperaturePath=new File(".\\data\\temperature");
-        File alarmMessagePath=new File(".\\data\\alarm");
-        File temperatureDataFile=new File(".\\data\\temperature\\"+time+".txt");
-        File alarmMessageDataFile=new File(".\\data\\alarm\\"+time+".txt");
+        File cataloguePath= new File(ConfigCenter.getString("guard.data.root"));
+        File temperaturePath=new File(ConfigCenter.getString("guard.data.temperature.root"));
+        File alarmMessagePath=new File(ConfigCenter.getString("guard.data.alarm.root"));
+        File temperatureDataFile=new File(temperaturePath.getAbsolutePath()+time+".txt");
+        File alarmMessageDataFile=new File(alarmMessagePath.getAbsolutePath()+time+".txt");
         this.guardActorConfig=guardActorConfig;
         time=realTime.getRealTime();
         if (!cataloguePath.exists()){
@@ -71,13 +72,14 @@ public class GuardActor extends BaseActor {
     }
     @Override
     protected boolean processActorRequest(Request requests) {
-        if (requests == MainUiRequest.MAIN_UI_GUARD_START) {
+        if (requests == GuardRequest.GUARD_START) {
             System.out.println("GuardRequest.GUARD_START");
-            startRequest=requests;
             if(!start()){
-                sendResponse(requests,GuardResponse.GUARD_ERROR);
+                sendResponse(requests,MainUiResponse.MAIN_UI_GUARD_START_ERROR);
             }
-
+        }
+        if(requests==GuardRequest.GUARD_SHUT_DOWN){
+            shutdown();
         }
         if(requests==GuardRequest.GUARD_SERIAL_NUM){
             guardActorConfig.setSerialPortNum((Integer)requests.getConfig().getData());
@@ -93,22 +95,17 @@ public class GuardActor extends BaseActor {
                 readFlag += 1;
             }
         }
-        if (requests == GuardRequest.GUARD_ERROR) {
-            System.out.println("GUARD_ERROR");
-        }
         //完整读取2字节后处理
         if (readFlag >= 2) {
             //返回值为1时漏血，返回值为2时气泡
             try {
                 switch (guardSerialDataProcess.process(data)){
                    case 1:{
-                        sendRequest(startRequest.getConfig().getSendActor(), GuardRequest.GUARD_BLOOD_LEAK);
-                        System.out.println("BLOOD");
+                        sendRequest(getGuardActorConfig().getBlackHoleActor(), MainUiRequest.MAIN_UI_GUARD_BLOOD_LEAK);
                         break;
                     }
                     case 2:{
-                        sendRequest(startRequest.getConfig().getSendActor(),GuardRequest.GUARD_BUBBLE);
-                        System.out.println("Bubble");
+                        sendRequest(getGuardActorConfig().getBlackHoleActor(),MainUiRequest.MAIN_UI_GUARD_BUBBLE);
                         break;
                     }
                     default:;
@@ -141,10 +138,8 @@ public class GuardActor extends BaseActor {
             /*getPortType方法返回端口类型*/
             if (portId.getPortType() == CommPortIdentifier.PORT_SERIAL) {
             /* 默认找Windows下的第6个串口,即小板子连上我的电脑后的串口编号*/
-                if (portId.getName().equals(winSerialPort)) {
-            /*找Unix-like系统下的第一个串口*/
-                    //if (portId.getName().equals(unixSerialPort)) {
-                    SerialComm serialComm = new SerialComm(this,portId,portList,GuardRequest.GUARD_DATA);
+                if ((portId.getName().equals(winSerialPort))||(portId.getName().equals(unixSerialPort))){
+                    serialComm = new SerialComm(this,portId,GuardRequest.GUARD_DATA);
                     successFlag=true;
                 }
             }
@@ -154,7 +149,17 @@ public class GuardActor extends BaseActor {
 
     @Override
     public boolean shutdown() {
+        serialComm.stopRun();
         return false;
+    }
+    public GuardActorConfig getGuardActorConfig(){
+        return guardActorConfig;
+    }
+    public TemperatureDataRefresh getTemperatureDataRefresh(){
+        return temperatureDataRefresh;
+    }
+    public AlarmDataRefresh getAlarmDataRefresh(){
+        return alarmDataRefresh;
     }
 }
 

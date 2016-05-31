@@ -1,4 +1,4 @@
-package actor.serialPort;
+package guard.guardDataProcess;
 
 import actor.BaseActor;
 import command.GuardRequest;
@@ -16,10 +16,9 @@ import java.util.Observable;
 public class GuardSerialDataProcess extends Observable {
     private File temperatureDataFile;
     private File alarmMessageDataFile;
-    private static boolean alarmBloodSovled = true;
-    private static boolean alarmBubbleSovled = true;
+    private static boolean alarmBloodSolved = true;
+    private static boolean alarmBubbleSolved = true;
     private static short alarmFlag=0;
-    private static boolean changedFlag=false;
 
     public GuardSerialDataProcess(File temperatureDataFile, File alarmMessageDatafile) throws IOException {
         this.temperatureDataFile = temperatureDataFile;
@@ -45,47 +44,47 @@ public class GuardSerialDataProcess extends Observable {
 
         alarmBlood = (data[0] / 32 % 2 == 1);
         alarmBubble = (data[0] / 64 % 2 == 1);
-        if (alarmBlood && alarmBloodSovled) {
+        if (alarmBlood && alarmBloodSolved) {
             FileOutputStream alarmStream = new FileOutputStream(alarmMessageDataFile, true);
             alarmOutputData = (nowTime + ":" + "Blood\r\n").getBytes();
             alarmStream.write(alarmOutputData);
             alarmStream.close();
-            result=result+nowTime+":"+"Blood\r\n";
-            alarmBloodSovled = false;
+            result=result+nowTime+"_"+"Blood\r\n";
+            alarmBloodSolved = false;
             alarmFlag=1;
-            changedFlag=true;
         }
-        else if ((!alarmBloodSovled)&&(!alarmBlood)) {
-            FileOutputStream alarmStream = new FileOutputStream(alarmMessageDataFile, true);
-            alarmOutputData = (nowTime + ":" + "Blood solved\r\n").getBytes();
-            alarmStream.write(alarmOutputData);
-            alarmStream.close();
-            result=nowTime + ":" + "Blood solved\r\n";
-            alarmBloodSovled = true;
-        }
-        if (alarmBubble && alarmBubbleSovled) {
+        else if (alarmBubble && alarmBubbleSolved) {
             FileOutputStream alarmStream = new FileOutputStream(alarmMessageDataFile, true);
             alarmOutputData = (nowTime + ":" + "Bubble\r\n").getBytes();
             alarmStream.write(alarmOutputData);
             alarmStream.close();
-            result=nowTime + ":" + "Bubble\r\n";
-            alarmBubbleSovled = false;
+            result=result+nowTime + "_" + "Bubble\r\n";
+            alarmBubbleSolved = false;
             alarmFlag=2;
-            changedFlag=true;
         }
-        else if ((!alarmBubbleSovled)&&(!alarmBubble)) {
+        else if ((!alarmBloodSolved)&&(!alarmBlood)) {
             FileOutputStream alarmStream = new FileOutputStream(alarmMessageDataFile, true);
-            alarmOutputData = (nowTime + ":" + "Bubble solved\r\n").getBytes();
+            alarmOutputData = (nowTime + ":" + "Blood Solved\r\n").getBytes();
             alarmStream.write(alarmOutputData);
             alarmStream.close();
-            result=result+nowTime + ":" + "Bubble solved\r\n";
-            alarmBubbleSovled = true;
-        }
-        if(!changedFlag)
+            result = result + nowTime + "_" + "Blood Solved\r\n";
+            alarmBloodSolved = true;
             alarmFlag=0;
+        }
+        else if ((!alarmBubbleSolved)&&(!alarmBubble)) {
+            FileOutputStream alarmStream = new FileOutputStream(alarmMessageDataFile, true);
+            alarmOutputData = (nowTime + ":" + "Bubble Solved\r\n").getBytes();
+            alarmStream.write(alarmOutputData);
+            alarmStream.close();
+            result=result+nowTime + "_" + "Bubble Solved\r\n";
+            alarmBubbleSolved = true;
+            alarmFlag=0;
+        }
+        else{
+            alarmFlag=0;
+        }
         setChanged();
         notifyObservers(result);
-        changedFlag=false;
         return alarmFlag;
     }
 }

@@ -1,4 +1,4 @@
-package actor.guard;
+package guard.guardshow;
 
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
@@ -42,7 +42,7 @@ public class TemperatureShow extends JPanel implements Observer{
         int HEIGHT = (int)Toolkit.getDefaultToolkit().getScreenSize().getHeight();
         Second second=new Second();
         float firstTemperature=(float)25.0;
-        tempLine=new TimeSeries("温度",Second.class);
+        tempLine=new TimeSeries("温度");
         tempLine.add(second,firstTemperature);
         TimeSeriesCollection tempCollection = new TimeSeriesCollection(tempLine);
         JFreeChart jfreechart = ChartFactory.createTimeSeriesChart("血温图","时间","血温",
