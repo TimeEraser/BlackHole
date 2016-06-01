@@ -21,6 +21,7 @@ import com.alee.laf.WebLookAndFeel;
 import command.*;
 import ct.ctshow.CTCurrentData;
 import ct.ctshow.CTHistoryData;
+import ct.ctshow.CTShowUI;
 import ecg.ecgshow.ECGShowUI;
 import ecg.tcp.TCPConfig;
 
@@ -267,14 +268,12 @@ public class MainUiActor extends BaseActor{
 		JPanel CTPanel= new JPanel(null);
 		Border etchedBorder = BorderFactory.createEtchedBorder(EtchedBorder.LOWERED,Color.LIGHT_GRAY,Color.LIGHT_GRAY);
 		CTPanel.setBounds(0,0,WIDTH,(int)(HEIGHT*0.9));
-		CTCurrentData mandelDraw=new CTCurrentData();
 
+		CTShowUI ctShowUI = new CTShowUI(blackHoleActor);
 		JPanel CTData = new JPanel(new FlowLayout(FlowLayout.CENTER));
 		CTData.setBorder(etchedBorder);
 		CTData.setBounds((int)(WIDTH*0.05),(int)(HEIGHT*0.02),(int)(WIDTH*0.65),(int)(HEIGHT*0.81));
-		GridBagConstraints c = new GridBagConstraints();
-		CTData.add(mandelDraw);
-		sendRequest(ctActor,CtRequest.CT_UI_CONFIG,mandelDraw);
+		CTData.add(ctShowUI.getCtCurrentData());
 		CTPanel.add(CTData);
 
 		JPanel CTControl = new JPanel();
@@ -299,14 +298,13 @@ public class MainUiActor extends BaseActor{
 		CTPanel.add(CTControl);
 
 		JPanel CTHistory = new JPanel();
-		CTHistory.setLayout(null);
+		CTHistory.setLayout(new BoxLayout(CTHistory,BoxLayout.Y_AXIS));
 		CTHistory.setBorder(etchedBorder);
-		CTHistory.setBounds((int)(WIDTH*0.75),(int)(HEIGHT*0.25),(int)(WIDTH*0.2),(int)(HEIGHT*0.58));
-			CTHistoryData ctHistoryData=new CTHistoryData();
-			ctHistoryData.refresh("肝   癌");
-			CTHistory.add(ctHistoryData);
+		CTHistory.setBounds((int)(WIDTH*0.75),(int)(HEIGHT*0.25),(int)(WIDTH*0.20),(int)(HEIGHT*0.58));
+		CTHistory.add(ctShowUI.getCtHistoryData());
 		CTPanel.add(CTHistory);
 
+		sendRequest(ctActor,CtRequest.CT_UI_CONFIG,ctShowUI);
 		CTPanel.setVisible(false);
 		return CTPanel;
 	}

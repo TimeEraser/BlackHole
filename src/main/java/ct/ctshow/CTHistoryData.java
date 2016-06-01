@@ -1,38 +1,61 @@
 package ct.ctshow;
 
+import actor.BaseActor;
+import actor.Listener.NoticeListener;
 import actor.config.CtActorConfig;
+import command.CtRequest;
 import config.ConfigCenter;
 import util.ImageUtil;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.border.EtchedBorder;
+import javax.swing.event.AncestorEvent;
+import javax.swing.event.AncestorListener;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableColumn;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.IOException;
+import java.util.Date;
+import java.util.Vector;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Created by zzq on 16/5/29.
  */
 public class CTHistoryData extends JScrollPane{
-    private String ROOT= ConfigCenter.getString("ct.analyse.result.save.root");
-    private String filterFormat=ConfigCenter.getString("ct.analyse.result.save.format");
-    private Integer imageWidth = 100;
-    private Integer imageHeight = 100;
-    private JTable showTable;
-
-    public CTHistoryData(){
-        setBounds(0,0,200,300);
+    private final String ROOT= ConfigCenter.getString("ct.analyse.result.save.root");
+    private final String filterFormat=ConfigCenter.getString("ct.analyse.result.save.format");
+    private final String[] names={"历史信息"};
+    private Integer imageWidth = 200;
+    private Integer imageHeight = 200;
+    private BaseActor boss;
+    private DefaultTableModel imageTableModel;
+    private JTable imageTable;
+    public CTHistoryData(BaseActor boss){
+        this.boss=boss;
+        getVerticalScrollBar().setPreferredSize(new Dimension(0, 0));
+        getViewport().setBorder(null);
+        setViewportBorder(null);
+        setBorder(null);
     }
     public void refresh(String result){
-        removeAll();
-        showTable = new JTable();
-        showTable.setBounds(0,0,200,200);
+        imageTableModel=new JTableButtonModel(null,names);
+        imageTable=new JTable(imageTableModel);
+        imageTable.getColumn("历史信息").setCellRenderer(new JTableButtonRenderer());
+        imageTable.addMouseListener(new JTableButtonMouseListener(imageTable));
+        imageTable.setRowHeight(imageHeight);
         File folder = new File(ROOT+"/"+result);
-        if(!folder.exists()||!folder.isDirectory())
+        if(!folder.exists()||!folder.isDirectory()) {
+            setViewportView(imageTable);
             return;
+        }
         File[] files=folder.listFiles(new FileFilter() {
             @Override
             public boolean accept(File pathname) {
@@ -43,24 +66,89 @@ public class CTHistoryData extends JScrollPane{
             try {
                 BufferedImage image = ImageIO.read(f);
                 BufferedImage zoomImage = ImageUtil.zoom(image,imageWidth,imageHeight);
-                ImagePanel show = new ImagePanel(zoomImage);
-                show.setBounds(0,0,200,200);
-                show.setVisible(true);
-                showTable.add(show);
-                showTable.setVisible(true);
-                setViewportView(show);
+                ImageIcon show = new ImageIcon(zoomImage);
+                JButton showButton = new JButton(show);
+                showButton.addActionListener(new NoticeListener(boss, CtRequest.CT_SHOW_HISTORY,f.getAbsolutePath()));
+                Object[] rowData = new Object[1];
+                rowData[0]=showButton;
+                imageTableModel.addRow(rowData);
             } catch (IOException e) {
                 System.out.println(e);
             }
         }
-        //showTable.setVisible(true);
-        //this.add(showTable);
-        //setViewportView(showTable);
-        //setModel(showTable);
+        setViewportView(imageTable);
         setVisible(true);
-        repaint();
     }
     public void addHistory(String path){
-        ;
+        File f = new File(path);
+        BufferedImage image = null;
+        try {
+            image = ImageIO.read(f);
+            BufferedImage zoomImage = ImageUtil.zoom(image,imageWidth,imageHeight);
+            ImageIcon show = new ImageIcon(zoomImage);
+            JButton showButton = new JButton(show);
+            showButton.addActionListener(new NoticeListener(boss, CtRequest.CT_SHOW_HISTORY,f.getAbsolutePath()));
+            Object[] rowData = new Object[1];
+            rowData[0]=showButton;
+            imageTableModel.insertRow(0,rowData);
+        } catch (IOException e) {
+            System.out.println(e);
+        }
+
+    }
+    private  class JTableButtonMouseListener extends MouseAdapter {
+        private final JTable table;
+
+        public JTableButtonMouseListener(JTable table) {
+            this.table = table;
+        }
+
+        public void mouseClicked(MouseEvent e) {
+            int column = table.getColumnModel().getColumnIndexAtX(e.getX());
+            int row    = e.getY()/table.getRowHeight();
+
+            if (row < table.getRowCount() && row >= 0 && column < table.getColumnCount() && column >= 0) {
+                Object value = table.getValueAt(row, column);
+                if (value instanceof JButton) {
+                    ((JButton)value).doClick();
+                }
+            }
+        }
+    }
+    private  class JTableButtonRenderer implements TableCellRenderer {
+
+        @Override public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+            JButton button = (JButton)value;
+            if (isSelected) {
+                button.setForeground(table.getSelectionForeground());
+                button.setBackground(table.getSelectionBackground());
+            } else {
+                button.setForeground(table.getForeground());
+                button.setBackground(table.getBackground());
+            }
+            return button;
+        }
+    }
+    private  class JTableButtonModel extends DefaultTableModel {
+        public JTableButtonModel(Object[][] data, Object[] columnNames)
+        {
+            super(data,columnNames);
+        }
+        @Override
+        public Object getValueAt(final int rowIndex, final int columnIndex){
+            return ((Vector)dataVector.elementAt(rowIndex)).elementAt(columnIndex);
+        }
+        @Override
+        public Class getColumnClass(int col)
+        {
+            // dataVector is a protected member of DefaultTableModel
+            Vector v = (Vector)dataVector.elementAt(0);
+            return v.elementAt(col).getClass();
+        }
+        @Override
+        public boolean isCellEditable(int row,int col)
+        {
+            return false;
+        }
     }
 }
