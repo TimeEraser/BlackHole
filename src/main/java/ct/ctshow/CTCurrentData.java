@@ -3,36 +3,36 @@ package ct.ctshow;
 /**
  * Created by ChaomingGu on 2016/5/19.
  */
+import util.ImageUtil;
+
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 
-import static com.sun.org.apache.xalan.internal.lib.ExsltDatetime.date;
+public class CTCurrentData extends JPanel {
+    private static final Color DRAWING_RECT_COLOR = Color.BLUE;
+    private static final Color DRAWN_RECT_COLOR = Color.RED;
 
-public class MandelDraw extends JPanel {
-    private static final Color DRAWING_RECT_COLOR = new Color(200, 200, 255);
-    private static final Color DRAWN_RECT_COLOR = Color.blue;
+    public BufferedImage image = null;
+    private String imagePath;
 
-    public BufferedImage image = null, focus = null;
+    private BufferedImage focus = null;
+    //mouse event
     private Rectangle rect = null;
     private boolean drawing = false;
-    public int x1, y1, x2, y2, x, y, width, height;
-    private int serialNum = 0;
-    private String saveImgPath;
-    private String imagePath;
-    private JPanel resultImageJPanel = new JPanel();
-
-
-    public MandelDraw() {
+    public CTCurrentData() {
     }
-
     public void refreshImage(String imagePath) {
         try {
+            //reInitialized
+            removeAll();
+            rect=null;
+            focus=null;
+            //refresh
             this.imagePath = imagePath;
             image = ImageIO.read(new File(imagePath));
             MyMouseAdapter mouseAdapter = new MyMouseAdapter();
@@ -52,22 +52,27 @@ public class MandelDraw extends JPanel {
 
     public void refreshResult(String result) {
         removeAll();
-//        JPanel resultImageJPanel =new JPanel();
+        Integer ZOOM_WIDTH=image.getWidth() / 6;
+        Integer ZOOM_HEIGHT=image.getHeight() /6;
+
+        JPanel resultImageJPanel =new JPanel();
         resultImageJPanel.setLayout(null);
         resultImageJPanel.setBackground(Color.BLACK);
-        resultImageJPanel.setBounds(0, 0, image.getWidth() / 6, image.getHeight() / 6 + 40);
+        resultImageJPanel.setBounds(0, 0,ZOOM_WIDTH+40, ZOOM_HEIGHT + 40);
+
+        BufferedImage focusZoom= ImageUtil.zoom(focus,ZOOM_WIDTH,ZOOM_HEIGHT);
         JLabel resultImage = new JLabel();
-        resultImage.setBounds(focus.getWidth() > image.getWidth() / 6 ? 0 : (image.getWidth() / 6 - focus.getWidth()) / 2,
-                focus.getHeight() > image.getHeight() / 6 ? 0 : (image.getHeight() / 6 - focus.getHeight()) / 2,
-                focus.getWidth(),
-                focus.getHeight());
-        resultImage.setIcon(new ImageIcon(focus));
+        resultImage.setBounds(0,0,ZOOM_WIDTH,ZOOM_HEIGHT);
+        resultImage.setIcon(new ImageIcon(focusZoom));
         resultImageJPanel.add(resultImage);
-        JLabel resultText = new JLabel("病症 : " + result);
-        resultText.setForeground(Color.RED);
-        resultText.setOpaque(false);
-        resultText.setFont(new Font("Dialog", 0, 14));
-        resultText.setBounds(0, image.getHeight() / 6, image.getWidth() / 6, 40);
+
+        JLabel resultText = new JLabel(result);
+        resultText.setLayout(new FlowLayout(FlowLayout.CENTER));
+        resultText.setOpaque(false);//背景透明
+        resultText.setForeground(Color.RED);//字体颜色
+        resultText.setFont(new Font("Dialog",0,14));//字体大小
+        resultText.setBounds(20,ZOOM_HEIGHT,ZOOM_WIDTH,40);
+
         resultImageJPanel.add(resultText);
         add(resultImageJPanel);
         this.repaint();
@@ -108,32 +113,32 @@ public class MandelDraw extends JPanel {
 
         @Override
         public void mousePressed(MouseEvent e) {
+            Integer mousePressedX,mousePressedY;
             mousePress = e.getPoint();
-            x1 = e.getX();
-            y1 = e.getY();
-            System.out.println("x1:" + x1 + " y1:" + y1);
+            mousePressedX = e.getX();
+            mousePressedY = e.getY();
+            System.out.println("mousePressed  X = :" + mousePressedX + " Y=:" + mousePressedY);
         }
 
         @Override
         public void mouseDragged(MouseEvent e) {
             drawing = true;
-            x = Math.min(mousePress.x, e.getPoint().x);
-            y = Math.min(mousePress.y, e.getPoint().y);
-            width = Math.abs(mousePress.x - e.getPoint().x);
-            height = Math.abs(mousePress.y - e.getPoint().y);
-
+            int x = Math.min(mousePress.x, e.getPoint().x);
+            int y = Math.min(mousePress.y, e.getPoint().y);
+            int width = Math.abs(mousePress.x - e.getPoint().x);
+            int height = Math.abs(mousePress.y - e.getPoint().y);
             rect = new Rectangle(x, y, width, height);
             repaint();
         }
-
         @Override
         public void mouseReleased(MouseEvent e) {
-            x2 = e.getX();
-            y2 = e.getY();
-            System.out.println("x2:" + x2 + " y2:" + y2);
+            Integer mouseReleasedX,mouseReleasedY;
+            mouseReleasedX = e.getX();
+            mouseReleasedY = e.getY();
+            System.out.println("mouseReleased X=:" + mouseReleasedX + " Y=:" + mouseReleasedY);
             drawing = false;
             repaint();
-            focus = image.getSubimage(x, y, width, height);
+            focus = image.getSubimage((int)rect.getX(),(int)rect.getY(),(int)rect.getWidth(), (int)rect.getHeight());
         }
 
         @Override
@@ -143,32 +148,8 @@ public class MandelDraw extends JPanel {
             }
         }
     }
-
     public double[] getCoordinate() {
-        double[] getCoordinate = {x1, y1, x2, y2};
+        double[] getCoordinate = {rect.getX(),rect.getY(), rect.getX()+rect.getWidth(), rect.getY()+rect.getHeight()};
         return getCoordinate;
     }
-
-    public void removeImg() {
-        if (image != null) {
-            image = null;
-        }
-    }
-
-
-    /*public void saveImg() {
-        int response = JOptionPane.showConfirmDialog(null, "保存文件", "是否保存文件?", JOptionPane.YES_NO_OPTION);
-        if (response == 0) {
-            serialNum++;
-            Dimension size = resultImageJPanel.getSize();
-            BufferedImage savedHistory = new BufferedImage(size.width, size.height, BufferedImage.TYPE_INT_RGB);
-            Graphics2D g = savedHistory.createGraphics();
-            resultImageJPanel.paint(g);
-            try {
-                ImageIO.write(savedHistory, "png", new File(serialNum+".png"));
-            } catch (Exception ex) {
-                System.out.println(ex);
-            }
-        }
-    }*/
 }

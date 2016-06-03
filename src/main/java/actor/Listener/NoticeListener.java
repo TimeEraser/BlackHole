@@ -38,7 +38,7 @@ public class NoticeListener extends BaseActor implements ActionListener{
     }
     @Override
     public void actionPerformed(ActionEvent e) {
-        sendRequest(receiver,request,data);
+        sendRequest(receiver, request, data);
     }
 
     @Override

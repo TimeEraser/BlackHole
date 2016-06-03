@@ -73,7 +73,7 @@ InputStream和一个OutputStream。如果端口是用open方法打开的，那�
 
     public void run() {
         try {
-            Thread.sleep(20000);
+            Thread.sleep(2000);
         } catch (InterruptedException e) {}
     }
 

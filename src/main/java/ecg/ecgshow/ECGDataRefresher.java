@@ -119,6 +119,7 @@ public class ECGDataRefresher extends Observable implements Observer{
 	}
 
 	public void setEcgOtherData(ECGOtherData ecgOtherData){this.ecgOtherData=ecgOtherData;}
+	public ECGOtherData getEcgOtherData(){return this.ecgOtherData;}
 	
 	/**
 	 * 显示必须采用降采样的方法，
@@ -174,9 +175,9 @@ public class ECGDataRefresher extends Observable implements Observer{
 		@Override
 		public void run() {
 			datas=readFileByBytes(filePath);
-			setChanged();
+			setChanged();// 设置变化点
 			System.out.println("通知分析数据");
-		    notifyObservers(datas);
+		    notifyObservers(datas);// datas被改变
 		}
 		
 	}
