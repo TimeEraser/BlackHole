@@ -24,7 +24,9 @@ public class BlackHoleActor extends BaseActor {
         //TO DO Initialize the BlackHoleActor
 
         monitorActor=new MonitorActor(new MonitorActorConfig());
-        guardActor=new GuardActor(new GuardActorConfig());
+        GuardActorConfig guardActorConfig=new GuardActorConfig();
+        guardActorConfig.setBlackHoleActor(this);
+        guardActor=new GuardActor(guardActorConfig);
         ctActor=new CtActor(new CtActorConfig());
         mobileActor=new MobileActor(new MobileActorConfig());
         MainUiActorConfig mainUiActorConfig= new MainUiActorConfig();

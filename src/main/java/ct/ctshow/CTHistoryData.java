@@ -1,22 +1,28 @@
 package ct.ctshow;
 
+
 import actor.config.CtActorConfig;
+
 import config.ConfigCenter;
 import util.ImageUtil;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.border.EtchedBorder;
+
 import java.awt.*;
+
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.IOException;
 
+
 /**
  * Created by zzq on 16/5/29.
  */
 public class CTHistoryData extends JScrollPane{
+
     private String ROOT= ConfigCenter.getString("ct.analyse.result.save.root");
     private String filterFormat=ConfigCenter.getString("ct.analyse.result.save.format");
     private Integer imageWidth = 100;
@@ -33,6 +39,7 @@ public class CTHistoryData extends JScrollPane{
         File folder = new File(ROOT+"/"+result);
         if(!folder.exists()||!folder.isDirectory())
             return;
+
         File[] files=folder.listFiles(new FileFilter() {
             @Override
             public boolean accept(File pathname) {
@@ -43,16 +50,19 @@ public class CTHistoryData extends JScrollPane{
             try {
                 BufferedImage image = ImageIO.read(f);
                 BufferedImage zoomImage = ImageUtil.zoom(image,imageWidth,imageHeight);
+
                 ImagePanel show = new ImagePanel(zoomImage);
                 show.setBounds(0,0,200,200);
                 show.setVisible(true);
                 showTable.add(show);
                 showTable.setVisible(true);
                 setViewportView(show);
+
             } catch (IOException e) {
                 System.out.println(e);
             }
         }
+
         //showTable.setVisible(true);
         //this.add(showTable);
         //setViewportView(showTable);
@@ -62,5 +72,6 @@ public class CTHistoryData extends JScrollPane{
     }
     public void addHistory(String path){
         ;
+
     }
 }

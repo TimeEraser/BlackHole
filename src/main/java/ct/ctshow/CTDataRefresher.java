@@ -6,6 +6,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * Created by zzq on 16/5/26.
  */
 public class CTDataRefresher  {
+
     private CTCurrentData ctCurrentData ;
     private AtomicBoolean INITIALIZED=new AtomicBoolean(false);
     public CTDataRefresher(CTCurrentData ctCurrentData){
@@ -17,6 +18,7 @@ public class CTDataRefresher  {
     }
     }
     public void refreshResult(String result){ctCurrentData.refreshResult(result);}
+
     public double[] getCoordinate(){
         return ctCurrentData.getCoordinate();
     }

@@ -1,6 +1,11 @@
 package actor.Listener;
 
 import actor.BaseActor;
+<<<<<<< HEAD
+=======
+import command.Request;
+import command.Response;
+>>>>>>> 9b3c977da614eae073e6be1ea38e19866a553054
 import command.Command;
 import command.Request;
 import command.Response;
@@ -86,7 +91,11 @@ public class ButtonSwitchListener extends BaseActor implements ActionListener {
             }
         }
         if(responses == SystemResponse.SYSTEM_FAILURE){
+<<<<<<< HEAD
             //JOptionPane.showMessageDialog(null,responses.getConfig().getData(),"系统错误",JOptionPane.ERROR_MESSAGE);
+=======
+            JOptionPane.showMessageDialog(null,responses.getConfig().getData(),"系统错误",JOptionPane.ERROR_MESSAGE);
+>>>>>>> 9b3c977da614eae073e6be1ea38e19866a553054
         }
         involvedButton.setEnabled(true);
         return false;

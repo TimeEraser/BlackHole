@@ -33,6 +33,7 @@ public class MonitorActor extends BaseActor{
     @Override
     protected boolean processActorRequest(Request request) {
         if(request==MonitorRequest.MONITOR_SHUTDOWM){
+
             if(client!=null) {
                 client.stopFlag = true;
                 if (ecgDataRefresher != null) ecgDataRefresher.setStopFlag();
@@ -43,6 +44,7 @@ public class MonitorActor extends BaseActor{
             {
                 sendResponse(request,SystemResponse.SYSTEM_FAILURE,"请配置心电仪");
             }
+
         }
         if(request==MonitorRequest.MONITOR_ECG_DATA) {
             connectInfo= (Map) request.getConfig().getData();

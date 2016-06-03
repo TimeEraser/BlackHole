@@ -1,5 +1,9 @@
 import actor.Listener.NoticeListener;
+<<<<<<< HEAD
 import ct.ctshow.ImagePanel;
+=======
+import ct.ctshow.CTHistoryData;
+>>>>>>> 9b3c977da614eae073e6be1ea38e19866a553054
 import util.ImageUtil;
 
 import javax.imageio.ImageIO;
@@ -16,6 +20,7 @@ public class Test extends JFrame {
 
     }
     public static void main(String[] args) {
+<<<<<<< HEAD
         //JScrollPane jScrollPane =new JScrollPane(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         try {
             BufferedImage  bufferedImage=ImageIO.read(new File("/Users/macbook/Documents/IdeaProject/BlackHole/res/肝   癌/肝   癌20160529141030.png"));
@@ -29,6 +34,8 @@ public class Test extends JFrame {
             e.printStackTrace();
         }
         //test1.add(jScrollPane);
+=======
+>>>>>>> 9b3c977da614eae073e6be1ea38e19866a553054
 
     }
 }

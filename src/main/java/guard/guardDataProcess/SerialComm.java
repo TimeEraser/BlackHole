@@ -1,4 +1,4 @@
-package actor.serialPort;
+package guard.guardDataProcess;
 
 import actor.BaseActor;
 import command.GuardRequest;
@@ -15,17 +15,16 @@ import java.util.TooManyListenersException;
  * Created by xuda on 2016/5/25/025.
  */
 public class SerialComm extends BaseActor implements SerialPortEventListener,Runnable {
-    protected static CommPortIdentifier portId;
-    protected static Enumeration portList;
-    protected InputStream inputStream;
-    protected SerialPort serialPort;
-    protected Thread readthread;
-    protected BaseActor commActor;
-    protected Request commRequest;
-    public SerialComm(BaseActor commActor,CommPortIdentifier portId,Enumeration portList,Request commRequest){
+    private CommPortIdentifier portId;
+    private InputStream inputStream;
+    private SerialPort serialPort;
+    private Thread readThread;
+    private BaseActor commActor;
+    private Request commRequest;
+    private boolean successFlag=true;
+    public SerialComm(BaseActor commActor,CommPortIdentifier portId,Request commRequest){
         this.commActor=commActor;
         this.portId=portId;
-        this.portList=portList;
         this.commRequest=commRequest;
         try {
 /* open方法打开通讯端口，获得一个CommPort对象。它使程序独占端口。如果端口正被其他应用程序占用，将使用
@@ -35,25 +34,33 @@ InputStream和一个OutputStream。如果端口是用open方法打开的，那�
 时阻塞等待的毫秒数。 */
             serialPort = (SerialPort) portId.open("GuardRead", 2000);
         } catch (PortInUseException e) {}
-        try {
+        if(serialPort!=null) {
+            try {
             /*获取端口的输入流对象*/
-            inputStream = serialPort.getInputStream();
-        } catch (IOException e) {}
-        try {
+                inputStream = serialPort.getInputStream();
+            } catch (IOException e) {
+            }
+            try {
         /*注册一个SerialPortEventListener事件来监听串口事件*/
-            serialPort.addEventListener(this);
-        } catch (TooManyListenersException e) {}
+                serialPort.addEventListener(this);
+            } catch (TooManyListenersException e) {
+            }
         /*数据可用*/
-        serialPort.notifyOnDataAvailable(true);
-        try {
+            serialPort.notifyOnDataAvailable(true);
+            try {
        /*设置串口初始化参数，依次是波特率，数据位，停止位和校验*/
-            serialPort.setSerialPortParams(9600,
-                    SerialPort.DATABITS_8,
-                    SerialPort.STOPBITS_1,
-                    SerialPort.PARITY_NONE);
-        } catch (UnsupportedCommOperationException e) {}
-        readthread = new Thread(this);
-        readthread.start();
+                serialPort.setSerialPortParams(9600,
+                        SerialPort.DATABITS_8,
+                        SerialPort.STOPBITS_1,
+                        SerialPort.PARITY_NONE);
+            } catch (UnsupportedCommOperationException e) {
+            }
+            readThread = new Thread(this);
+            readThread.start();
+        }
+        else {
+            successFlag=false;
+        }
     }
     protected boolean processActorRequest(Request requests) {
         return false;
@@ -70,13 +77,19 @@ InputStream和一个OutputStream。如果端口是用open方法打开的，那�
     public boolean shutdown() {
         return false;
     }
+    public boolean getSuccessFlag(){
+        return successFlag;
+    }
 
     public void run() {
         try {
             Thread.sleep(2000);
         } catch (InterruptedException e) {}
     }
-
+    public void stopRun(){
+        readThread.interrupt();
+        serialPort.close();
+    }
     public void serialEvent(SerialPortEvent serialPortEvent) {
         switch(serialPortEvent.getEventType()) {
             case SerialPortEvent.BI:/*Break interrupt,通讯中断*/
@@ -107,4 +120,5 @@ InputStream和一个OutputStream。如果端口是用open方法打开的，那�
                 break;
         }
     }
+
 }
