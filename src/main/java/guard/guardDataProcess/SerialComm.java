@@ -21,6 +21,7 @@ public class SerialComm extends BaseActor implements SerialPortEventListener,Run
     private Thread readThread;
     private BaseActor commActor;
     private Request commRequest;
+    private boolean successFlag=true;
     public SerialComm(BaseActor commActor,CommPortIdentifier portId,Request commRequest){
         this.commActor=commActor;
         this.portId=portId;
@@ -33,25 +34,33 @@ InputStream和一个OutputStream。如果端口是用open方法打开的，那�
 时阻塞等待的毫秒数。 */
             serialPort = (SerialPort) portId.open("GuardRead", 2000);
         } catch (PortInUseException e) {}
-        try {
+        if(serialPort!=null) {
+            try {
             /*获取端口的输入流对象*/
-            inputStream = serialPort.getInputStream();
-        } catch (IOException e) {}
-        try {
+                inputStream = serialPort.getInputStream();
+            } catch (IOException e) {
+            }
+            try {
         /*注册一个SerialPortEventListener事件来监听串口事件*/
-            serialPort.addEventListener(this);
-        } catch (TooManyListenersException e) {}
+                serialPort.addEventListener(this);
+            } catch (TooManyListenersException e) {
+            }
         /*数据可用*/
-        serialPort.notifyOnDataAvailable(true);
-        try {
+            serialPort.notifyOnDataAvailable(true);
+            try {
        /*设置串口初始化参数，依次是波特率，数据位，停止位和校验*/
-            serialPort.setSerialPortParams(9600,
-                    SerialPort.DATABITS_8,
-                    SerialPort.STOPBITS_1,
-                    SerialPort.PARITY_NONE);
-        } catch (UnsupportedCommOperationException e) {}
-        readThread = new Thread(this);
-        readThread.start();
+                serialPort.setSerialPortParams(9600,
+                        SerialPort.DATABITS_8,
+                        SerialPort.STOPBITS_1,
+                        SerialPort.PARITY_NONE);
+            } catch (UnsupportedCommOperationException e) {
+            }
+            readThread = new Thread(this);
+            readThread.start();
+        }
+        else {
+            successFlag=false;
+        }
     }
     protected boolean processActorRequest(Request requests) {
         return false;
@@ -67,6 +76,9 @@ InputStream和一个OutputStream。如果端口是用open方法打开的，那�
 
     public boolean shutdown() {
         return false;
+    }
+    public boolean getSuccessFlag(){
+        return successFlag;
     }
 
     public void run() {

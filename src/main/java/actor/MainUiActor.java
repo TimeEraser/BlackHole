@@ -21,6 +21,7 @@ import ct.ctshow.CTCurrentData;
 import ct.ctshow.CTHistoryData;
 import ecg.ecgshow.ECGShowUI;
 import ecg.tcp.TCPConfig;
+import java.util.Timer;
 
 public class MainUiActor extends BaseActor{
 
@@ -41,6 +42,9 @@ public class MainUiActor extends BaseActor{
 	private Integer LEFT;
 	private Integer TOP;
 
+	private static boolean temperatureAlarmEnable=true;
+	private static boolean bloodAlarmEnable=true;
+	private static boolean bubbleAlarmEnable=true;
 
 
 	public MainUiActor(MainUiActorConfig mainUiActorConfig){
@@ -70,11 +74,61 @@ public class MainUiActor extends BaseActor{
 			sendRequest(ctActor,CtRequest.CT_OPEN_IMG,getCTImagePath());
 		if(request==MainUiRequest.MAIN_UI_GUARD_SERIAL_PORT_SET)
 			createGuardConfigDialog();
+		if(request==MainUiRequest.MAIN_UI_GUARD_TEMPERATURE_HIGH){
+			if (temperatureAlarmEnable){
+				temperatureAlarmEnable=false;
+				createGuardErrorDialog("血温过高!!!");
+				java.util.Timer timer=new Timer();
+				timer.schedule(
+						new java.util.TimerTask() {
+							public void run(){
+								temperatureAlarmEnable=true;
+							}
+						},60000
+				);
+			}
+		}
+		if(request==MainUiRequest.MAIN_UI_GUARD_TEMPERATURE_LOW){
+			if (temperatureAlarmEnable){
+				temperatureAlarmEnable=false;
+				createGuardErrorDialog("血温过低!!!");
+				java.util.Timer timer=new Timer();
+				timer.schedule(
+						new java.util.TimerTask() {
+							public void run(){
+								temperatureAlarmEnable=true;
+							}
+						},60000
+				);
+			}
+		}
 		if(request==MainUiRequest.MAIN_UI_GUARD_BLOOD_LEAK) {
-			createGuardErrorDialog("发生漏血!!!");
+			if(bloodAlarmEnable) {
+				bloodAlarmEnable = false;
+				createGuardErrorDialog("发生漏血!!!");
+				java.util.Timer timer=new Timer();
+				timer.schedule(
+						new java.util.TimerTask() {
+							public void run(){
+								bloodAlarmEnable=true;
+							}
+						},60000
+				);
+			}
 		}
 		if(request== MainUiRequest.MAIN_UI_GUARD_BUBBLE) {
-			createGuardErrorDialog("出现气泡!!!");
+			if(bubbleAlarmEnable) {
+				bubbleAlarmEnable = false;
+				createGuardErrorDialog("出现气泡!!!");
+				java.util.Timer timer=new Timer();
+				timer.schedule(
+						new java.util.TimerTask() {
+							public void run(){
+								bubbleAlarmEnable=true;
+							}
+						},60000
+				);
+			}
 		}
 		if(request==MainUiRequest.MAIN_UI_GUARD_START){
 			sendRequest(guardActor,MainUiRequest.MAIN_UI_GUARD_START);
@@ -84,10 +138,6 @@ public class MainUiActor extends BaseActor{
 
 	@Override
 	public boolean processActorResponse(Response response) {
-		if(response==MainUiResponse.MAIN_UI_GUARD_START_ERROR){
-			createGuardErrorDialog("无设备");
-			return true;
-		}
 		if(response==MonitorResponse.MONITOR_SHUTDOWM){
 			return true;
 		}
@@ -218,19 +268,18 @@ public class MainUiActor extends BaseActor{
 		GuardPanel.setBounds(0,0,WIDTH,(int)(HEIGHT*0.9));
 
 		JPanel GUARDControl=new JPanel();
-		GUARDControl.setBounds((int)(WIDTH*0.77),(int)(HEIGHT*0.01),(int)(WIDTH*0.2),(int)(HEIGHT*0.22));
+		GUARDControl.setBounds((int)(WIDTH*0.53),(int)(HEIGHT*0.01),(int)(WIDTH*0.5),(int)(HEIGHT*0.1));
 		GUARDControl.setLayout(new FlowLayout(FlowLayout.CENTER));
 		JButton GUARDConnect = new JButton();
 		GUARDConnect.setText("连接报警设备");
 		GUARDConnect.setIcon(new ImageIcon(getIconImage("Icon/start.png")));
-		GUARDConnect.addActionListener(new NoticeListener(this,guardActor,GuardRequest.GUARD_START));
 		ButtonSwitchListener buttonSwitchListener=new ButtonSwitchListener();
 		buttonSwitchListener.setText(0,"连接报警设备");
 		buttonSwitchListener.setIcon(0,new ImageIcon(getIconImage("Icon/start.png")));
-		buttonSwitchListener.setActionListener(0,new NoticeListener(this,guardActor,GuardRequest.GUARD_START));
+		buttonSwitchListener.setMessage(0,guardActor,GuardRequest.GUARD_START);
 		buttonSwitchListener.setText(1,"断开报警设备");
 		buttonSwitchListener.setIcon(1,new ImageIcon(getIconImage("Icon/stop.png")));
-		buttonSwitchListener.setActionListener(1,new NoticeListener(guardActor,GuardRequest.GUARD_SHUT_DOWN));
+		buttonSwitchListener.setMessage(1,guardActor,GuardRequest.GUARD_SHUT_DOWN);
 		GUARDConnect.addActionListener(buttonSwitchListener);
 		GUARDControl.add(GUARDConnect);
 
@@ -241,42 +290,63 @@ public class MainUiActor extends BaseActor{
 		GUARDControl.add(GUARDConfigSet);
 		GuardPanel.add(GUARDControl);
 
-		JPanel ACTIVEShow=new JPanel();
-		ActiveAlarmShow activeAlarmShow=new ActiveAlarmShow();
-		guardActor.getAlarmDataRefresh().addObserver(activeAlarmShow);
-		ACTIVEShow.setBounds((int)(WIDTH*0.77),(int)(HEIGHT*0.24),(int)(WIDTH*0.2),(int)(HEIGHT*0.28));
-		ACTIVEShow.setLayout(new BorderLayout());
-		ACTIVEShow.add(activeAlarmShow);
-		GuardPanel.add(ACTIVEShow);
+		JPanel TEMPERATUREShow = new JPanel();
+		TemperatureShow temperatureShow=new TemperatureShow();
+		guardActor.getGuardSerialDataProcess().addObserver(temperatureShow);
+		TEMPERATUREShow.setBounds(0,(int)(HEIGHT*0.005),(int)(WIDTH*0.52),(int)(HEIGHT*0.41));
+		TEMPERATUREShow.setLayout(new BorderLayout());
+		TEMPERATUREShow.add(temperatureShow);
+		GuardPanel.add(TEMPERATUREShow);
 
-//		JPanel GUARDShow = new JPanel();
-//		TemperatureShow temperatureShow=new TemperatureShow();
-//		guardActor.getTemperatureDataRefresh().addObserver(temperatureShow);
-//		GUARDShow.setBounds((int)(WIDTH*0.002),(int)(HEIGHT*0.005),(int)(WIDTH*0.7),(int)(HEIGHT*0.85));
-//		GUARDShow.setLayout(new BorderLayout());
-//		GUARDShow.add(temperatureShow);
-//		GuardPanel.add(GUARDShow);
-//
+		JPanel LIGHTValueShow=new JPanel();
+		LightValueShow lightValueShow=new LightValueShow();
+		guardActor.getGuardSerialDataProcess().addObserver(lightValueShow);
+		LIGHTValueShow.setBounds((int)(WIDTH*0.062),(int)(HEIGHT*0.42),(int)(WIDTH*0.4),(int)(HEIGHT*0.38));
+		LIGHTValueShow.setLayout(new BorderLayout());
+		LIGHTValueShow.add(lightValueShow);
+		LIGHTValueShow.setVisible(true);
+		GuardPanel.add(LIGHTValueShow);
+
 		JPanel ALARMShow=new JPanel();
-		AlarmShow alarmShow=new AlarmShow();
-		guardActor.getAlarmDataRefresh().addObserver(alarmShow);
-		ALARMShow.setBorder(BorderFactory.createBevelBorder(EtchedBorder.LOWERED,Color.BLACK,Color.BLACK));
-		ALARMShow.setBounds((int)(WIDTH*0.30),(int)(HEIGHT*0.01),(int)(WIDTH*0.45),(int)(HEIGHT*0.85));
+		AlarmShow alarmShow=new AlarmShow(guardActor.getGuardSerialDataProcess());
+		ALARMShow.setBounds((int)(WIDTH*0.58),(int)(HEIGHT*0.12),(int)(WIDTH*0.37),(int)(HEIGHT*0.63));
 		ALARMShow.setLayout(new BorderLayout());
 		ALARMShow.add(alarmShow);
 		GuardPanel.add(ALARMShow);
+
+		JPanel GuardBottomShow=new JPanel();
+		GuardBottomShow guardBottomShow=new GuardBottomShow();
+		guardActor.getGuardSerialDataProcess().addObserver(guardBottomShow);
+		GuardBottomShow.setBounds(0,(int)(HEIGHT*0.82),(int)(WIDTH*0.985),(int)(HEIGHT*0.05));
+		GuardBottomShow.setLayout(new BorderLayout());
+		GuardBottomShow.add(guardBottomShow);
+		GuardPanel.add(GuardBottomShow);
 
 		GuardPanel.setVisible(false);
 		return GuardPanel;
 	}
 	private void createGuardConfigDialog(){
 		GuardConfigShow guardConfigShow = new GuardConfigShow(InitializationInterface,true);
-		guardConfigShow.setSerialNum(guardActor.getGuardActorConfig().serialPortNum);
+		guardActor.getGuardSerialDataProcess().addObserver(guardConfigShow);
+		guardConfigShow.setSerialNum(guardActor.getGuardActorConfig().getSerialPortNum());
+		guardConfigShow.setTemperatureLow(guardActor.getGuardActorConfig().getTemperatureLow());
+		guardConfigShow.setTemperatureHigh(guardActor.getGuardActorConfig().getTemperatureHigh());
+		guardConfigShow.setDefaultLightValue(guardActor.getGuardActorConfig().getDefaultLightValue());
+		guardConfigShow.setBloodLightValue(guardActor.getGuardActorConfig().getBloodLightValue());
+		guardConfigShow.setBubbleLightValue(guardActor.getGuardActorConfig().getBubbleLightValue());
+		guardConfigShow.setBubbleHoldCount(guardActor.getGuardActorConfig().getBubbleHoldCount());
+
 		guardConfigShow.initComponents();
 		guardConfigShow.setVisible(true);
-		int serialNum=guardConfigShow.getSerialNum();
-		sendRequest(guardActor,GuardRequest.GUARD_SERIAL_NUM,serialNum);
-		sendRequest(guardActor,MainUiRequest.MAIN_UI_GUARD_START);
+		if(guardConfigShow.getConfirmFlag()) {
+			guardActor.getGuardActorConfig().setSerialPortNum(guardConfigShow.getSerialNum());
+			guardActor.getGuardActorConfig().setTemperatureLow(guardConfigShow.getTemperatureLow());
+			guardActor.getGuardActorConfig().setTemperatureHigh(guardConfigShow.getTemperatureHigh());
+			guardActor.getGuardActorConfig().setDefaultLightValue(guardConfigShow.getDefaultLightValue());
+			guardActor.getGuardActorConfig().setBloodLightValue(guardConfigShow.getBloodLightValue());
+			guardActor.getGuardActorConfig().setBubbleLightValue(guardConfigShow.getBubbleLightValue());
+			guardActor.getGuardActorConfig().setBubbleHoldCount(guardConfigShow.getBubbleHoldCount());
+		}
 	}
 	private void createGuardErrorDialog(String displayString){
 		GuardErrorShow guardErrorShow=new GuardErrorShow(InitializationInterface,true,displayString);
@@ -355,10 +425,10 @@ public class MainUiActor extends BaseActor{
 		ButtonSwitchListener buttonSwitchListener=new ButtonSwitchListener();
 		buttonSwitchListener.setText(0,"开始传输");
 		buttonSwitchListener.setIcon(0,new ImageIcon(getIconImage("Icon/start.png")));
-		buttonSwitchListener.setActionListener(0,new NoticeListener(monitorActor,MonitorRequest.MONITOR_ECG_START));
+		buttonSwitchListener.setMessage(0,monitorActor,MonitorRequest.MONITOR_ECG_START);
 		buttonSwitchListener.setText(1,"暂停传输");
 		buttonSwitchListener.setIcon(1,new ImageIcon(getIconImage("Icon/pause.png")));
-		buttonSwitchListener.setActionListener(1,new NoticeListener(monitorActor,MonitorRequest.MONITOR_ECG_STOP));
+		buttonSwitchListener.setMessage(1,monitorActor,MonitorRequest.MONITOR_ECG_STOP);
 		ecgStart.addActionListener(buttonSwitchListener);
 		ECGControl.add(ecgStart);
 

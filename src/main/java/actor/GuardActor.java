@@ -2,11 +2,7 @@ package actor;
 
 
 import actor.config.GuardActorConfig;
-import com.sun.corba.se.spi.orbutil.fsm.Guard;
 import config.ConfigCenter;
-import guard.guardDataProcess.AlarmDataRefresh;
-import guard.guardDataProcess.TemperatureDataRefresh;
-import guard.guardshow.TemperatureShow;
 import guard.guardDataProcess.GuardSerialDataProcess;
 import guard.guardDataProcess.SerialComm;
 import command.*;
@@ -23,10 +19,8 @@ import java.util.Enumeration;
  */
 public class GuardActor extends BaseActor {
     private GuardActorConfig guardActorConfig;
-    private TemperatureDataRefresh temperatureDataRefresh;
-    private AlarmDataRefresh alarmDataRefresh;
     private byte readFlag=0;
-    private byte[] data = new byte[2];
+    private byte[] data = new byte[4];
     private GuardSerialDataProcess guardSerialDataProcess;
     private SerialComm serialComm;
 
@@ -36,8 +30,8 @@ public class GuardActor extends BaseActor {
         File cataloguePath= new File(ConfigCenter.getString("guard.data.root"));
         File temperaturePath=new File(ConfigCenter.getString("guard.data.temperature.root"));
         File alarmMessagePath=new File(ConfigCenter.getString("guard.data.alarm.root"));
-        File temperatureDataFile=new File(temperaturePath.getAbsolutePath()+time+".txt");
-        File alarmMessageDataFile=new File(alarmMessagePath.getAbsolutePath()+time+".txt");
+        File temperatureDataFile=new File(temperaturePath.getAbsolutePath()+"/"+time+".txt");
+        File alarmMessageDataFile=new File(alarmMessagePath.getAbsolutePath()+"/"+time+".txt");
         this.guardActorConfig=guardActorConfig;
         time=realTime.getRealTime();
         if (!cataloguePath.exists()){
@@ -60,14 +54,10 @@ public class GuardActor extends BaseActor {
             e1.printStackTrace();
         }
         try {
-            guardSerialDataProcess=new GuardSerialDataProcess(temperatureDataFile,alarmMessageDataFile);
+            guardSerialDataProcess=new GuardSerialDataProcess(temperatureDataFile,alarmMessageDataFile,guardActorConfig);
         } catch (IOException e) {
             e.printStackTrace();
         }
-        temperatureDataRefresh=new TemperatureDataRefresh();
-        alarmDataRefresh=new AlarmDataRefresh();
-        guardSerialDataProcess.addObserver(temperatureDataRefresh);
-        guardSerialDataProcess.addObserver(alarmDataRefresh);
         //TO DO Initialize the GuardActor
     }
     @Override
@@ -75,11 +65,15 @@ public class GuardActor extends BaseActor {
         if (requests == GuardRequest.GUARD_START) {
             System.out.println("GuardRequest.GUARD_START");
             if(!start()){
-                sendResponse(requests,MainUiResponse.MAIN_UI_GUARD_START_ERROR);
+                sendResponse(requests,SystemResponse.SYSTEM_FAILURE,"请检查报警模块及配置");
+            }
+            else {
+                sendResponse(requests,SystemResponse.SYSTEM_SUCCESS);
             }
         }
         if(requests==GuardRequest.GUARD_SHUT_DOWN){
             shutdown();
+            sendResponse(requests,SystemResponse.SYSTEM_SUCCESS);
         }
         if(requests==GuardRequest.GUARD_SERIAL_NUM){
             guardActorConfig.setSerialPortNum((Integer)requests.getConfig().getData());
@@ -87,32 +81,41 @@ public class GuardActor extends BaseActor {
         if (requests == GuardRequest.GUARD_DATA) {
             byte temp;
             temp = (Byte) (requests.getConfig().getData());
-            if (temp > 0) {
+            if ((temp > 0) && ((temp & 0x40) == 0)) {
                 data[0] = temp;
                 readFlag += 1;
-            } else {
+            } else if ((temp > 0) && ((temp & 0x40) != 0)) {
                 data[1] = temp;
                 readFlag += 1;
+            } else if ((temp < 0) && ((temp & 0x40) == 0)) {
+                data[2] = temp;
+                readFlag += 1;
+            } else if ((temp < 0) && ((temp & 0x40) != 0)) {
+                data[3] = temp;
+                readFlag += 1;
             }
-        }
-        //完整读取2字节后处理
-        if (readFlag >= 2) {
-            //返回值为1时漏血，返回值为2时气泡
-            try {
-                switch (guardSerialDataProcess.process(data)){
-                   case 1:{
-                        sendRequest(getGuardActorConfig().getBlackHoleActor(), MainUiRequest.MAIN_UI_GUARD_BLOOD_LEAK);
-                        break;
+
+            //完整读取4字节后处理
+            if (readFlag >= 4) {
+                //返回值为1时漏血，返回值为2时气泡
+                try {
+                    short tempData = guardSerialDataProcess.process(data);
+                    if (tempData % 2 == 1) {
+                        sendRequest(guardActorConfig.getBlackHoleActor(), MainUiRequest.MAIN_UI_GUARD_BLOOD_LEAK);
                     }
-                    case 2:{
-                        sendRequest(getGuardActorConfig().getBlackHoleActor(),MainUiRequest.MAIN_UI_GUARD_BUBBLE);
-                        break;
+                    if (tempData % 4 / 2 == 1) {
+                        sendRequest(guardActorConfig.getBlackHoleActor(), MainUiRequest.MAIN_UI_GUARD_BUBBLE);
                     }
-                    default:;
+                    if (tempData % 8 / 4 == 1) {
+                        sendRequest(guardActorConfig.getBlackHoleActor(), MainUiRequest.MAIN_UI_GUARD_TEMPERATURE_LOW);
+                    }
+                    if (tempData % 16 / 8 == 1) {
+                        sendRequest(guardActorConfig.getBlackHoleActor(), MainUiRequest.MAIN_UI_GUARD_TEMPERATURE_HIGH);
+                    }
+                    readFlag = 0;
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
-                readFlag = 0;
-            } catch (IOException e) {
-                e.printStackTrace();
             }
         }
         return false;
@@ -129,10 +132,9 @@ public class GuardActor extends BaseActor {
         portList=CommPortIdentifier.getPortIdentifiers();//读出串口列表
         CommPortIdentifier portId;
         boolean successFlag=false;
-        System.out.print("serialport:");
-        System.out.println(guardActorConfig.getSerialPortNum());
         String winSerialPort="COM"+String.valueOf(guardActorConfig.getSerialPortNum());
         String unixSerialPort="/dev/term/"+String.valueOf((char)(guardActorConfig.getSerialPortNum()+64));
+        System.out.println(winSerialPort);
         while (portList.hasMoreElements()) {
             portId = (CommPortIdentifier) portList.nextElement();
             /*getPortType方法返回端口类型*/
@@ -143,6 +145,9 @@ public class GuardActor extends BaseActor {
                     successFlag=true;
                 }
             }
+        }
+        if (successFlag&&(!serialComm.getSuccessFlag())){
+            successFlag=false;
         }
         return successFlag;
     }
@@ -155,15 +160,8 @@ public class GuardActor extends BaseActor {
     public GuardActorConfig getGuardActorConfig(){
         return guardActorConfig;
     }
-    public TemperatureDataRefresh getTemperatureDataRefresh(){
-        return temperatureDataRefresh;
-    }
-    public AlarmDataRefresh getAlarmDataRefresh(){
-        return alarmDataRefresh;
+
+    public GuardSerialDataProcess getGuardSerialDataProcess(){
+        return guardSerialDataProcess;
     }
 }
-
-
-
-
-

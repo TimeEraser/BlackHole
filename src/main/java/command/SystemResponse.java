@@ -6,6 +6,8 @@ import command.config.CommandConfig;
  * Created by zzq on 16/5/21.
  */
 public enum SystemResponse implements Response{
+    SYSTEM_SUCCESS,
+    SYSTEM_FAILURE,
     SYSTEM_MESSAGE;
     private CommandConfig responseConfig=null;
     @Override

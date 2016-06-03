@@ -46,11 +46,20 @@ public class MonitorActor extends BaseActor{
             ecgDataRefresher=new ECGDataRefresher(ecgShowUI.getECGSeries(),ecgShowUI.getDateAxises(),ecgShowUI.getECGOtherData());
         }
         if(request==MonitorRequest.MONITOR_ECG_START){
-            client.stopFlag = false;
-            if(ecgDataRefresher!=null) ecgDataRefresher.setStartFlag();
+            if(client!=null) {
+                ecgDataRefresher.setStartFlag();
+                sendResponse(request,SystemResponse.SYSTEM_SUCCESS);
+            }else {
+                sendResponse(request,SystemResponse.SYSTEM_FAILURE,"请配置心电仪");
+            }
         }
         if(request==MonitorRequest.MONITOR_ECG_STOP) {
-            if(ecgDataRefresher!=null)ecgDataRefresher.setStopFlag();
+            if(client!=null) {
+                ecgDataRefresher.setStopFlag();
+                sendResponse(request,SystemResponse.SYSTEM_SUCCESS);
+            }else {
+                sendResponse(request,SystemResponse.SYSTEM_FAILURE,"请配置心电仪");
+            }
         }
         return false;
     }
