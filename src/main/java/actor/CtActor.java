@@ -49,20 +49,20 @@ public class CtActor extends BaseActor{
     public boolean processActorRequest(Request  request ) {
         if(request== CtRequest.CT_OPEN_IMG){
             CTAnalyseResult=null;
-            ctDataRefresher.refreshCTData((String) request.getConfig().getData(),true);
+            ctDataRefresher.refreshCTData((String) request.getConfig().getData(),false);
         }
         if(request== CtRequest.CT_UI_CONFIG){
             ctDataRefresher=new CTDataRefresher((CTShowUI)request.getConfig().getData());
         }
-        if(request==MainUiRequest.MAIN_UI_CT_ANALYSIS){
+        if(request==CtRequest.CT_ANALYSIS){
             ctAnalysis();
             ctDataRefresher.refreshHistoryResult(CTAnalyseResult);
         }
-        if(request==MainUiRequest.MAIN_UI_CT_SAVE){
+        if(request==CtRequest.CT_SAVE){
             saveCTAnalyseResult();
         }
         if(request==CtRequest.CT_SHOW_HISTORY)
-            ctDataRefresher.refreshCTData((String) request.getConfig().getData(),false);
+            ctDataRefresher.refreshCTData((String) request.getConfig().getData(),true);
         return false;
     }
 

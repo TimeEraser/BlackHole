@@ -27,7 +27,7 @@ public class CTCurrentData extends JPanel {
     private boolean drawing = false;
     public CTCurrentData() {
     }
-    public void refreshImage(String imagePath,boolean addMouseAdapterOrNot) {
+    public void refreshImage(String imagePath,boolean isHistory) {
         try {
             //reInitialized
             removeAll();
@@ -38,7 +38,7 @@ public class CTCurrentData extends JPanel {
             //refresh
             this.imagePath = imagePath;
             image = ImageIO.read(new File(imagePath));
-            if(addMouseAdapterOrNot){
+            if(!isHistory){
                 mouseAdapter = new MyMouseAdapter();
                 addMouseListener(mouseAdapter);
                 addMouseMotionListener(mouseAdapter);

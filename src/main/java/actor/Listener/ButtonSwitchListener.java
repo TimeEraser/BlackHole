@@ -1,19 +1,15 @@
 package actor.Listener;
 
 import actor.BaseActor;
-import command.Request;
-import command.Response;
-import command.Command;
+
 import command.Request;
 import command.Response;
 import command.SystemResponse;
 
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 /**
  * Created by zzq on 16/5/26.

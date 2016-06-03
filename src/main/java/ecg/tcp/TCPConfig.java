@@ -1,6 +1,11 @@
 package ecg.tcp;
 
+import config.ConfigCenter;
+
 import javax.swing.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.io.*;
 
 public class TCPConfig extends JDialog {		//TCP配置界面
@@ -18,10 +23,11 @@ public class TCPConfig extends JDialog {		//TCP配置界面
     private JTextField jTextField4;
     private JRadioButton jRadioButton1;
     private JRadioButton jRadioButton2;
-    private String jRadioButtonName;
-    private String [] fileContent=new String[5];
+    private String jRadioButtonName=null;
 
-    private   String filename = "./TCPConfig.txt";
+
+
+    private   String filename = ConfigCenter.getString("ecg.tcp.TCPConfig.save");
     FileWriter fwriter = null;
     BufferedReader reader = null;
     File file=new File(filename );
@@ -39,12 +45,13 @@ public class TCPConfig extends JDialog {		//TCP配置界面
         jLabel3 = new JLabel();
         jLabel4 = new JLabel();
         jLabel5 = new JLabel();
-        jTextField1 = new JTextField("192.168.1.101");
-        jTextField2 = new JTextField("60129");
+        jTextField1 = new JTextField(null);
+        jTextField2 = new JTextField(null);
         jTextField3 = new JTextField(null);
         jTextField4 = new JTextField(null);
         jRadioButton1=new JRadioButton("男") ;
         jRadioButton2=new JRadioButton("女") ;
+        jRadioButtonName=new String();
         jButton1 = new JButton();
         ButtonGroup buttonGroup=new ButtonGroup();       //单选按钮组
         buttonGroup.add(jRadioButton1);
@@ -59,6 +66,21 @@ public class TCPConfig extends JDialog {		//TCP配置界面
         jLabel5.setText("性别");
         jButton1.setText("确定");
 
+
+
+        this.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                        jLabel1.setText(null);
+                        jLabel2.setText(null);
+                        jLabel3.setText(null);
+                        jLabel4.setText(null);
+                        jLabel5.setText(null);
+                        jRadioButtonName=null;
+                System.out.println("windowClosing");
+            }
+        });
+
         if(!file.exists()){
             try {
                 fwriter= new FileWriter(filename);
@@ -70,7 +92,8 @@ public class TCPConfig extends JDialog {		//TCP配置界面
                 fwriter.write("\r\n");
                 fwriter.write(jTextField4.getText());
                 fwriter.write("\r\n");
-//              fwriter.write(jRadioButtonName);
+                fwriter.write(jRadioButtonName);
+                fwriter.write("\r\n");
 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -86,6 +109,7 @@ public class TCPConfig extends JDialog {		//TCP配置界面
         }
         else {
             File file = new File(filename);
+            String [] fileContent=new String[5];
             try {
                 reader = new BufferedReader(new FileReader(file));
                 String tempString = null;
@@ -112,6 +136,13 @@ public class TCPConfig extends JDialog {		//TCP配置界面
             jTextField2.setText(fileContent[1]);
             jTextField3.setText(fileContent[2]);
             jTextField4.setText(fileContent[3]);
+            jRadioButtonName=fileContent[4];
+            if(jRadioButtonName.equals((String )"男")){
+                jRadioButton1.setSelected(true);
+            }
+            else if(jRadioButtonName.equals((String )"女")){
+                jRadioButton2.setSelected(true);
+            }
 
         }
 
@@ -216,6 +247,8 @@ public class TCPConfig extends JDialog {		//TCP配置界面
             fwriter.write(jTextField3.getText());
             fwriter.write("\r\n");
             fwriter.write(jTextField4.getText());
+            fwriter.write("\r\n");
+            fwriter.write(jRadioButtonName);
             fwriter.write("\r\n");
         } catch (IOException e) {
             e.printStackTrace();

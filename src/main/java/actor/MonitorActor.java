@@ -33,13 +33,24 @@ public class MonitorActor extends BaseActor{
     @Override
     protected boolean processActorRequest(Request request) {
         if(request==MonitorRequest.MONITOR_SHUTDOWM){
-            client.stopFlag =true;
-            if(ecgDataRefresher!=null) ecgDataRefresher.setStopFlag();
-            System.out.println("client.stopFlag =true");
+
+            if(client!=null) {
+                client.stopFlag = true;
+                if (ecgDataRefresher != null) ecgDataRefresher.setStopFlag();
+                sendResponse(request,SystemResponse.SYSTEM_SUCCESS);
+                System.out.println("client.stopFlag =true");
+            }
+            else
+            {
+                sendResponse(request,SystemResponse.SYSTEM_FAILURE,"请配置心电仪");
+            }
+
         }
         if(request==MonitorRequest.MONITOR_ECG_DATA) {
             connectInfo= (Map) request.getConfig().getData();
             start();
+
+
         }
         if(request==MonitorRequest.ECG_UI_CONFIG){
             ecgShowUI = (ECGShowUI)request.getConfig().getData();
@@ -82,7 +93,7 @@ public class MonitorActor extends BaseActor{
         System.out.println("MonitorActor: name ="+Name);
         System.out.println("MonitorActor: sex ="+Sex);
         System.out.println("MonitorRequest.MONITOR_ECG_DATA");
-        if((host!=null)&&(port!=null)) {
+
             client = new TCPClient(ecgDataRefresher);        //新建一个TCPClient()方法的实例client
             client.setHost(host);    //设置主机
             client.setPort(Integer.parseInt(port));    //设置端口
@@ -92,11 +103,10 @@ public class MonitorActor extends BaseActor{
             client.stopFlag = false;
             //client.setMainUiActor((MainUiActor) request.getConfig().getSendActor());
             client.start();        //客户端线程开始运行
-        }
-        else{
-            return false;
-        }
+
+
         ecgDataRefresher.start();
+
         return false;
     }
 

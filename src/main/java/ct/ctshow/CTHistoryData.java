@@ -5,7 +5,6 @@ import actor.Listener.NoticeListener;
 import command.CtRequest;
 import config.ConfigCenter;
 import util.ImageUtil;
-
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -33,7 +32,7 @@ public class CTHistoryData extends JScrollPane{
     private JTable imageTable;
     public CTHistoryData(BaseActor boss){
         this.boss=boss;
-        //getVerticalScrollBar().setPreferredSize(new Dimension(0, 0));
+        getVerticalScrollBar().setPreferredSize(new Dimension(0, 0));
         getViewport().setBorder(null);
         setViewportBorder(null);
         setBorder(null);
@@ -87,6 +86,7 @@ public class CTHistoryData extends JScrollPane{
         } catch (IOException e) {
             System.out.println(e);
         }
+
     }
     private  class JTableButtonMouseListener extends MouseAdapter {
         private final JTable table;

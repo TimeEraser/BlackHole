@@ -28,12 +28,15 @@ public class TCPClient extends Thread{  //跑多线程
 	private String Name;//姓名
 	private String Sex;	//性别
 	private ECGDataRefresher ecgDataRefresher;
-	private FileOutputStream fos;
+	private FileOutputStream fosEcg;
+	private FileOutputStream fosHeartRate;
+	private FileOutputStream fosPressure;
+	private FileOutputStream fosBloodOxygen;
 
 	public String heart_rate;			//心率
 	public String systolic_pressure;	//收缩压
 	public String diastolic_pressure;	//舒张压
-	public String blood_oxygen;		//血氧
+	public String blood_oxygen;			//血氧
 	private ECGOtherData ecgOtherData;
 
 	public boolean connectFlag = false;//布尔变量型 连接标志，初始时设为false没有连接
@@ -86,6 +89,7 @@ public class TCPClient extends Thread{  //跑多线程
 
 	public TCPClient(ECGDataRefresher ecgDataRefresher){
 		this.ecgDataRefresher=ecgDataRefresher;
+		this.ecgOtherData=ecgDataRefresher.getEcgOtherData();
 	}
 
 
@@ -93,7 +97,10 @@ public class TCPClient extends Thread{  //跑多线程
 	public void run() {
 
 		try {
-			fos = new FileOutputStream("./res/SurgeryId_"+Id+"_"+"_ecg.dat");
+			fosEcg = new FileOutputStream("./res/SurgeryId_"+Id+"_"+"_Ecg.dat");
+			fosHeartRate= new FileOutputStream("./res/SurgeryId_"+Id+"_"+"_HeartRate.dat");
+			fosPressure= new FileOutputStream("./res/SurgeryId_"+Id+"_"+"_Pressure.dat");
+			fosBloodOxygen= new FileOutputStream("./res/SurgeryId_"+Id+"_"+"_BloodOxygen.dat");
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -121,6 +128,7 @@ public class TCPClient extends Thread{  //跑多线程
 		} catch (UnknownHostException e) {		//public void connect()对应的异常处理。未知的主机异常
 			// TODO Auto-generated catch block
 			e.printStackTrace();	//打印栈的跟踪
+
 		} catch (IOException e) {	//IO异常
 			// TODO Auto-generated catch block
 			e.printStackTrace();	//打印栈的跟踪
@@ -140,7 +148,7 @@ public class TCPClient extends Thread{  //跑多线程
 			//System.out.print(stopFlag);
 			if(stopFlag){		//如果停止传输
 				try {
-					fos.close();
+					fosEcg.close();
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
@@ -156,21 +164,27 @@ public class TCPClient extends Thread{  //跑多线程
 					if(receivedBuffer[0]==0x01){		//心电模块
 						heart_rate = ((receivedBuffer[14]<<8)+(receivedBuffer[15]&0xFF))+" bpm";		//心率，有符号
 						ecgOtherData.setHeart_rate(heart_rate);
-						fos.write(receivedBuffer, 16, 3000);
+						fosHeartRate.write(receivedBuffer,14,2);
+						fosEcg.write(receivedBuffer, 16, 3000);
 						ecgDataRefresher.refreshData(Arrays.copyOfRange(receivedBuffer, 16, 3016));
+						ecgDataRefresher.setEcgOtherData(ecgOtherData);
 					}
 					else if(receivedBuffer[0]==0x03){	//血压模块
 						systolic_pressure = ((receivedBuffer[6]<<8)+(receivedBuffer[7]&0xFF))+" mmHg";	//收缩压，有符号
 						diastolic_pressure = ((receivedBuffer[8]<<8)+(receivedBuffer[9]&0xFF))+" mmHg";	//舒张压，有符号
 						ecgOtherData.setSystolic_pressure(systolic_pressure);
 						ecgOtherData.setDiastolic_pressure(diastolic_pressure);
+						fosPressure.write(receivedBuffer,6,4);
+						ecgDataRefresher.setEcgOtherData(ecgOtherData);
 					}
 					else if(receivedBuffer[0]==0x04){	//血氧模块 饱和度，有符号
 						blood_oxygen = receivedBuffer[8]+" %";
 						ecgOtherData.setBlood_oxygen(blood_oxygen);
+						fosBloodOxygen.write(receivedBuffer,8,1);
+						ecgDataRefresher.setEcgOtherData(ecgOtherData);
 					}
 
-					ecgDataRefresher.setEcgOtherData(ecgOtherData);
+
 
 //					System.out.println(len);		//打印接收到的信息
 //					System.out.println(frameLen);	//打印接收到的信息

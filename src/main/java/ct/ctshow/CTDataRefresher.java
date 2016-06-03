@@ -13,9 +13,9 @@ public class CTDataRefresher  {
         ctCurrentData=ctShowUI.getCtCurrentData();
         ctHistoryData=ctShowUI.getCtHistoryData();
     }
-    public void refreshCTData(String imagePath ,boolean addMouseAdapterOrNot){if(imagePath!=null) {
+    public void refreshCTData(String imagePath ,boolean isHistory){if(imagePath!=null) {
         INITIALIZED.set(true);
-       ctCurrentData.refreshImage(imagePath,addMouseAdapterOrNot);
+        ctCurrentData.refreshImage(imagePath,isHistory);
     }
     }
     public void refreshCurrentResult(String result){ctCurrentData.refreshResult(result);}
