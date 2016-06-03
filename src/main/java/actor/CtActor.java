@@ -7,6 +7,7 @@ import ct.ctshow.CTCurrentData;
 import ct.algorithm.feature.ImageFeature;
 import ct.algorithm.randomforest.RandomForest;
 import command.*;
+import ct.ctshow.CTShowUI;
 import util.FileUtil;
 
 import javax.imageio.ImageIO;
@@ -48,18 +49,20 @@ public class CtActor extends BaseActor{
     public boolean processActorRequest(Request  request ) {
         if(request== CtRequest.CT_OPEN_IMG){
             CTAnalyseResult=null;
-            ctDataRefresher.refreshCTData((String) request.getConfig().getData());
+            ctDataRefresher.refreshCTData((String) request.getConfig().getData(),true);
         }
         if(request== CtRequest.CT_UI_CONFIG){
-            ctDataRefresher=new CTDataRefresher((CTCurrentData)request.getConfig().getData());
+            ctDataRefresher=new CTDataRefresher((CTShowUI)request.getConfig().getData());
         }
         if(request==MainUiRequest.MAIN_UI_CT_ANALYSIS){
             ctAnalysis();
-            //CTList = listFile.getList();
+            ctDataRefresher.refreshHistoryResult(CTAnalyseResult);
         }
         if(request==MainUiRequest.MAIN_UI_CT_SAVE){
             saveCTAnalyseResult();
         }
+        if(request==CtRequest.CT_SHOW_HISTORY)
+            ctDataRefresher.refreshCTData((String) request.getConfig().getData(),false);
         return false;
     }
 
@@ -112,7 +115,7 @@ public class CtActor extends BaseActor{
                         CTAnalyseResult = "其   他";
                 }
                 System.out.println("RandomForest predict:" + CTAnalyseResult);
-                ctDataRefresher.refreshResult(CTAnalyseResult);
+                ctDataRefresher.refreshCurrentResult(CTAnalyseResult);
             } catch (FileNotFoundException e_analysis) {
                 e_analysis.printStackTrace();
             } catch (IOException e_analysis) {
@@ -139,6 +142,7 @@ public class CtActor extends BaseActor{
                 String filename = CTAnalyseResult + time +"."+CT_ANALYSE_RESULT_SAVE_FORMAT;
                 try {
                     ImageIO.write(savedHistory, CT_ANALYSE_RESULT_SAVE_FORMAT, new File(folderPath, filename));
+                    ctDataRefresher.addHistoryResult(folderPath+"/"+filename);
                     System.out.println("Saved Successfully!");
                 } catch (Exception ex) {
                     System.out.println(ex);
