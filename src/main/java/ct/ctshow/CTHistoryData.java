@@ -2,19 +2,14 @@ package ct.ctshow;
 
 import actor.BaseActor;
 import actor.Listener.NoticeListener;
-import actor.config.CtActorConfig;
 import command.CtRequest;
 import config.ConfigCenter;
 import util.ImageUtil;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
-import javax.swing.border.EtchedBorder;
-import javax.swing.event.AncestorEvent;
-import javax.swing.event.AncestorListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
-import javax.swing.table.TableColumn;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -22,9 +17,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.IOException;
-import java.util.Date;
 import java.util.Vector;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Created by zzq on 16/5/29.
@@ -40,7 +33,7 @@ public class CTHistoryData extends JScrollPane{
     private JTable imageTable;
     public CTHistoryData(BaseActor boss){
         this.boss=boss;
-        getVerticalScrollBar().setPreferredSize(new Dimension(0, 0));
+        //getVerticalScrollBar().setPreferredSize(new Dimension(0, 0));
         getViewport().setBorder(null);
         setViewportBorder(null);
         setBorder(null);
@@ -94,7 +87,6 @@ public class CTHistoryData extends JScrollPane{
         } catch (IOException e) {
             System.out.println(e);
         }
-
     }
     private  class JTableButtonMouseListener extends MouseAdapter {
         private final JTable table;

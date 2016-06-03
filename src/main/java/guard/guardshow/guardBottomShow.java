@@ -1,8 +1,6 @@
 package guard.guardshow;
 
 import guard.guardDataProcess.GuardData;
-import guard.guardDataProcess.GuardSerialDataProcess;
-
 import javax.swing.*;
 import java.awt.*;
 import java.net.URL;
