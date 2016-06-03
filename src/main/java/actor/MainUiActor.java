@@ -224,6 +224,7 @@ public class MainUiActor extends BaseActor{
 		Component ECGComponent = createECGJPanel();
 		Component GUARDComponent = createGUARDJPanel();
 		Component MOBILEComponent = createMOBILEJPanel();
+
 		contentPane.add(CTComponent);
 		contentPane.add(ECGComponent);
 		contentPane.add(GUARDComponent);
@@ -319,11 +320,19 @@ public class MainUiActor extends BaseActor{
 		JPanel LIGHTValueShow=new JPanel();
 		LightValueShow lightValueShow=new LightValueShow();
 		guardActor.getGuardSerialDataProcess().addObserver(lightValueShow);
-		LIGHTValueShow.setBounds((int)(WIDTH*0.062),(int)(HEIGHT*0.42),(int)(WIDTH*0.4),(int)(HEIGHT*0.38));
+		LIGHTValueShow.setBounds((int)(WIDTH*0.062),(int)(HEIGHT*0.41),(int)(WIDTH*0.2),(int)(HEIGHT*0.38));
 		LIGHTValueShow.setLayout(new BorderLayout());
 		LIGHTValueShow.add(lightValueShow);
 		LIGHTValueShow.setVisible(true);
 		GuardPanel.add(LIGHTValueShow);
+
+		JPanel LIGHTValueDialShow=new JPanel();
+		LightValueDialPlot lightValueDialPlot=new LightValueDialPlot();
+		guardActor.getGuardSerialDataProcess().addObserver(lightValueDialPlot);
+		LIGHTValueDialShow.setBounds((int)(WIDTH*0.27),(int)(HEIGHT*0.41),(int)(WIDTH*0.205),(int)(HEIGHT*0.38));
+		LIGHTValueDialShow.setLayout(new BorderLayout());
+		LIGHTValueDialShow.add(lightValueDialPlot);
+		GuardPanel.add(LIGHTValueDialShow);
 
 		JPanel ALARMShow=new JPanel();
 		AlarmShow alarmShow=new AlarmShow(guardActor.getGuardSerialDataProcess());
@@ -335,7 +344,7 @@ public class MainUiActor extends BaseActor{
 		JPanel GuardBottom=new JPanel();
 		GuardBottomShow guardBottomShow=new GuardBottomShow();
 		guardActor.getGuardSerialDataProcess().addObserver(guardBottomShow);
-		GuardBottom.setBounds(0,(int)(HEIGHT*0.82),(int)(WIDTH*0.985),(int)(HEIGHT*0.05));
+		GuardBottom.setBounds(0,(int)(HEIGHT*0.79),(int)(WIDTH*0.985),(int)(HEIGHT*0.15));
 		GuardBottom.setLayout(new BorderLayout());
 		GuardBottom.add(guardBottomShow);
 		GuardPanel.add(GuardBottom);
@@ -539,3 +548,4 @@ public class MainUiActor extends BaseActor{
 		return imagePath;
 	}
 }
+
