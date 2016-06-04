@@ -60,7 +60,6 @@ public class GuardActor extends BaseActor {
             e1.printStackTrace();
         }
         try {
-
             guardSerialDataProcess=new GuardSerialDataProcess(temperatureDataFile,alarmMessageDataFile,guardActorConfig);
         } catch (IOException e) {
             e.printStackTrace();

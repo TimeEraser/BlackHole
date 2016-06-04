@@ -5,8 +5,7 @@ import guard.guardDataProcess.GuardData;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Observable;
-import java.util.Observer;
+import java.util.*;
 
 /**
  * Created by adminstrator on 2016/5/29.
@@ -32,6 +31,7 @@ public class GuardConfigShow extends JDialog implements Observer{
     private boolean defaultLightValueAdjustEnableFlag=false;
     private boolean bloodLightValueAdjustEnableFlag=false;
     private boolean bubbleLightValueAdjustEnableFlag=false;
+    private boolean beginAdjust=false;
 
     public GuardConfigShow(JFrame jFrame,Boolean model){
         super(jFrame,model);
@@ -255,16 +255,68 @@ public class GuardConfigShow extends JDialog implements Observer{
         }
     }
     private void temperatureAdjustButtonActionPerformed(java.awt.event.ActionEvent evt){
-        temperatureAdjustEnableFlag=true;
+        if(!temperatureAdjustEnableFlag) {
+            temperatureAdjustEnableFlag = true;
+            beginAdjust = true;
+            java.util.Timer timer=new java.util.Timer();
+            timer.schedule(
+                    new java.util.TimerTask() {
+                        public void run(){
+                            if(beginAdjust){
+                                JOptionPane.showMessageDialog(null, "请先连接设备", "系统错误", JOptionPane.ERROR_MESSAGE);
+                            }
+                        }
+                    },4000
+            );
+        }
     }
     private void defaultLightValueAdjustButtonActionPerformed(java.awt.event.ActionEvent evt){
-        defaultLightValueAdjustEnableFlag=true;
+        if(!defaultLightValueAdjustEnableFlag) {
+            defaultLightValueAdjustEnableFlag = true;
+            beginAdjust=true;
+            java.util.Timer timer=new java.util.Timer();
+            timer.schedule(
+                    new java.util.TimerTask() {
+                        public void run(){
+                            if(beginAdjust){
+                                JOptionPane.showMessageDialog(null, "请先连接设备", "系统错误", JOptionPane.ERROR_MESSAGE);
+                            }
+                        }
+                    },4000
+            );
+        }
     }
     private void bloodLightValueAdjustButtonActionPerformed(java.awt.event.ActionEvent evt){
-        bloodLightValueAdjustEnableFlag=true;
+        if(!bloodLightValueAdjustEnableFlag) {
+            bloodLightValueAdjustEnableFlag = true;
+            beginAdjust=true;
+            java.util.Timer timer=new java.util.Timer();
+            timer.schedule(
+                    new java.util.TimerTask() {
+                        public void run(){
+                            if(beginAdjust){
+                                JOptionPane.showMessageDialog(null, "请先连接设备", "系统错误", JOptionPane.ERROR_MESSAGE);
+                            }
+                        }
+                    },4000
+            );
+        }
     }
     private void bubbleLightValueButtonActionPerformed(java.awt.event.ActionEvent evt){
-        bubbleLightValueAdjustEnableFlag=true;
+        if(!bubbleLightValueAdjustEnableFlag) {
+            bubbleLightValueAdjustEnableFlag = true;
+            beginAdjust = true;
+            java.util.Timer timer=new java.util.Timer();
+            timer.schedule(
+                    new java.util.TimerTask() {
+                        public void run(){
+                            if(beginAdjust){
+                                JOptionPane.showMessageDialog(null, "请先连接设备", "系统错误", JOptionPane.ERROR_MESSAGE);
+                            }
+                        }
+                    },4000
+            );
+        }
     }
     private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt){
         confirmFlag=false;
@@ -337,15 +389,19 @@ public class GuardConfigShow extends JDialog implements Observer{
     @Override
     public void update(Observable o, Object arg) {
         if(temperatureAdjustEnableFlag){
+            beginAdjust=false;
             adjustTemperature((GuardData)arg);
         }
         if(defaultLightValueAdjustEnableFlag){
+            beginAdjust=false;
             adjustDefaultLightValue((GuardData)arg);
         }
         if(bloodLightValueAdjustEnableFlag){
+            beginAdjust=false;
             adjustBloodLightValue((GuardData)arg);
         }
         if (bubbleLightValueAdjustEnableFlag){
+            beginAdjust=false;
             adjustBubbleLightValue((GuardData)arg);
         }
     }
