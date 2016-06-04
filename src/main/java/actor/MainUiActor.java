@@ -344,8 +344,7 @@ public class MainUiActor extends BaseActor{
 		JPanel GuardBottom=new JPanel();
 		GuardBottomShow guardBottomShow=new GuardBottomShow();
 		guardActor.getGuardSerialDataProcess().addObserver(guardBottomShow);
-		GuardBottom.setBounds(0,(int)(HEIGHT*0.79),(int)(WIDTH*0.985),(int)(HEIGHT*0.15));
-		GuardBottom.setBorder(etchedBorder);
+		GuardBottom.setBounds(0,(int)(HEIGHT*0.785),(int)(WIDTH*0.985),(int)(HEIGHT*0.15));
 		GuardBottom.setLayout(new BorderLayout());
 		GuardBottom.add(guardBottomShow);
 		GuardPanel.add(GuardBottom);
