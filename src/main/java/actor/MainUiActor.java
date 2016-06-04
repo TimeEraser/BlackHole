@@ -232,12 +232,12 @@ public class MainUiActor extends BaseActor{
 
 
 		Container contentPane = InitializationInterface.getContentPane();	//容器
-//		JLayeredPane jLayeredPane=InitializationInterface.getLayeredPane();
+		JLayeredPane jLayeredPane=InitializationInterface.getLayeredPane();
 		Component CTComponent = createCTJPanel();							//内容块
 		Component ECGComponent = createECGJPanel();
 		Component GUARDComponent = createGUARDJPanel();
 		Component MOBILEComponent = createMOBILEJPanel();
-//		Component BOTTOMComponent=createBOTTOMJPanel();
+		Component BOTTOMComponent=createBOTTOMJPanel();
 
 		contentPane.add(CTComponent);
 		contentPane.add(ECGComponent);
@@ -247,7 +247,7 @@ public class MainUiActor extends BaseActor{
 //		jLayeredPane.add(ECGComponent,JLayeredPane.DEFAULT_LAYER);
 //		jLayeredPane.add(GUARDComponent,JLayeredPane.DEFAULT_LAYER);
 //		jLayeredPane.add(MOBILEComponent,JLayeredPane.DEFAULT_LAYER);
-//		jLayeredPane.add(BOTTOMComponent,JLayeredPane.DRAG_LAYER);
+		jLayeredPane.add(BOTTOMComponent,JLayeredPane.DRAG_LAYER);
 
 		JMenuBar mainMenu=new JMenuBar();
 		JMenu sys = new JMenu();
@@ -365,13 +365,13 @@ public class MainUiActor extends BaseActor{
 		ALARMShow.add(alarmShow);
 		GuardPanel.add(ALARMShow);
 
-		JPanel GuardBottom=new JPanel();
-		GuardBottomShow guardBottomShow=new GuardBottomShow();
-		guardSerialDataProcess.addObserver(guardBottomShow);
-		GuardBottom.setBounds(0,(int)(HEIGHT*0.785),(int)(WIDTH*0.985),(int)(HEIGHT*0.15));
-		GuardBottom.setLayout(new BorderLayout());
-		GuardBottom.add(guardBottomShow);
-		GuardPanel.add(GuardBottom);
+//		JPanel GuardBottom=new JPanel();
+//		GuardBottomShow guardBottomShow=new GuardBottomShow();
+//		guardSerialDataProcess.addObserver(guardBottomShow);
+//		GuardBottom.setBounds(0,(int)(HEIGHT*0.785),(int)(WIDTH*0.985),(int)(HEIGHT*0.15));
+//		GuardBottom.setLayout(new BorderLayout());
+//		GuardBottom.add(guardBottomShow);
+//		GuardPanel.add(GuardBottom);
 
 		GuardPanel.setVisible(false);
 		return GuardPanel;
