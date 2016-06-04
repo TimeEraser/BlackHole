@@ -287,8 +287,8 @@ public class MainUiActor extends BaseActor{
 		GuardPanel.setBounds(0,0,WIDTH,(int)(HEIGHT*0.9));
 
 		JPanel GUARDControl=new JPanel();
-		GUARDControl.setBounds((int)(WIDTH*0.53),(int)(HEIGHT*0.01),(int)(WIDTH*0.5),(int)(HEIGHT*0.1));
-		GUARDControl.setLayout(new FlowLayout(FlowLayout.CENTER));
+		GUARDControl.setBounds((int)(WIDTH*0.61),(int)(HEIGHT*0.01),(int)(WIDTH*0.36),(int)(HEIGHT*0.1));
+		GUARDControl.setLayout(new FlowLayout(FlowLayout.LEFT,(int)(WIDTH*0.02),0));
 		JButton GUARDConnect = new JButton();
 		GUARDConnect.setText("连接报警设备");
 		GUARDConnect.setIcon(new ImageIcon(getIconImage("Icon/start.png")));
@@ -312,31 +312,31 @@ public class MainUiActor extends BaseActor{
 		JPanel TEMPERATUREShow = new JPanel();
 		TemperatureShow temperatureShow=new TemperatureShow();
 		guardActor.getGuardSerialDataProcess().addObserver(temperatureShow);
-		TEMPERATUREShow.setBounds(0,(int)(HEIGHT*0.005),(int)(WIDTH*0.52),(int)(HEIGHT*0.41));
+		TEMPERATUREShow.setBounds(0,(int)(HEIGHT*0.005),(int)(WIDTH*0.6),(int)(HEIGHT*0.41));
 		TEMPERATUREShow.setLayout(new BorderLayout());
 		TEMPERATUREShow.add(temperatureShow);
 		GuardPanel.add(TEMPERATUREShow);
 
 		JPanel LIGHTValueShow=new JPanel();
 		LightValueShow lightValueShow=new LightValueShow();
+		LIGHTValueShow.setLayout(new BorderLayout());
 		guardActor.getGuardSerialDataProcess().addObserver(lightValueShow);
-		LIGHTValueShow.setBounds((int)(WIDTH*0.062),(int)(HEIGHT*0.41),(int)(WIDTH*0.2),(int)(HEIGHT*0.38));
+		LIGHTValueShow.setBounds((int)(WIDTH*0.03),(int)(HEIGHT*0.41),(int)(WIDTH*0.25),(int)(HEIGHT*0.38));
 		LIGHTValueShow.setLayout(new BorderLayout());
 		LIGHTValueShow.add(lightValueShow);
-		LIGHTValueShow.setVisible(true);
 		GuardPanel.add(LIGHTValueShow);
 
 		JPanel LIGHTValueDialShow=new JPanel();
 		LightValueDialPlot lightValueDialPlot=new LightValueDialPlot();
 		guardActor.getGuardSerialDataProcess().addObserver(lightValueDialPlot);
-		LIGHTValueDialShow.setBounds((int)(WIDTH*0.27),(int)(HEIGHT*0.41),(int)(WIDTH*0.205),(int)(HEIGHT*0.38));
+		LIGHTValueDialShow.setBounds((int)(WIDTH*0.34),(int)(HEIGHT*0.41),(int)(WIDTH*0.2),(int)(HEIGHT*0.36));
 		LIGHTValueDialShow.setLayout(new BorderLayout());
 		LIGHTValueDialShow.add(lightValueDialPlot);
 		GuardPanel.add(LIGHTValueDialShow);
 
 		JPanel ALARMShow=new JPanel();
 		AlarmShow alarmShow=new AlarmShow(guardActor.getGuardSerialDataProcess());
-		ALARMShow.setBounds((int)(WIDTH*0.58),(int)(HEIGHT*0.12),(int)(WIDTH*0.37),(int)(HEIGHT*0.63));
+		ALARMShow.setBounds((int)(WIDTH*0.63),(int)(HEIGHT*0.12),(int)(WIDTH*0.35),(int)(HEIGHT*0.63));
 		ALARMShow.setLayout(new BorderLayout());
 		ALARMShow.add(alarmShow);
 		GuardPanel.add(ALARMShow);
@@ -345,6 +345,7 @@ public class MainUiActor extends BaseActor{
 		GuardBottomShow guardBottomShow=new GuardBottomShow();
 		guardActor.getGuardSerialDataProcess().addObserver(guardBottomShow);
 		GuardBottom.setBounds(0,(int)(HEIGHT*0.79),(int)(WIDTH*0.985),(int)(HEIGHT*0.15));
+		GuardBottom.setBorder(etchedBorder);
 		GuardBottom.setLayout(new BorderLayout());
 		GuardBottom.add(guardBottomShow);
 		GuardPanel.add(GuardBottom);

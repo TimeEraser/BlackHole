@@ -6,6 +6,7 @@ import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.dial.*;
 import org.jfree.data.general.DefaultValueDataset;
 import org.jfree.ui.GradientPaintTransformType;
+import org.jfree.ui.RectangleInsets;
 import org.jfree.ui.StandardGradientPaintTransformer;
 
 import javax.swing.*;
@@ -67,9 +68,10 @@ public class LightValueDialPlot extends JPanel implements Observer{
         lightValueDialChart.setBackgroundPaint(null);
         lightValueDialChart.setTitle("当前透光度");
         lightValueDialChart.getTitle().setFont(new Font("Dialog", Font.BOLD , 14));
-        ChartPanel lightValueDialChartPanel=new ChartPanel(lightValueDialChart,(int)(WIDTH*0.17),(int)(HEIGHT*0.25), 0,0,
+        ChartPanel lightValueDialChartPanel=new ChartPanel(lightValueDialChart,(int)(WIDTH*0.14),(int)(HEIGHT*0.26), 0,0,
                 Integer.MAX_VALUE, Integer.MAX_VALUE, true, true, false,
                 true, false, false);
+        this.setLayout(new BorderLayout());
         this.add(lightValueDialChartPanel);
     }
 

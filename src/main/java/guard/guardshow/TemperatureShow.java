@@ -63,9 +63,10 @@ public class TemperatureShow extends JPanel implements Observer{
         xylineandshaperenderer.setSeriesPaint(1, Color.LIGHT_GRAY);  //线段颜色为红
         xylineandshaperenderer.setSeriesStroke(1,new BasicStroke(5));
         xyPlot.setRenderer(xylineandshaperenderer);
-        chartPanel=new ChartPanel(jfreechart,(int)(WIDTH*0.4),(int)(HEIGHT*0.35), 0,0,
+        chartPanel=new ChartPanel(jfreechart,(int)(WIDTH*0.32),(int)(HEIGHT*0.35), 0,0,
                 Integer.MAX_VALUE, Integer.MAX_VALUE, false, true, false,
                 true, false, false);
+        this.setLayout(new BorderLayout());
         this.add(chartPanel);
     }
 

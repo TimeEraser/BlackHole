@@ -9,9 +9,15 @@ import org.jfree.chart.plot.PiePlot;
 import org.jfree.chart.plot.PiePlot3D;
 import org.jfree.data.general.DefaultPieDataset;
 import org.jfree.data.general.PieDataset;
+import org.jfree.ui.HorizontalAlignment;
+import org.jfree.ui.RectangleEdge;
 import org.jfree.ui.RectangleInsets;
+import org.jfree.ui.VerticalAlignment;
+import org.jfree.util.*;
+import org.jfree.util.SortOrder;
 
 import javax.swing.*;
+import javax.swing.border.EtchedBorder;
 import java.awt.*;
 import java.util.Observable;
 import java.util.Observer;
@@ -28,11 +34,16 @@ public class LightValueShow extends JPanel implements Observer{
         int WIDTH = (int)Toolkit.getDefaultToolkit().getScreenSize().getWidth();
         int HEIGHT = (int)Toolkit.getDefaultToolkit().getScreenSize().getHeight();
         lightValuePieChart= ChartFactory.createPieChart3D("过去10秒内透光度变化",createDataSet(),true,true,false);
+        lightValuePieChart.setPadding(RectangleInsets.ZERO_INSETS);
         lightValuePieChart.getTitle().setFont(new Font("Dialog", Font.BOLD , 14));
+        lightValuePieChart.getTitle().setPosition(RectangleEdge.TOP);
         lightValuePieChart.setBackgroundPaint(null);
         lightValuePieChart.getLegend().setItemFont(new Font("Dialog", 0, 12));
-//        lightValuePieChart.getLegend().setPosition(RectangleEdge.RIGHT);
         lightValuePieChart.getLegend().setMargin(RectangleInsets.ZERO_INSETS);
+        lightValuePieChart.getLegend().setItemLabelPadding(RectangleInsets.ZERO_INSETS);
+        lightValuePieChart.getLegend().setPadding(RectangleInsets.ZERO_INSETS);
+        lightValuePieChart.getLegend().setLegendItemGraphicPadding(RectangleInsets.ZERO_INSETS);
+        lightValuePieChart.getLegend().setPosition(RectangleEdge.RIGHT);
         lightValuePieChart.setBorderPaint(null);
         PiePlot3D piePlot=(PiePlot3D) lightValuePieChart.getPlot();
         piePlot.setBackgroundPaint(null);
@@ -48,18 +59,20 @@ public class LightValueShow extends JPanel implements Observer{
         setNoDataMessage(piePlot);
         setNullAndZeroValue(piePlot);
         piePlot.setLabelLinksVisible(false);
-        ChartPanel lightValuePieChartPanel=new ChartPanel(lightValuePieChart,(int)(WIDTH*0.22),(int)(HEIGHT*0.25), 0,0,
+        ChartPanel lightValuePieChartPanel=new ChartPanel(lightValuePieChart,(int)(WIDTH*0.35),(int)(HEIGHT*0.3), 0,0,
                 Integer.MAX_VALUE, Integer.MAX_VALUE, true, true, false,
                 true, false, false);
         lightValuePieChartPanel.setBackground(null);
+        lightValuePieChartPanel.setLayout(new BorderLayout());
+        this.setLayout(new BorderLayout());
         this.add(lightValuePieChartPanel);
     }
     private PieDataset createDataSet(){
         lightValueDataSet=new DefaultPieDataset();
-        lightValueDataSet.setValue("正常",0);
-        lightValueDataSet.setValue("无管",0);
-        lightValueDataSet.setValue("管内气泡",0);
-        lightValueDataSet.setValue("管内漏血",0);
+        lightValueDataSet.setValue("正常",25);
+        lightValueDataSet.setValue("无管",25);
+        lightValueDataSet.setValue("管内气泡",25);
+        lightValueDataSet.setValue("管内漏血",25);
         return lightValueDataSet;
     }
     private void setSection(PiePlot piePlot){
@@ -70,8 +83,7 @@ public class LightValueShow extends JPanel implements Observer{
         piePlot.setSectionOutlinesVisible(false);
     }
     private void setLabel(PiePlot pieplot) {
-        pieplot.setLabelGenerator(new StandardPieSectionLabelGenerator(
-                ""));
+        pieplot.setLabelGenerator(null);
         pieplot.setLabelBackgroundPaint(null);
         pieplot.setLabelShadowPaint(null);
         pieplot.setLabelOutlinePaint(null);
@@ -89,7 +101,7 @@ public class LightValueShow extends JPanel implements Observer{
     private void setNullAndZeroValue(PiePlot piePlot) {
         //设置是否忽略0和null值
         piePlot.setIgnoreNullValues(true);
-        piePlot.setIgnoreZeroValues(true);
+        piePlot.setIgnoreZeroValues(false);
     }
     @Override
     public void update(Observable o, Object arg) {
