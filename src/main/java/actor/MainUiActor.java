@@ -7,6 +7,7 @@ import java.util.Map;
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.EtchedBorder;
+import javax.swing.border.StrokeBorder;
 import javax.swing.plaf.FontUIResource;
 
 import actor.Listener.ButtonSwitchListener;
@@ -14,12 +15,14 @@ import actor.Listener.NoticeListener;
 import actor.Listener.MenuSwitchListener;
 import actor.config.MainUiActorConfig;
 import com.alee.laf.WebLookAndFeel;
+import com.android.dx.command.Main;
 import command.*;
 import ct.ctshow.CTHistoryData;
 
 import ct.ctshow.CTShowUI;
 import ecg.ecgshow.ECGShowUI;
 import ecg.tcp.TCPConfig;
+import guard.guardDataProcess.GuardSerialDataProcess;
 import guard.guardshow.*;
 
 import java.util.Timer;
@@ -29,7 +32,6 @@ public class MainUiActor extends BaseActor{
 	//Initialize parameter
 	//Interactive element
 	private CtActor ctActor;
-	private GuardActor guardActor;
 	private MonitorActor monitorActor;
 	private BlackHoleActor blackHoleActor;
 	private MobileActor mobileActor;
@@ -43,6 +45,8 @@ public class MainUiActor extends BaseActor{
 	private Integer LEFT;
 	private Integer TOP;
 
+	private GuardSerialDataProcess guardSerialDataProcess;
+
 	private static boolean temperatureAlarmEnable=true;
 	private static boolean bloodAlarmEnable=true;
 	private static boolean bubbleAlarmEnable=true;
@@ -50,7 +54,6 @@ public class MainUiActor extends BaseActor{
 
 	public MainUiActor(MainUiActorConfig mainUiActorConfig){
 		ctActor=mainUiActorConfig.getCtActor();
-		guardActor=mainUiActorConfig.getGuardActor();
 		monitorActor=mainUiActorConfig.getMonitorActor();
 		blackHoleActor=mainUiActorConfig.getBlackHoleActor();
 		mobileActor=mainUiActorConfig.getMobileActor();
@@ -73,9 +76,9 @@ public class MainUiActor extends BaseActor{
 			sendRequest(monitorActor,MonitorRequest.MONITOR_ECG_DATA,getECGConnectInfo());
 		if(request==MainUiRequest.MAIN_UI_CT_OPEN)
 			sendRequest(ctActor,CtRequest.CT_OPEN_IMG,getCTImagePath());
-		if(request==MainUiRequest.MAIN_UI_GUARD_SERIAL_PORT_SET)
-			createGuardConfigDialog();
-
+		if(request==MainUiRequest.MAIN_UI_GUARD_SERIAL_PORT_SET){
+			sendRequest(blackHoleActor,GuardRequest.GUARD_SERIAL_ASK);
+		}
 		if(request==MainUiRequest.MAIN_UI_GUARD_TEMPERATURE_HIGH){
 			if (temperatureAlarmEnable){
 				temperatureAlarmEnable=false;
@@ -134,7 +137,7 @@ public class MainUiActor extends BaseActor{
 
 		}
 		if(request==MainUiRequest.MAIN_UI_GUARD_START){
-			sendRequest(guardActor,MainUiRequest.MAIN_UI_GUARD_START);
+			sendRequest(blackHoleActor,MainUiRequest.MAIN_UI_GUARD_START);
 		}
 		return false;
 	}
@@ -152,13 +155,22 @@ public class MainUiActor extends BaseActor{
 			JOptionPane.showMessageDialog(null,response.getConfig().getData(),"系统错误",JOptionPane.ERROR_MESSAGE);
 			System.out.println(response.getConfig().getData());
 		}
-
-
+		if (response==GuardResponse.GUARD_SERIAL_ASK){
+			Map tempMap=createGuardConfigDialog((Map)response.getConfig().getData());
+			if (tempMap!=null) {
+				System.out.println("GuardSet");
+				sendRequest(blackHoleActor, GuardRequest.GUARD_SERIAL_SET, tempMap);
+			}
+		}
+		if(response==GuardResponse.GUARD_SERIAL_DATA_PROCESS){
+			this.guardSerialDataProcess=(GuardSerialDataProcess)response.getConfig().getData();
+		}
 		return false;
 	}
 
 	@Override
 	public boolean start()  {
+		sendRequest(blackHoleActor,GuardRequest.GUARD_SERIAL_DATA_PROCESS);
 		this.constructInterface();
 		return false;
 	}
@@ -220,20 +232,22 @@ public class MainUiActor extends BaseActor{
 
 
 		Container contentPane = InitializationInterface.getContentPane();	//容器
+//		JLayeredPane jLayeredPane=InitializationInterface.getLayeredPane();
 		Component CTComponent = createCTJPanel();							//内容块
 		Component ECGComponent = createECGJPanel();
 		Component GUARDComponent = createGUARDJPanel();
 		Component MOBILEComponent = createMOBILEJPanel();
+//		Component BOTTOMComponent=createBOTTOMJPanel();
 
 		contentPane.add(CTComponent);
 		contentPane.add(ECGComponent);
 		contentPane.add(GUARDComponent);
 		contentPane.add(MOBILEComponent);
-
-		contentPane.add(CTComponent);
-		contentPane.add(ECGComponent);
-		contentPane.add(GUARDComponent);
-
+//		jLayeredPane.add(CTComponent,JLayeredPane.DEFAULT_LAYER);
+//		jLayeredPane.add(ECGComponent,JLayeredPane.DEFAULT_LAYER);
+//		jLayeredPane.add(GUARDComponent,JLayeredPane.DEFAULT_LAYER);
+//		jLayeredPane.add(MOBILEComponent,JLayeredPane.DEFAULT_LAYER);
+//		jLayeredPane.add(BOTTOMComponent,JLayeredPane.DRAG_LAYER);
 
 		JMenuBar mainMenu=new JMenuBar();
 		JMenu sys = new JMenu();
@@ -279,6 +293,16 @@ public class MainUiActor extends BaseActor{
 		return this.getClass().getClassLoader().getResource(path);
 	}
 
+	private JPanel createBOTTOMJPanel(){
+		JPanel GuardBottom=new JPanel();
+		GuardBottomShow guardBottomShow=new GuardBottomShow();
+		guardSerialDataProcess.addObserver(guardBottomShow);
+		GuardBottom.setBounds(0,(int)(HEIGHT*0.87),(int)(WIDTH*0.985),(int)(HEIGHT*0.15));
+		GuardBottom.setLayout(new BorderLayout());
+		GuardBottom.add(guardBottomShow);
+		GuardBottom.setVisible(true);
+		return GuardBottom;
+	}
 
 	private JPanel createGUARDJPanel(){
 		JPanel GuardPanel=new JPanel(null);
@@ -295,10 +319,10 @@ public class MainUiActor extends BaseActor{
 		ButtonSwitchListener buttonSwitchListener=new ButtonSwitchListener();
 		buttonSwitchListener.setText(0,"连接报警设备");
 		buttonSwitchListener.setIcon(0,new ImageIcon(getIconImage("Icon/start.png")));
-		buttonSwitchListener.setMessage(0,guardActor,GuardRequest.GUARD_START);
+		buttonSwitchListener.setMessage(0,blackHoleActor,GuardRequest.GUARD_START);
 		buttonSwitchListener.setText(1,"断开报警设备");
 		buttonSwitchListener.setIcon(1,new ImageIcon(getIconImage("Icon/stop.png")));
-		buttonSwitchListener.setMessage(1,guardActor,GuardRequest.GUARD_SHUT_DOWN);
+		buttonSwitchListener.setMessage(1,blackHoleActor,GuardRequest.GUARD_SHUT_DOWN);
 		GUARDConnect.addActionListener(buttonSwitchListener);
 		GUARDControl.add(GUARDConnect);
 
@@ -311,7 +335,7 @@ public class MainUiActor extends BaseActor{
 
 		JPanel TEMPERATUREShow = new JPanel();
 		TemperatureShow temperatureShow=new TemperatureShow();
-		guardActor.getGuardSerialDataProcess().addObserver(temperatureShow);
+		guardSerialDataProcess.addObserver(temperatureShow);
 		TEMPERATUREShow.setBounds(0,(int)(HEIGHT*0.005),(int)(WIDTH*0.6),(int)(HEIGHT*0.41));
 		TEMPERATUREShow.setLayout(new BorderLayout());
 		TEMPERATUREShow.add(temperatureShow);
@@ -320,7 +344,7 @@ public class MainUiActor extends BaseActor{
 		JPanel LIGHTValueShow=new JPanel();
 		LightValueShow lightValueShow=new LightValueShow();
 		LIGHTValueShow.setLayout(new BorderLayout());
-		guardActor.getGuardSerialDataProcess().addObserver(lightValueShow);
+		guardSerialDataProcess.addObserver(lightValueShow);
 		LIGHTValueShow.setBounds((int)(WIDTH*0.03),(int)(HEIGHT*0.41),(int)(WIDTH*0.25),(int)(HEIGHT*0.38));
 		LIGHTValueShow.setLayout(new BorderLayout());
 		LIGHTValueShow.add(lightValueShow);
@@ -328,14 +352,14 @@ public class MainUiActor extends BaseActor{
 
 		JPanel LIGHTValueDialShow=new JPanel();
 		LightValueDialPlot lightValueDialPlot=new LightValueDialPlot();
-		guardActor.getGuardSerialDataProcess().addObserver(lightValueDialPlot);
+		guardSerialDataProcess.addObserver(lightValueDialPlot);
 		LIGHTValueDialShow.setBounds((int)(WIDTH*0.34),(int)(HEIGHT*0.41),(int)(WIDTH*0.2),(int)(HEIGHT*0.36));
 		LIGHTValueDialShow.setLayout(new BorderLayout());
 		LIGHTValueDialShow.add(lightValueDialPlot);
 		GuardPanel.add(LIGHTValueDialShow);
 
 		JPanel ALARMShow=new JPanel();
-		AlarmShow alarmShow=new AlarmShow(guardActor.getGuardSerialDataProcess());
+		AlarmShow alarmShow=new AlarmShow(guardSerialDataProcess);
 		ALARMShow.setBounds((int)(WIDTH*0.63),(int)(HEIGHT*0.12),(int)(WIDTH*0.35),(int)(HEIGHT*0.63));
 		ALARMShow.setLayout(new BorderLayout());
 		ALARMShow.add(alarmShow);
@@ -343,7 +367,7 @@ public class MainUiActor extends BaseActor{
 
 		JPanel GuardBottom=new JPanel();
 		GuardBottomShow guardBottomShow=new GuardBottomShow();
-		guardActor.getGuardSerialDataProcess().addObserver(guardBottomShow);
+		guardSerialDataProcess.addObserver(guardBottomShow);
 		GuardBottom.setBounds(0,(int)(HEIGHT*0.785),(int)(WIDTH*0.985),(int)(HEIGHT*0.15));
 		GuardBottom.setLayout(new BorderLayout());
 		GuardBottom.add(guardBottomShow);
@@ -352,29 +376,40 @@ public class MainUiActor extends BaseActor{
 		GuardPanel.setVisible(false);
 		return GuardPanel;
 	}
-	private void createGuardConfigDialog(){
-
+	private Map<String, String>  createGuardConfigDialog(Map<String, String> connectInfo){
 		GuardConfigShow guardConfigShow = new GuardConfigShow(InitializationInterface,true);
-		guardActor.getGuardSerialDataProcess().addObserver(guardConfigShow);
-		guardConfigShow.setSerialNum(guardActor.getGuardActorConfig().getSerialPortNum());
-		guardConfigShow.setTemperatureLow(guardActor.getGuardActorConfig().getTemperatureLow());
-		guardConfigShow.setTemperatureHigh(guardActor.getGuardActorConfig().getTemperatureHigh());
-		guardConfigShow.setDefaultLightValue(guardActor.getGuardActorConfig().getDefaultLightValue());
-		guardConfigShow.setBloodLightValue(guardActor.getGuardActorConfig().getBloodLightValue());
-		guardConfigShow.setBubbleLightValue(guardActor.getGuardActorConfig().getBubbleLightValue());
-		guardConfigShow.setBubbleHoldCount(guardActor.getGuardActorConfig().getBubbleHoldCount());
-
+		guardSerialDataProcess.addObserver(guardConfigShow);
+		guardConfigShow.setSerialNum(Integer.parseInt(connectInfo.get("serialNum")));
+		guardConfigShow.setTemperatureLow(Integer.parseInt(connectInfo.get("temperatureLow")));
+		guardConfigShow.setTemperatureHigh(Integer.parseInt(connectInfo.get("temperatureHigh")));
+		guardConfigShow.setDefaultLightValue(Integer.parseInt(connectInfo.get("defaultLightValue")));
+		guardConfigShow.setBloodLightValue(Integer.parseInt(connectInfo.get("bloodLightValue")));
+		guardConfigShow.setBubbleLightValue(Integer.parseInt(connectInfo.get("bubbleLightValue")));
+		guardConfigShow.setBubbleHoldCount(Integer.parseInt(connectInfo.get("bubbleHoldCount")));
 		guardConfigShow.initComponents();
 		guardConfigShow.setVisible(true);
 		if(guardConfigShow.getConfirmFlag()) {
-			guardActor.getGuardActorConfig().setSerialPortNum(guardConfigShow.getSerialNum());
-			guardActor.getGuardActorConfig().setTemperatureLow(guardConfigShow.getTemperatureLow());
-			guardActor.getGuardActorConfig().setTemperatureHigh(guardConfigShow.getTemperatureHigh());
-			guardActor.getGuardActorConfig().setDefaultLightValue(guardConfigShow.getDefaultLightValue());
-			guardActor.getGuardActorConfig().setBloodLightValue(guardConfigShow.getBloodLightValue());
-			guardActor.getGuardActorConfig().setBubbleLightValue(guardConfigShow.getBubbleLightValue());
-			guardActor.getGuardActorConfig().setBubbleHoldCount(guardConfigShow.getBubbleHoldCount());
+			return getGuardConnectInfo(guardConfigShow);
 		}
+		else return null;
+	}
+	private Map<String, String> getGuardConnectInfo(GuardConfigShow guardConfigShow){
+		String serialNum=String.valueOf(guardConfigShow.getSerialNum());
+		String temperatureLow=String.valueOf(guardConfigShow.getTemperatureLow());
+		String temperatureHigh=String.valueOf(guardConfigShow.getTemperatureHigh());
+		String defaultLightValue=String.valueOf(guardConfigShow.getDefaultLightValue());
+		String bloodLightValue= String.valueOf(guardConfigShow.getBloodLightValue());
+		String bubbleLightValue=String.valueOf(guardConfigShow.getBubbleLightValue());
+		String bubbleHoldCount=String.valueOf(guardConfigShow.getBubbleHoldCount());
+		Map<String,String> connectInfo=new HashMap<>();
+		connectInfo.put("serialNum",serialNum);
+		connectInfo.put("temperatureLow",temperatureLow);
+		connectInfo.put("temperatureHigh",temperatureHigh);
+		connectInfo.put("defaultLightValue",defaultLightValue);
+		connectInfo.put("bloodLightValue",bloodLightValue);
+		connectInfo.put("bubbleLightValue",bubbleLightValue);
+		connectInfo.put("bubbleHoldCount",bubbleHoldCount);
+		return connectInfo;
 	}
 	private void createGuardErrorDialog(String displayString){
 		GuardErrorShow guardErrorShow=new GuardErrorShow(InitializationInterface,true,displayString);
@@ -537,6 +572,7 @@ public class MainUiActor extends BaseActor{
 		connectInfo.put("Sex",Sex);
 		return connectInfo;
 	}
+
 	private  String getCTImagePath(){
 		String imagePath=null;
 		JFileChooser fileChooser = new JFileChooser();

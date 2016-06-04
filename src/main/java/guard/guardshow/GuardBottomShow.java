@@ -37,9 +37,9 @@ public class GuardBottomShow extends JPanel implements Observer{
         JPanel connectStatePointPanel;
         JPanel temperatureStatePointPanel;
         JPanel lightValueStatePointPanel;
-        JLabel connectState=new JLabel("连接状态");
+        JLabel connectState=new JLabel("报警模块连接状态");
         connectState.setFont(new Font("Dialog", 0, 14));
-        connectState.setPreferredSize(new Dimension(60,45));
+        connectState.setPreferredSize(new Dimension(120,45));
         JLabel temperatureState=new JLabel("血温状态");
         temperatureState.setFont( new Font("Dialog", 0, 14));
         temperatureState.setPreferredSize(new Dimension(60,45));

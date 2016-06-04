@@ -10,9 +10,11 @@ import java.awt.*;
 public class MenuSwitchListener implements MenuListener {
     Container contentPane;
     Component content;
+//    Component BOTTOMComponent;
     public MenuSwitchListener(Container contentPane, Component content){
         this.contentPane=contentPane;
         this.content=content;
+//        this.BOTTOMComponent=BOTTOMComponent;
     }
     @Override
     public void menuSelected(MenuEvent e) {
@@ -20,6 +22,7 @@ public class MenuSwitchListener implements MenuListener {
             c.setVisible(false);
         }
         if(content!= null) content.setVisible(true);
+//        BOTTOMComponent.setVisible(true);
     }
     @Override
     public void menuDeselected(MenuEvent e) {

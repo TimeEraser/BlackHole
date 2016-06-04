@@ -7,10 +7,9 @@ import command.config.CommandConfig;
  */
 public enum  GuardRequest implements Request {
     GUARD_DATA,
-    GUARD_BUBBLE,
-    GUARD_BLOOD_LEAK,
-    GUARD_TEMPERATURE,
-    GUARD_SERIAL_NUM,
+    GUARD_SERIAL_ASK,
+    GUARD_SERIAL_SET,
+    GUARD_SERIAL_DATA_PROCESS,
     GUARD_START,
     GUARD_SHUT_DOWN,
     GUARD_ERROR;

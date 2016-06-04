@@ -1,5 +1,6 @@
 package guard.guardshow;
 
+import com.sun.jnlp.ApiDialog;
 import guard.guardDataProcess.GuardData;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
@@ -19,6 +20,9 @@ import java.util.Observer;
  */
 public class LightValueDialPlot extends JPanel implements Observer{
     private DefaultValueDataset dataSet;
+    private StandardDialRange normalDialRange;
+    private StandardDialRange bloodDialRange;
+    private StandardDialRange bubbleDialRange;
     public LightValueDialPlot(){
         int WIDTH = (int)Toolkit.getDefaultToolkit().getScreenSize().getWidth();
         int HEIGHT = (int)Toolkit.getDefaultToolkit().getScreenSize().getHeight();
@@ -56,6 +60,21 @@ public class LightValueDialPlot extends JPanel implements Observer{
         dialScale.setTickRadius(0.85D); // 值越大,与刻度盘框架边缘越近
         dialScale.setTickLabelOffset(0.1D); // 值越大,与刻度盘刻度越远0
 
+        bloodDialRange =new StandardDialRange(650D,750D, Color.red);
+        bloodDialRange.setInnerRadius(0.52000000000000002D);
+        bloodDialRange.setOuterRadius(0.55000000000000004D);
+        lightValueDialPlot.addLayer(bloodDialRange);
+        //设置刻度范围（橘黄色）
+        bubbleDialRange =new StandardDialRange(0D, 650D, Color.orange);
+        bubbleDialRange.setInnerRadius(0.52000000000000002D);
+        bubbleDialRange.setOuterRadius(0.55000000000000004D);
+        lightValueDialPlot.addLayer(bubbleDialRange);
+        //设置刻度范围（绿色）
+        normalDialRange =new StandardDialRange(750D,1024D, Color.green);
+        normalDialRange.setInnerRadius(0.52000000000000002D);
+        normalDialRange.setOuterRadius(0.55000000000000004D);
+        lightValueDialPlot.addLayer(normalDialRange);
+
         dialScale.setTickLabelFont(new Font("Dialog", 0, 8)); // 刻度盘刻度字体
         lightValueDialPlot.addScale(0,dialScale);
 
@@ -74,10 +93,22 @@ public class LightValueDialPlot extends JPanel implements Observer{
         this.setLayout(new BorderLayout());
         this.add(lightValueDialChartPanel);
     }
-
+    public StandardDialRange getNormalDialRange(){
+        return normalDialRange;
+    }
+    public StandardDialRange getBloodDialRange(){
+        return bloodDialRange;
+    }
+    public StandardDialRange getBubbleDialRange(){
+        return bubbleDialRange;
+    }
     @Override
     public void update(Observable o, Object arg) {
-        dataSet.setValue(Integer.parseInt(((GuardData)arg).getLightValue()));
+        GuardData guardData=(GuardData)arg;
+        dataSet.setValue(Integer.parseInt(guardData.getLightValue()));
+        normalDialRange.setBounds((double) guardData.getBloodLightValue(),1024D);
+        bloodDialRange.setBounds((double)guardData.getBubbleLightValue(),(double)guardData.getBloodLightValue());
+        bubbleDialRange.setBounds(0,(double)guardData.getBubbleLightValue());
     }
 }
 
