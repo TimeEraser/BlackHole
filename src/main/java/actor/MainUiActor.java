@@ -2,6 +2,7 @@ package actor;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
@@ -246,10 +247,6 @@ public class MainUiActor extends BaseActor{
 		contentPane.add(ECGComponent);
 		contentPane.add(GUARDComponent);
 		contentPane.add(MOBILEComponent);
-//		jLayeredPane.add(CTComponent,JLayeredPane.DEFAULT_LAYER);
-//		jLayeredPane.add(ECGComponent,JLayeredPane.DEFAULT_LAYER);
-//		jLayeredPane.add(GUARDComponent,JLayeredPane.DEFAULT_LAYER);
-//		jLayeredPane.add(MOBILEComponent,JLayeredPane.DEFAULT_LAYER);
 		jLayeredPane.add(BOTTOMComponent,JLayeredPane.DRAG_LAYER);
 
 		JMenuBar mainMenu=new JMenuBar();
@@ -316,19 +313,28 @@ public class MainUiActor extends BaseActor{
 		JPanel GUARDControl=new JPanel();
 		GUARDControl.setBounds((int)(WIDTH*0.61),(int)(HEIGHT*0.01),(int)(WIDTH*0.37),(int)(HEIGHT*0.1));
 		GUARDControl.setLayout(new FlowLayout(FlowLayout.LEFT,(int)(WIDTH*0.02),0));
-		JButton GUARDConnect = new JButton();
-		GUARDConnect.setText("连接报警设备");
-		GUARDConnect.setIcon(new ImageIcon(getIconImage("Icon/start.png")));
-		ButtonSwitchListener buttonSwitchListener=new ButtonSwitchListener();
-		buttonSwitchListener.setText(0,"连接报警设备");
-		buttonSwitchListener.setIcon(0,new ImageIcon(getIconImage("Icon/start.png")));
-		buttonSwitchListener.setMessage(0,blackHoleActor,GuardRequest.GUARD_START);
-		buttonSwitchListener.setText(1,"断开报警设备");
-		buttonSwitchListener.setIcon(1,new ImageIcon(getIconImage("Icon/stop.png")));
-		buttonSwitchListener.setMessage(1,blackHoleActor,GuardRequest.GUARD_SHUT_DOWN);
-		GUARDConnect.addActionListener(buttonSwitchListener);
-		GUARDControl.add(GUARDConnect);
 
+		try {
+
+			Image startImage= ImageIO.read(getIconImage("Icon/start.png"));
+			BufferedImage startBufferImage = ImageUtil.zoom(startImage,(int)(WIDTH*0.037),(int)(HEIGHT*0.065),new Color(1f,1f,1f,0f));
+			Image stopImage=ImageIO.read(getIconImage("Icon/stop.png"));
+			BufferedImage stopBufferImage = ImageUtil.zoom(startImage,(int)(WIDTH*0.037),(int)(HEIGHT*0.065),new Color(1f,1f,1f,0f));
+			JButton GUARDConnect = new JButton();
+			GUARDConnect.setText("连接报警设备");
+			GUARDConnect.setIcon(new ImageIcon(startBufferImage));
+			ButtonSwitchListener buttonSwitchListener=new ButtonSwitchListener();
+			buttonSwitchListener.setText(0,"连接报警设备");
+			buttonSwitchListener.setIcon(0,new ImageIcon(startBufferImage));
+			buttonSwitchListener.setMessage(0,blackHoleActor,GuardRequest.GUARD_START);
+			buttonSwitchListener.setText(1,"断开报警设备");
+			buttonSwitchListener.setIcon(1,new ImageIcon(stopBufferImage));
+			buttonSwitchListener.setMessage(1,blackHoleActor,GuardRequest.GUARD_SHUT_DOWN);
+			GUARDConnect.addActionListener(buttonSwitchListener);
+			GUARDControl.add(GUARDConnect);
+		}catch (IOException e) {
+			e.printStackTrace();
+		}
 		JButton GUARDConfigSet = new JButton();
 		GUARDConfigSet.setText("报警参数配置");
 		GUARDConfigSet.setIcon(new ImageIcon(getIconImage("Icon/config.png")));
