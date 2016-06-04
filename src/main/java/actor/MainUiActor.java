@@ -1,9 +1,11 @@
 package actor;
 
 import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.EtchedBorder;
@@ -24,6 +26,7 @@ import ecg.ecgshow.ECGShowUI;
 import ecg.tcp.TCPConfig;
 import guard.guardDataProcess.GuardSerialDataProcess;
 import guard.guardshow.*;
+import util.ImageUtil;
 
 import java.util.Timer;
 
@@ -311,7 +314,7 @@ public class MainUiActor extends BaseActor{
 		GuardPanel.setBounds(0,0,WIDTH,(int)(HEIGHT*0.9));
 
 		JPanel GUARDControl=new JPanel();
-		GUARDControl.setBounds((int)(WIDTH*0.61),(int)(HEIGHT*0.01),(int)(WIDTH*0.36),(int)(HEIGHT*0.1));
+		GUARDControl.setBounds((int)(WIDTH*0.61),(int)(HEIGHT*0.01),(int)(WIDTH*0.37),(int)(HEIGHT*0.1));
 		GUARDControl.setLayout(new FlowLayout(FlowLayout.LEFT,(int)(WIDTH*0.02),0));
 		JButton GUARDConnect = new JButton();
 		GUARDConnect.setText("连接报警设备");
