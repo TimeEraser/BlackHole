@@ -94,7 +94,7 @@ public class ECGShowUI extends JPanel {
             dateAxises[i].setTickLabelFont(new Font("SansSerif", 0, 12));
             dateAxises[i].setLabelFont(new Font("SansSerif", 0, 14));
             dateAxises[i].setTickLabelsVisible(true);
-            dateAxises[i].setVisible(true);
+            dateAxises[i].setVisible(false);
 
             //NumberAxis numberaxis = new NumberAxis("ecg");
             NumberAxis numberaxis = new NumberAxis("ecg");
@@ -131,6 +131,7 @@ public class ECGShowUI extends JPanel {
                     BorderFactory.createEmptyBorder(0, 0, 0, 0)     //边界线条间距为0
                     ,BorderFactory.createEmptyBorder()          //边界线条不可见
             ));
+            chartpanel.setMouseZoomable(false); //禁止鼠标缩放
             ECGData.add(chartpanel);
         }
     }
@@ -139,7 +140,7 @@ public class ECGShowUI extends JPanel {
         HeartRatedatas=new short[1];
         HeartRateData=new JPanel();
         HeartRateData.setLayout(new BorderLayout());
-        HeartRateData.setBounds(0,0,(int)(WIDTH * 0.14), (int) (HEIGHT * 0.18));
+        HeartRateData.setBounds(0,0,(int)(WIDTH * 0.14), (int) (HEIGHT * 0.15));
         HeartRateData.setBackground(Color.BLACK);
 
         JLabel jLabel1=new JLabel("--");
@@ -151,7 +152,7 @@ public class ECGShowUI extends JPanel {
             jLabel1.setText(Short.toString((short)HeartRatedatas[0]));
         }
 
-        jLabel1.setFont(loadFont("LED.tff",84.0f));
+        jLabel1.setFont(loadFont("LED.tff",64.0f));
         jLabel1.setBackground(Color.BLACK);
         jLabel1.setForeground(Color.GREEN);
         jLabel1.setBounds(0,0,100,100);
@@ -210,7 +211,7 @@ public class ECGShowUI extends JPanel {
         jfreechart.getLegend().setVisible(false);
 
         ChartPanel chartpanel = new ChartPanel(jfreechart,
-                (int) (WIDTH * 0.13), (int) (HEIGHT * 0.18), 0, 0,
+                (int) (WIDTH * 0.16), (int) (HEIGHT * 0.18), 0, 0,
                 Integer.MAX_VALUE, Integer.MAX_VALUE, true, true, false,
                 true, false, false);
 
@@ -226,18 +227,18 @@ public class ECGShowUI extends JPanel {
         BloodOxygendatas=new short [1];
         BloodOxygenData=new JPanel();
         BloodOxygenData.setLayout(new BorderLayout());
-        BloodOxygenData.setBounds(0,0,(int) (WIDTH * 0.14), (int) (HEIGHT * 0.18));
+        BloodOxygenData.setBounds(0,0,(int) (WIDTH * 0.14), (int) (HEIGHT * 0.15));
         BloodOxygenData.setBackground(Color.BLACK);
 
         JLabel jLabel1=new JLabel("--");
         if (BloodOxygendatas[0]==0x00||BloodOxygendatas==null){
-            jLabel1.setText("0000");
+            jLabel1.setText("00");
         }
         else {
             jLabel1.setText(Short.toString((short)BloodOxygendatas[0]));
         }
         System.out.println("BloodOxygendatas"+Short.toString(BloodOxygendatas[0]));
-        jLabel1.setFont(loadFont("LED.tff",84.0f));
+        jLabel1.setFont(loadFont("LED.tff",64.0f));
         jLabel1.setBackground(Color.BLACK);
         jLabel1.setForeground(Color.GREEN);
         jLabel1.setBounds(0,0,100,100);
