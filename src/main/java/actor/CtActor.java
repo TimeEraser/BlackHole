@@ -63,7 +63,7 @@ public class CtActor extends BaseActor{
             ctAnalysis();
             //ctDataRefresher.refreshHistoryResult(CTAnalyseResult);
         }
-        if(request==MainUiRequest.MAIN_UI_CT_SAVE){
+        if(request==CtRequest.CT_SAVE){
             saveCTAnalyseResult();
         }
         if(request==CtRequest.CT_SHOW_HISTORY)
