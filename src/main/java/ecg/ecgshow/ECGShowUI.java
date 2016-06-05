@@ -183,14 +183,18 @@ public class ECGShowUI extends JPanel {
     private void createPressureData(long timeZone){
         PressureData=new JPanel();
         PressuredateAxises = new DateAxis[1];
-        SystolicPressureSeries= new TimeSeries[2];//0是测试空数据，1的实际数据
+        SystolicPressureSeries= new TimeSeries[2];
         DiastolicPressureSeries= new TimeSeries[2];
 
         TimeSeriesCollection timeseriescollection = new TimeSeriesCollection();
         SystolicPressureSeries[0] = new TimeSeries("");
         SystolicPressureSeries[0].setMaximumItemAge(timeZone);
-        SystolicPressureSeries[0].setMaximumItemCount(50);
+        SystolicPressureSeries[0].setMaximumItemCount(500);
+        SystolicPressureSeries[1] = new TimeSeries("");
+        SystolicPressureSeries[1].setMaximumItemAge(timeZone);
+        SystolicPressureSeries[1].setMaximumItemCount(2);
         timeseriescollection.addSeries(SystolicPressureSeries[0]);
+        timeseriescollection.addSeries(SystolicPressureSeries[1]);
 
         PressuredateAxises[0] = new DateAxis("");
         PressuredateAxises[0].setTickLabelFont(new Font("SansSerif", 0, 12));
@@ -200,8 +204,12 @@ public class ECGShowUI extends JPanel {
 
         DiastolicPressureSeries[0] = new TimeSeries("");
         DiastolicPressureSeries[0].setMaximumItemAge(timeZone);
-        DiastolicPressureSeries[0].setMaximumItemCount(50);
+        DiastolicPressureSeries[0].setMaximumItemCount(500);
+        DiastolicPressureSeries[1] = new TimeSeries("");
+        DiastolicPressureSeries[1].setMaximumItemAge(timeZone);
+        DiastolicPressureSeries[1].setMaximumItemCount(2);
         timeseriescollection.addSeries(DiastolicPressureSeries[0]);
+        timeseriescollection.addSeries(DiastolicPressureSeries[1]);
 
         NumberAxis numberaxis = new NumberAxis("Pressure");
         numberaxis.setTickLabelFont(new Font("SansSerif", 0, 12));
@@ -213,11 +221,20 @@ public class ECGShowUI extends JPanel {
 
         XYLineAndShapeRenderer xylineandshaperenderer = new XYLineAndShapeRenderer(true,false);
         xylineandshaperenderer.setSeriesPaint(0, Color.GREEN);  //线段颜色为绿
-        xylineandshaperenderer.setSeriesStroke(0,new BasicStroke(2));
+        xylineandshaperenderer.setSeriesStroke(0,new BasicStroke(2));   //线粗
         xylineandshaperenderer.setSeriesPaint(1, Color.LIGHT_GRAY);  //线段颜色为红
         xylineandshaperenderer.setSeriesStroke(1,new BasicStroke(5));
 
-        XYPlot xyplot = new XYPlot(timeseriescollection, PressuredateAxises[0], numberaxis, xylineandshaperenderer);
+        xylineandshaperenderer.setSeriesPaint(2, Color.ORANGE);  //线段颜色为绿
+        xylineandshaperenderer.setSeriesStroke(2,new BasicStroke(2));   //线粗
+        xylineandshaperenderer.setSeriesPaint(3, Color.LIGHT_GRAY);  //线段颜色为红
+        xylineandshaperenderer.setSeriesStroke(3,new BasicStroke(5));
+
+
+
+        //XYPlot xyplot = new XYPlot(timeseriescollection, PressuredateAxises[0], numberaxis, xylineandshaperenderer);
+        XYPlot xyplot = new XYPlot(timeseriescollection, dateAxises[0], numberaxis, xylineandshaperenderer);
+
         xyplot.setBackgroundPaint(Color.LIGHT_GRAY);
         xyplot.setDomainGridlinePaint(Color.LIGHT_GRAY);
         xyplot.setRangeGridlinePaint(Color.LIGHT_GRAY);
