@@ -527,27 +527,27 @@ public class MainUiActor extends BaseActor{
 		JPanel HeartRate=new JPanel(new BorderLayout());
 		HeartRate.setLayout(null);
 		//HeartRate.setBorder(etchedBorder);	//等会注释掉
-		HeartRate.setBounds((int)(WIDTH*0.60),(int)(HEIGHT*0.15),(int)(WIDTH*0.17),(int)(HEIGHT*0.18));
+		HeartRate.setBounds((int)(WIDTH*0.61),(int)(HEIGHT*0.15),(int)(WIDTH*0.17),(int)(HEIGHT*0.18));
 		HeartRate.add(ecgShowUI.getHeartRateData(),BorderLayout.CENTER);
 		ECGPanel.add(HeartRate);
 
 		JPanel Pressure=new JPanel();
 		//Pressure.setBorder(etchedBorder);	//等会注释掉
-		Pressure.setBounds((int)(WIDTH*0.58),(int)(HEIGHT*0.32),(int)(WIDTH*0.20),(int)(HEIGHT*0.22));
+		Pressure.setBounds((int)(WIDTH*0.594),(int)(HEIGHT*0.32),(int)(WIDTH*0.20),(int)(HEIGHT*0.22));
 		Pressure.add(ecgShowUI.getPressureData());
 		ECGPanel.add(Pressure);
 
 		JPanel BloodOxygen=new JPanel(new BorderLayout());
 		BloodOxygen.setLayout(null);
 		//BloodOxygen.setBorder(etchedBorder);	//等会注释掉
-		BloodOxygen.setBounds((int)(WIDTH*0.60),(int)(HEIGHT*0.57),(int)(WIDTH*0.17),(int)(HEIGHT*0.18));
+		BloodOxygen.setBounds((int)(WIDTH*0.61),(int)(HEIGHT*0.57),(int)(WIDTH*0.17),(int)(HEIGHT*0.18));
 		BloodOxygen.add(ecgShowUI.getBloodOxygenData(),BorderLayout.CENTER);
 		ECGPanel.add(BloodOxygen);
 
 
 		JPanel ECGAnalyse = new JPanel();
 		//ECGAnalyse.setBorder(etchedBorder);	//等会注释掉
-		ECGAnalyse.setBounds((int)(WIDTH*0.78),(int)(HEIGHT*0.02),(int)(WIDTH*0.2),(int)(HEIGHT*0.75));
+		ECGAnalyse.setBounds((int)(WIDTH*0.79),(int)(HEIGHT*0.02),(int)(WIDTH*0.2),(int)(HEIGHT*0.75));
 
 		//ECGAnalyse.add(ecgShowUI.getECGInfo());
 		ECGPanel.add(ECGAnalyse);

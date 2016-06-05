@@ -145,7 +145,7 @@ public class ECGShowUI extends JPanel {
 
         JLabel jLabel1=new JLabel("--");
         if (HeartRatedatas[0]==0x00||HeartRatedatas==null){
-            jLabel1.setText("00");
+            jLabel1.setText("--");
         }
         else
         {
@@ -211,7 +211,7 @@ public class ECGShowUI extends JPanel {
         jfreechart.getLegend().setVisible(false);
 
         ChartPanel chartpanel = new ChartPanel(jfreechart,
-                (int) (WIDTH * 0.16), (int) (HEIGHT * 0.18), 0, 0,
+                (int) (WIDTH * 0.155), (int) (HEIGHT * 0.18), 0, 0,
                 Integer.MAX_VALUE, Integer.MAX_VALUE, true, true, false,
                 true, false, false);
 
@@ -219,6 +219,7 @@ public class ECGShowUI extends JPanel {
                 BorderFactory.createEmptyBorder(0, 0, 0, 0)     //边界线条间距为0
                 ,BorderFactory.createEmptyBorder()          //边界线条不可见
         ));
+        chartpanel.setMouseZoomable(false);
         PressureData.add(chartpanel);
 
     }
@@ -232,7 +233,7 @@ public class ECGShowUI extends JPanel {
 
         JLabel jLabel1=new JLabel("--");
         if (BloodOxygendatas[0]==0x00||BloodOxygendatas==null){
-            jLabel1.setText("00");
+            jLabel1.setText("--");
         }
         else {
             jLabel1.setText(Short.toString((short)BloodOxygendatas[0]));
