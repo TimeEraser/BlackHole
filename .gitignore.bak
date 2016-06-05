@@ -19,8 +19,6 @@ data/*
 *.diff
 *.patch
 *.tmp
-*.txt
-res/*.dat
 
 
 # Windows image file caches

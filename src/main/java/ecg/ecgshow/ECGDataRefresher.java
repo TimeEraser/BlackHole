@@ -11,11 +11,15 @@ import java.util.Observable;
 import java.util.Observer;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import javax.swing.JButton;
 
 import org.jfree.chart.axis.DateAxis;
 import org.jfree.data.time.Millisecond;
+import org.jfree.data.time.Second;
 import org.jfree.data.time.TimeSeries;
 
 //数据刷新
@@ -23,15 +27,39 @@ public class ECGDataRefresher extends Observable implements Observer{
 	public static final int SAMPLING=500;		//取样时间
 	public static final int MAX_TIME=1;			//最大时间
 	public static final int DATA_LENGTH=SAMPLING*MAX_TIME;//数据长度
-	public static final int REFRESH_TIME=50;	//刷新时间
+	public static final int REFRESH_TIME=50;	//刷新时间50ms
 	
 	private Timer timer;					//定时器
+	private ScheduledExecutorService scheduledExecutorService;
 	private TimeSeries[] ecgSerises;		//时间序列数组
 	private DateAxis[] dateAxises;          //时间轴
+
+	private TimeSeries[] SystolicPressureSeries;
+	private TimeSeries[] DiastolicPressureSeries;
+	private DateAxis[] PressuredateAxises;
+
 	private String filePath;				//文件路径
 	private Millisecond time;				//几个毫秒
+
 	private short[][] datas=new short[ECGShowUI.LEAD_COUNT][DATA_LENGTH];	//短整型二维数组
+	private  short[] SystolicPressuredatas=new short[1];
+	private  short[] DiastolicPressuredatas=new short[1];
+	private  short[] HeartRatedatas=new short[1];
+	private  short[] BloodOxygendatas=new short[1];
+
+
 	private volatile int currentPoint=2;	//用于多线程的变量，现在的点
+	private volatile int currentPoint2=2;
+	private volatile int currentPoint3=2;
+
+	public boolean isStopFlag() {
+		return stopFlag;
+	}
+
+	public void setStopFlag(boolean stopFlag) {
+		this.stopFlag = stopFlag;
+	}
+
 	private boolean stopFlag=true;			//停止标志
 	private boolean everStop=false;
 
@@ -43,10 +71,20 @@ public class ECGDataRefresher extends Observable implements Observer{
 		this.filePath=filePath;
 		timer=new Timer();
 	}
-	public ECGDataRefresher(TimeSeries[] ecgSerises, DateAxis[] dateAxises,ECGOtherData ecgOtherData){
+	public ECGDataRefresher(TimeSeries[] ecgSerises, DateAxis[] dateAxises,
+							TimeSeries[] SystolicPressureSeries, TimeSeries[] DiastolicPressureSeries,
+							DateAxis[] PressuredateAxises,short[] HeartRatedatas,short[] BloodOxygendatas
+							)
+	{
 		this.ecgSerises=ecgSerises;
 		this.dateAxises=dateAxises;
-		this.ecgOtherData=ecgOtherData;
+		this.SystolicPressureSeries=SystolicPressureSeries;
+		this.DiastolicPressureSeries=DiastolicPressureSeries;
+		this.PressuredateAxises=PressuredateAxises;
+		this.HeartRatedatas=HeartRatedatas;
+		this.BloodOxygendatas=BloodOxygendatas;
+		this.scheduledExecutorService= Executors.newSingleThreadScheduledExecutor();
+		//this.ecgOtherData=ecgOtherData;
 		timer=new Timer();
 	}
 	public void cancel(){
@@ -57,12 +95,12 @@ public class ECGDataRefresher extends Observable implements Observer{
 		//datas=readFileByBytes(filePath);
 		timer.scheduleAtFixedRate(new ReadFileDataTask(), 0, MAX_TIME*1000);
 		time=new Millisecond(new Date(57600000L));
-		timer.scheduleAtFixedRate(new AddToShowTask(), 0, REFRESH_TIME);			
+
 	}
 	
 	public void start(){
 		time=new Millisecond();
-		timer.schedule(new AddToShowTask(), 0, REFRESH_TIME);
+		scheduledExecutorService.scheduleAtFixedRate(new AddToShowTask(), 0, 50, TimeUnit.MILLISECONDS);
 	}
 	
 	private short[][] readFileByBytes(String fileName) {
@@ -118,6 +156,29 @@ public class ECGDataRefresher extends Observable implements Observer{
 		}
 	}
 
+
+
+
+	public void refreshHeartRate(byte[] message){
+		HeartRatedatas[0]=(short)(((message[0])<<8)|(message[1]&0xff));
+	}
+
+	public void refreshSystolicPressure(byte[] message){
+		SystolicPressuredatas[0]=(short)(((message[0])<<8)|(message[1]&0xff));
+	}
+
+	public void refreshDiastolicPressure(byte[] message){
+
+		DiastolicPressuredatas[0]=(short)(((message[0])<<8)|(message[1]&0xff));
+	}
+
+	public void refreshBloodOxygen(byte[] message){
+		BloodOxygendatas[0]=(short)message[0];
+	}
+
+
+
+
 	public void setEcgOtherData(ECGOtherData ecgOtherData){this.ecgOtherData=ecgOtherData;}
 	public ECGOtherData getEcgOtherData(){return this.ecgOtherData;}
 	
@@ -126,47 +187,84 @@ public class ECGDataRefresher extends Observable implements Observer{
 	 * @author Administrator
 	 *
 	 */
-	class AddToShowTask extends TimerTask{
+	class AddToShowTask implements Runnable{
 		private static final int LOWSAMPLE=5;
-		private Integer count=0;
+		private long upperBound=0;
+		private Millisecond time;
 		@Override
 		public void run() {
+			long currentTimeMillis =System.currentTimeMillis();
+			time = new Millisecond(new Date(currentTimeMillis));
+			if(currentTimeMillis > upperBound) {
+				for (DateAxis d :
+						dateAxises) {
+					d.setRange(new Date(currentTimeMillis), new Date(currentTimeMillis + 5000));
+				}
+				upperBound=currentTimeMillis+5000;
+			}
 			if(datas!=null){
 				for(int i=0;i<REFRESH_TIME/LOWSAMPLE/2;i++){
 					if(currentPoint< DATA_LENGTH){
 						if(stopFlag==false){
-							if(count==0 || everStop ==true) {
-								for (DateAxis d:dateAxises) {
-									long beginMilliSecond=time.getFirstMillisecond();
-									d.setRange(new Date(beginMilliSecond),new Date(beginMilliSecond+5000));
-								}
-								everStop=false;
-								count=0;
-							}
 							for(int j = 0; j< ECGShowUI.LEAD_COUNT; j++){
 								ecgSerises[j].add(time, 2000);//该方法在超过指定长度后会将最久的数据丢弃
 								//ecgSerises[j].add(time, 2000);//该方法在超过指定长度后会将最久的数据丢弃
-								ecgSerises[j+ ECGShowUI.LEAD_COUNT].add(time, datas[j][currentPoint]);//该方法在超过指定长度后会将最久的数据丢弃
-							}
-							count++;
-							if(count==500){
-								count=0;
+								//ecgSerises[j+ ECGShowUI.LEAD_COUNT].add(time, datas[j][currentPoint]);//该方法在超过指定长度后会将最久的数据丢弃
+								ecgSerises[j+ ECGShowUI.LEAD_COUNT].add(time, 2000);//该方法在超过指定长度后会将最久的数据丢弃
+								currentTimeMillis+=10;
 							}
 						}
-						time=(Millisecond) time.next().next().next().next().next().next().next().next().next().next();
+						time= new Millisecond(new Date(currentTimeMillis));
 						currentPoint+=LOWSAMPLE;
 					}
 					else {
 						currentPoint=2;
-						//System.out.println(System.currentTimeMillis()-startTime);
-						//cancel();
-						//return;
 					}
 				}
 			}
 			else{
 				System.out.println("数据尚未准备好！");
 			}
+
+//			if (SystolicPressuredatas!=null&&DiastolicPressuredatas!=null){
+//
+//				for(int i=0;i<REFRESH_TIME/LOWSAMPLE/2;i++){
+//						if(stopFlag==false){
+//							if(count==0 || everStop ==true) {
+////								for (DateAxis d:PressuredateAxises) {
+//									long beginMilliSecond=time.getFirstMillisecond();
+//								PressuredateAxises[0].setRange(new Date(beginMilliSecond),new Date(beginMilliSecond+5000));
+////								}
+//								everStop=false;
+//								count=0;
+//							}
+//								//SystolicPressureSeries[0].add(time, 20);//该方法在超过指定长度后会将最久的数据丢弃
+//								//DiastolicPressureSeries[0].add(time, 20);//该方法在超过指定长度后会将最久的数据丢弃
+//
+//							//	SystolicPressureSeries[1].add(time, SystolicPressuredatas[0]);
+//							//	DiastolicPressureSeries[1].add(time, DiastolicPressuredatas[0]);
+//							count++;
+//							if(count==50){
+//								count=0;
+//							}
+//						}
+//						time=(Millisecond) time.next().next().next().next().next().next().next().next().next().next();
+//				}
+//
+//			}
+//			else{
+//				System.out.println("数据尚未准备好！");
+//			}
+//
+//
+//			if (BloodOxygendatas!=null){
+//				BloodOxygendatas[0]=BloodOxygendatas[0];
+//			}
+//			else{
+//				System.out.println("数据尚未准备好！");
+//			}
+
+
 		}	//run()  end
 	}
 

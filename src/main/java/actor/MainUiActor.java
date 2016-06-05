@@ -25,9 +25,11 @@ import ct.ctshow.CTHistoryData;
 import ct.ctshow.CTShowUI;
 import ecg.ecgshow.ECGShowUI;
 import ecg.tcp.TCPConfig;
+
 import guard.guardDataProcess.GuardSerialDataProcess;
 import guard.guardshow.*;
 import util.ImageUtil;
+
 
 import java.util.Timer;
 
@@ -359,6 +361,7 @@ public class MainUiActor extends BaseActor{
 		LIGHTValueShow.add(lightValueShow);
 		GuardPanel.add(LIGHTValueShow);
 
+
 		JPanel LIGHTValueDialShow=new JPanel();
 		LightValueDialPlot lightValueDialPlot=new LightValueDialPlot();
 		guardSerialDataProcess.addObserver(lightValueDialPlot);
@@ -370,17 +373,10 @@ public class MainUiActor extends BaseActor{
 		JPanel ALARMShow=new JPanel();
 		AlarmShow alarmShow=new AlarmShow(guardSerialDataProcess);
 		ALARMShow.setBounds((int)(WIDTH*0.63),(int)(HEIGHT*0.12),(int)(WIDTH*0.35),(int)(HEIGHT*0.63));
+
 		ALARMShow.setLayout(new BorderLayout());
 		ALARMShow.add(alarmShow);
 		GuardPanel.add(ALARMShow);
-
-//		JPanel GuardBottom=new JPanel();
-//		GuardBottomShow guardBottomShow=new GuardBottomShow();
-//		guardSerialDataProcess.addObserver(guardBottomShow);
-//		GuardBottom.setBounds(0,(int)(HEIGHT*0.785),(int)(WIDTH*0.985),(int)(HEIGHT*0.15));
-//		GuardBottom.setLayout(new BorderLayout());
-//		GuardBottom.add(guardBottomShow);
-//		GuardPanel.add(GuardBottom);
 
 		GuardPanel.setVisible(false);
 		return GuardPanel;
@@ -484,8 +480,8 @@ public class MainUiActor extends BaseActor{
 		ECGPanel.setBounds(0,0,WIDTH,(int)(HEIGHT*0.9));
 
 		JPanel ECGControl = new JPanel();
-		ECGControl.setBorder(etchedBorder);		//等会注释掉
-		ECGControl.setBounds((int)(WIDTH*0.02),(int)(HEIGHT*0.05),(int)(WIDTH*0.75),(int)(HEIGHT*0.10));
+		//ECGControl.setBorder(etchedBorder);		//等会注释掉
+		ECGControl.setBounds((int)(WIDTH*0.02),(int)(HEIGHT*0.02),(int)(WIDTH*0.75),(int)(HEIGHT*0.10));
 		ECGControl.setLayout(new FlowLayout(FlowLayout.CENTER));
 
 		JButton ecgConfig = new JButton();
@@ -496,8 +492,7 @@ public class MainUiActor extends BaseActor{
 
 		JButton ecgStart = new JButton();
 		ecgStart.setText("开始传输");
-		ecgStart.setIcon(new ImageIcon(getIconImage("Icon/start.png")));
-		ecgStart.addActionListener(new NoticeListener(this,monitorActor,MonitorRequest.MONITOR_ECG_START));
+		ecgStart.setIcon(new ImageIcon(getIconImage("Icon/start.png")));;
 		ButtonSwitchListener buttonSwitchListener=new ButtonSwitchListener();
 		buttonSwitchListener.setText(0,"开始传输");
 		buttonSwitchListener.setIcon(0,new ImageIcon(getIconImage("Icon/start.png")));
@@ -518,39 +513,41 @@ public class MainUiActor extends BaseActor{
 		ecgAnalyse.setText("心电图分析");
 		ecgAnalyse.setIcon(new ImageIcon(getIconImage("Icon/analyse.png")));
 		ecgAnalyse.addActionListener(new NoticeListener(this,monitorActor,MainUiRequest.MAIN_UI_ECG_ANALYSIS));
-		ECGControl.add(ecgAnalyse);
+		//ECGControl.add(ecgAnalyse);
 		ECGPanel.add(ECGControl);
 
 		JPanel ECGData = new JPanel();
-		ECGData.setBorder(etchedBorder);	//等会注释掉
-		ECGData.setBounds((int)(WIDTH*0.02),(int)(HEIGHT*0.20),(int)(WIDTH*0.58),(int)(HEIGHT*0.66));
+		//ECGData.setBorder(etchedBorder);	//等会注释掉
+		ECGData.setBounds((int)(WIDTH*0.02),(int)(HEIGHT*0.12),(int)(WIDTH*0.58),(int)(HEIGHT*0.66));
 		ECGShowUI ecgShowUI=new ECGShowUI("ecg", 5000L);
 		ECGData.add(ecgShowUI.getECGData());
 		sendRequest(monitorActor,MonitorRequest.ECG_UI_CONFIG,ecgShowUI);
 		ECGPanel.add(ECGData);
 
-		JPanel HeartRate=new JPanel();
-		HeartRate.setBorder(etchedBorder);	//等会注释掉
-		HeartRate.setBounds((int)(WIDTH*0.60),(int)(HEIGHT*0.20),(int)(WIDTH*0.17),(int)(HEIGHT*0.22));
-		HeartRate.add(ecgShowUI.getHeartRateData());
+		JPanel HeartRate=new JPanel(new BorderLayout());
+		HeartRate.setLayout(null);
+		//HeartRate.setBorder(etchedBorder);	//等会注释掉
+		HeartRate.setBounds((int)(WIDTH*0.60),(int)(HEIGHT*0.15),(int)(WIDTH*0.17),(int)(HEIGHT*0.18));
+		HeartRate.add(ecgShowUI.getHeartRateData(),BorderLayout.CENTER);
 		ECGPanel.add(HeartRate);
 
 		JPanel Pressure=new JPanel();
-		Pressure.setBorder(etchedBorder);	//等会注释掉
-		Pressure.setBounds((int)(WIDTH*0.60),(int)(HEIGHT*0.42),(int)(WIDTH*0.17),(int)(HEIGHT*0.22));
+		//Pressure.setBorder(etchedBorder);	//等会注释掉
+		Pressure.setBounds((int)(WIDTH*0.58),(int)(HEIGHT*0.32),(int)(WIDTH*0.20),(int)(HEIGHT*0.22));
 		Pressure.add(ecgShowUI.getPressureData());
 		ECGPanel.add(Pressure);
 
-		JPanel BloodOxygen=new JPanel();
-		BloodOxygen.setBorder(etchedBorder);	//等会注释掉
-		BloodOxygen.setBounds((int)(WIDTH*0.60),(int)(HEIGHT*0.64),(int)(WIDTH*0.17),(int)(HEIGHT*0.22));
-		BloodOxygen.add(ecgShowUI.getBloodOxygenData());
+		JPanel BloodOxygen=new JPanel(new BorderLayout());
+		BloodOxygen.setLayout(null);
+		//BloodOxygen.setBorder(etchedBorder);	//等会注释掉
+		BloodOxygen.setBounds((int)(WIDTH*0.60),(int)(HEIGHT*0.57),(int)(WIDTH*0.17),(int)(HEIGHT*0.18));
+		BloodOxygen.add(ecgShowUI.getBloodOxygenData(),BorderLayout.CENTER);
 		ECGPanel.add(BloodOxygen);
 
 
 		JPanel ECGAnalyse = new JPanel();
-		ECGAnalyse.setBorder(etchedBorder);	//等会注释掉
-		ECGAnalyse.setBounds((int)(WIDTH*0.78),(int)(HEIGHT*0.05),(int)(WIDTH*0.2),(int)(HEIGHT*0.8));
+		//ECGAnalyse.setBorder(etchedBorder);	//等会注释掉
+		ECGAnalyse.setBounds((int)(WIDTH*0.78),(int)(HEIGHT*0.02),(int)(WIDTH*0.2),(int)(HEIGHT*0.75));
 
 		//ECGAnalyse.add(ecgShowUI.getECGInfo());
 		ECGPanel.add(ECGAnalyse);

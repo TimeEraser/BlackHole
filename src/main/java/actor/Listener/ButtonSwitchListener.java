@@ -84,7 +84,9 @@ public class ButtonSwitchListener extends BaseActor implements ActionListener {
             }
         }
         if(responses == SystemResponse.SYSTEM_FAILURE){
+
             JOptionPane.showMessageDialog(null,responses.getConfig().getData(),"系统错误",JOptionPane.ERROR_MESSAGE);
+
         }
         involvedButton.setEnabled(true);
         return false;

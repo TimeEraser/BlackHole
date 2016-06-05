@@ -54,11 +54,16 @@ public class MonitorActor extends BaseActor{
         }
         if(request==MonitorRequest.ECG_UI_CONFIG){
             ecgShowUI = (ECGShowUI)request.getConfig().getData();
-            ecgDataRefresher=new ECGDataRefresher(ecgShowUI.getECGSeries(),ecgShowUI.getDateAxises(),ecgShowUI.getECGOtherData());
+            ecgDataRefresher=new ECGDataRefresher(ecgShowUI.getECGSeries(),ecgShowUI.getDateAxises(),
+                    ecgShowUI.getSystolicPressureSeries(),ecgShowUI.getDiastolicPressureSeries(),
+                    ecgShowUI.getPressuredateAxises (),ecgShowUI.getHeartRatedatas(),ecgShowUI.getBloodOxygendatas()
+
+            );
         }
         if(request==MonitorRequest.MONITOR_ECG_START){
             if(client!=null) {
                 ecgDataRefresher.setStartFlag();
+                System.out.println(ecgDataRefresher.isStopFlag());
                 sendResponse(request,SystemResponse.SYSTEM_SUCCESS);
             }else {
                 sendResponse(request,SystemResponse.SYSTEM_FAILURE,"请配置心电仪");
@@ -67,6 +72,7 @@ public class MonitorActor extends BaseActor{
         if(request==MonitorRequest.MONITOR_ECG_STOP) {
             if(client!=null) {
                 ecgDataRefresher.setStopFlag();
+                System.out.println(ecgDataRefresher.isStopFlag());
                 sendResponse(request,SystemResponse.SYSTEM_SUCCESS);
             }else {
                 sendResponse(request,SystemResponse.SYSTEM_FAILURE,"请配置心电仪");
