@@ -548,7 +548,10 @@ public class MainUiActor extends BaseActor{
 		JPanel ECGAnalyse = new JPanel();
 		//ECGAnalyse.setBorder(etchedBorder);	//等会注释掉
 		ECGAnalyse.setBounds((int)(WIDTH*0.79),(int)(HEIGHT*0.02),(int)(WIDTH*0.2),(int)(HEIGHT*0.75));
-
+		guardSerialDataProcess.addObserver(ecgShowUI);
+		ECGAnalyse.setLayout(new BorderLayout());
+		ECGAnalyse.add(ecgShowUI.getTemperatureData(),BorderLayout.NORTH);
+		ECGAnalyse.add(ecgShowUI.getLightValueData(),BorderLayout.SOUTH);
 		//ECGAnalyse.add(ecgShowUI.getECGInfo());
 		ECGPanel.add(ECGAnalyse);
 

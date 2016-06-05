@@ -27,6 +27,9 @@ public class GuardSerialDataProcess extends Observable {
     private static int bloodCount=0;
     private static int bubbleCount=0;
     private static int lastLightValue=0;
+    private static int bubbleSeemValue=0;
+    private static boolean bubbleJudgeFlag=false;
+    private static int bubbleJudgeCount=0;
     private GuardData guardData;
 
     public GuardSerialDataProcess(File temperatureDataFile, File alarmMessageDatafile, GuardActorConfig guardActorConfig) throws IOException {
@@ -101,15 +104,41 @@ public class GuardSerialDataProcess extends Observable {
             emptyCount+=1;
         }
         else if(lightValue<=lastLightValue-bubbleLightValue){
-            alarmBubble=true;
-            bubbleCount+=1;
+            if(!bubbleJudgeFlag) {
+                bubbleJudgeFlag = true;
+                bubbleSeemValue=lastLightValue;
+                bubbleJudgeCount += 1;
+            }
+            else {
+                bubbleJudgeFlag=false;
+                bubbleCount+=bubbleJudgeCount;
+                bubbleJudgeCount=0;
+                alarmBubble=true;
+            }
         }
         else if ((lightValue<bloodLightValue)&&(bubbleCount==0)){
-            alarmBlood=true;
-            bloodCount+=1;
+            if(bubbleJudgeFlag){
+                bubbleJudgeCount+=1;
+            }
+            else {
+                alarmBlood = true;
+                bloodCount += 1;
+            }
         }
         else {
             normalCount+=1;
+        }
+        if((lightValue>bubbleSeemValue-bubbleLightValue)&&bubbleJudgeFlag){
+            bubbleJudgeFlag=false;
+            bubbleCount+=bubbleJudgeCount;
+            bubbleJudgeCount=0;
+            alarmBubble=true;
+        }
+        if(bubbleJudgeCount>guardActorConfig.getBubbleHoldCount()){
+            bubbleJudgeFlag=false;
+            bloodCount+=bubbleJudgeCount;
+            bubbleJudgeCount=0;
+            alarmBlood=true;
         }
         guardData.countMessageRefresh(normalCount,emptyCount,bloodCount,bubbleCount);
         lastLightValue=lightValue;

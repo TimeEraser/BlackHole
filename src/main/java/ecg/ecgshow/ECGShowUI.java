@@ -9,8 +9,11 @@ package ecg.ecgshow;
 import java.awt.*;
 import java.io.File;
 import java.io.InputStream;
+import java.util.Observable;
+import java.util.Observer;
 import javax.swing.*;
 
+import guard.guardDataProcess.GuardData;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.DateAxis;
@@ -27,7 +30,7 @@ import static javafx.scene.text.Font.loadFont;
  *
  * @author MCH
  */
-public class ECGShowUI extends JPanel {
+public class ECGShowUI extends JPanel implements Observer {
 
 //	// Variables declaration - do not modify//GEN-BEGIN:variables
 //    private JPanel contentPane=new JPanel();
@@ -46,6 +49,11 @@ public class ECGShowUI extends JPanel {
     private Integer HEIGHT;
     //ECGData
     private JPanel ECGData;
+    private JPanel temperatureData;
+    private JPanel lightValueData;
+
+    private JLabel temperatureLabel;
+    private JLabel lightValueLabel;
     private DateAxis[] dateAxises ;
     private DateAxis[] PressuredateAxises ;
    // private ECGOtherData ecgOtherData=new ECGOtherData();
@@ -70,7 +78,7 @@ public class ECGShowUI extends JPanel {
         createHeartRateData(timeZone);
         createPressureData(timeZone);
         createBloodOxygenData(timeZone);
-
+        createGuardData();
 
     }
 
@@ -223,7 +231,31 @@ public class ECGShowUI extends JPanel {
         PressureData.add(chartpanel);
 
     }
+    private void createGuardData(){
+        temperatureData=new JPanel();
+        temperatureData.setLayout(new BorderLayout());
+        temperatureData.setBounds(0,0,(int) (WIDTH * 0.28), (int) (HEIGHT * 0.15));
+        temperatureData.setBackground(Color.BLACK);
+        temperatureLabel=new JLabel("--.-");
+        temperatureLabel.setFont(loadFont("LED.tff",64.0f));
+        temperatureLabel.setBackground(Color.BLACK);
+        temperatureLabel.setForeground(Color.GREEN);
+        temperatureLabel.setBounds(0,0,200,100);
+        temperatureLabel.setOpaque(true);
+        temperatureData.add(temperatureLabel,BorderLayout.CENTER);
 
+        lightValueData=new JPanel();
+        lightValueData.setLayout(new BorderLayout());
+        lightValueData.setBounds(0,0,(int) (WIDTH * 0.28), (int) (HEIGHT * 0.15));
+        lightValueData.setBackground(Color.BLACK);
+        lightValueLabel=new JLabel("----");
+        lightValueLabel.setFont(loadFont("LED.tff",64.0f));
+        lightValueLabel.setBackground(Color.BLACK);
+        lightValueLabel.setForeground(Color.GREEN);
+        lightValueLabel.setBounds(0,0,200,100);
+        lightValueLabel.setOpaque(true);
+        lightValueData.add(lightValueLabel,BorderLayout.CENTER);
+    }
     private void createBloodOxygenData(long timeZone){
         BloodOxygendatas=new short [1];
         BloodOxygenData=new JPanel();
@@ -272,7 +304,12 @@ public class ECGShowUI extends JPanel {
     public JPanel getHeartRateData(){return HeartRateData;}
     public JPanel getPressureData(){return PressureData;}
     public JPanel getBloodOxygenData(){return BloodOxygenData;}
-
+    public JPanel getTemperatureData(){
+        return temperatureData;
+    }
+    public JPanel getLightValueData(){
+        return lightValueData;
+    }
 
 
     public TimeSeries[] getECGSeries() {
@@ -336,6 +373,13 @@ public class ECGShowUI extends JPanel {
             e.printStackTrace();
             return new java.awt.Font("宋体", Font.PLAIN, 64);
         }
+    }
+
+    @Override
+    public void update(Observable o, Object arg) {
+        GuardData guardData=(GuardData)arg;
+        temperatureLabel.setText(guardData.getTemperature());
+        lightValueLabel.setText(guardData.getLightValue());
     }
 
 //    public ECGOtherData getECGOtherData(){return ecgOtherData;}
