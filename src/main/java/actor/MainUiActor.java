@@ -545,15 +545,21 @@ public class MainUiActor extends BaseActor{
 		ECGPanel.add(BloodOxygen);
 
 
-		JPanel ECGAnalyse = new JPanel();
+		JPanel Temperature = new JPanel();
 		//ECGAnalyse.setBorder(etchedBorder);	//等会注释掉
-		ECGAnalyse.setBounds((int)(WIDTH*0.79),(int)(HEIGHT*0.02),(int)(WIDTH*0.2),(int)(HEIGHT*0.75));
+		Temperature.setBounds((int)(WIDTH*0.80),(int)(HEIGHT*0.15),(int)(WIDTH*0.18),(int)(HEIGHT*0.18));
 		guardSerialDataProcess.addObserver(ecgShowUI);
-		ECGAnalyse.setLayout(new BorderLayout());
-		ECGAnalyse.add(ecgShowUI.getTemperatureData(),BorderLayout.NORTH);
-		ECGAnalyse.add(ecgShowUI.getLightValueData(),BorderLayout.SOUTH);
+		Temperature.setLayout(new BorderLayout());
+		Temperature.add(ecgShowUI.getTemperatureData(),BorderLayout.CENTER);
+
+		JPanel LightValue=new JPanel();
+		LightValue.setBounds((int)(WIDTH*0.80),(int)(HEIGHT*0.57),(int)(WIDTH*0.18),(int)(HEIGHT*0.18));
+		LightValue.setLayout(new BorderLayout());
+		LightValue.add(ecgShowUI.getLightValueData(),BorderLayout.CENTER);
+
 		//ECGAnalyse.add(ecgShowUI.getECGInfo());
-		ECGPanel.add(ECGAnalyse);
+		ECGPanel.add(Temperature);
+		ECGPanel.add(LightValue);
 
 		ECGPanel.setVisible(false);
 		return ECGPanel;

@@ -72,7 +72,7 @@ public class AlarmTablePanel extends JPanel implements Observer{
             JLabel[] rowValue = new JLabel[3];
             rowValue[0] = new JLabel(guardData.getTime());
             String alarmMessage=guardData.getMessage(targetString);
-            System.out.println(alarmMessage);
+
             rowValue[1]=new JLabel(alarmMessage);
             switch (alarmMessage){
                 case "血温正常":case "不再漏血":case"气泡消失":

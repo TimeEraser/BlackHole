@@ -37,6 +37,7 @@ public class MonitorActor extends BaseActor{
             if(client!=null) {
                 client.stopFlag = true;
                 if (ecgDataRefresher != null) ecgDataRefresher.setStopFlag();
+
                 sendResponse(request,SystemResponse.SYSTEM_SUCCESS);
                 System.out.println("client.stopFlag =true");
             }
