@@ -70,9 +70,8 @@ public class GuardActor extends BaseActor {
     }
     @Override
     protected boolean processActorRequest(Request requests) {
-        if (requests == MainUiRequest.MAIN_UI_GUARD_START) {
+        if (requests == GuardRequest.GUARD_START) {
             System.out.println("GuardRequest.GUARD_START");
-            startRequest=requests;
             if(!start()){
                 sendResponse(requests,SystemResponse.SYSTEM_FAILURE,"请检查报警模块及配置");
             }

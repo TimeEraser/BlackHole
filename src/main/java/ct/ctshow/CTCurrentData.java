@@ -22,22 +22,27 @@ public class CTCurrentData extends JPanel {
 
     private BufferedImage focus = null;
     //mouse event
+    private MyMouseAdapter mouseAdapter;
     private Rectangle rect = null;
     private boolean drawing = false;
     public CTCurrentData() {
     }
-    public void refreshImage(String imagePath) {
+    public void refreshImage(String imagePath,boolean isHistory) {
         try {
             //reInitialized
             removeAll();
+            removeMouseListener(mouseAdapter);
+            removeMouseMotionListener(mouseAdapter);
             rect=null;
             focus=null;
             //refresh
             this.imagePath = imagePath;
             image = ImageIO.read(new File(imagePath));
-            MyMouseAdapter mouseAdapter = new MyMouseAdapter();
-            addMouseListener(mouseAdapter);
-            addMouseMotionListener(mouseAdapter);
+            if(!isHistory){
+                mouseAdapter = new MyMouseAdapter();
+                addMouseListener(mouseAdapter);
+                addMouseMotionListener(mouseAdapter);
+            }
             this.setVisible(true);
             this.getParent().getHeight();
             Integer imageX, imageY;

@@ -13,22 +13,14 @@ import actor.Listener.ButtonSwitchListener;
 import actor.Listener.NoticeListener;
 import actor.Listener.MenuSwitchListener;
 import actor.config.MainUiActorConfig;
-
-import actor.guard.AlarmShow;
-import actor.guard.GuardConfig;
-import actor.guard.GuardError;
-import actor.guard.TemperatureShow;
-
 import com.alee.laf.WebLookAndFeel;
 import command.*;
-import ct.ctshow.CTCurrentData;
 import ct.ctshow.CTHistoryData;
 
+import ct.ctshow.CTShowUI;
 import ecg.ecgshow.ECGShowUI;
-import ecg.ecgshow.PressureShowUI;
 import ecg.tcp.TCPConfig;
-import guard.guardshow.GuardConfigShow;
-import guard.guardshow.LightValueShow;
+import guard.guardshow.*;
 
 import java.util.Timer;
 
@@ -288,12 +280,10 @@ public class MainUiActor extends BaseActor{
 
 
 	private JPanel createGUARDJPanel(){
-
 		JPanel GuardPanel=new JPanel(null);
 
 		Border etchedBorder = BorderFactory.createEtchedBorder(EtchedBorder.LOWERED,Color.LIGHT_GRAY,Color.LIGHT_GRAY);
 		GuardPanel.setBounds(0,0,WIDTH,(int)(HEIGHT*0.9));
-
 
 		JPanel GUARDControl=new JPanel();
 		GUARDControl.setBounds((int)(WIDTH*0.53),(int)(HEIGHT*0.01),(int)(WIDTH*0.5),(int)(HEIGHT*0.1));
@@ -338,19 +328,17 @@ public class MainUiActor extends BaseActor{
 		JPanel ALARMShow=new JPanel();
 		AlarmShow alarmShow=new AlarmShow(guardActor.getGuardSerialDataProcess());
 		ALARMShow.setBounds((int)(WIDTH*0.58),(int)(HEIGHT*0.12),(int)(WIDTH*0.37),(int)(HEIGHT*0.63));
-
 		ALARMShow.setLayout(new BorderLayout());
 		ALARMShow.add(alarmShow);
 		GuardPanel.add(ALARMShow);
 
-
-		JPanel GuardBottomShow=new JPanel();
+		JPanel GuardBottom=new JPanel();
 		GuardBottomShow guardBottomShow=new GuardBottomShow();
 		guardActor.getGuardSerialDataProcess().addObserver(guardBottomShow);
-		GuardBottomShow.setBounds(0,(int)(HEIGHT*0.82),(int)(WIDTH*0.985),(int)(HEIGHT*0.05));
-		GuardBottomShow.setLayout(new BorderLayout());
-		GuardBottomShow.add(guardBottomShow);
-		GuardPanel.add(GuardBottomShow);
+		GuardBottom.setBounds(0,(int)(HEIGHT*0.82),(int)(WIDTH*0.985),(int)(HEIGHT*0.05));
+		GuardBottom.setLayout(new BorderLayout());
+		GuardBottom.add(guardBottomShow);
+		GuardPanel.add(GuardBottom);
 
 		GuardPanel.setVisible(false);
 		return GuardPanel;
@@ -396,8 +384,7 @@ public class MainUiActor extends BaseActor{
 
 		CTData.setBounds((int)(WIDTH*0.05),(int)(HEIGHT*0.02),(int)(WIDTH*0.65),(int)(HEIGHT*0.81));	//setBounds()设定的是四个值，分别是X坐标和y坐标（其中屏幕的左上角是原点）、宽和高
 		GridBagConstraints c = new GridBagConstraints();
-		CTData.add(mandelDraw);
-		sendRequest(ctActor,CtRequest.CT_UI_CONFIG,mandelDraw);
+		CTData.add(ctShowUI.getCtCurrentData());
 
 		CTPanel.add(CTData);
 
@@ -426,15 +413,11 @@ public class MainUiActor extends BaseActor{
 
 		JPanel CTHistory = new JPanel();
 
-		CTHistory.setLayout(null);
+		CTHistory.setLayout(new BoxLayout(CTHistory,BoxLayout.Y_AXIS));
 		CTHistory.setBorder(etchedBorder);
 		CTHistory.setBounds((int)(WIDTH*0.75),(int)(HEIGHT*0.25),(int)(WIDTH*0.2),(int)(HEIGHT*0.58));
-			CTHistoryData ctHistoryData=new CTHistoryData();
-			ctHistoryData.refresh("肝   癌");
-			CTHistory.add(ctHistoryData);
-
+		CTHistory.add(ctShowUI.getCtHistoryData());
 		CTPanel.add(CTHistory);
-
 		sendRequest(ctActor,CtRequest.CT_UI_CONFIG,ctShowUI);
 		CTPanel.setVisible(false);
 		return CTPanel;
@@ -460,8 +443,7 @@ public class MainUiActor extends BaseActor{
 
 		JButton ecgStart = new JButton();
 		ecgStart.setText("开始传输");
-		ecgStart.setIcon(new ImageIcon(getIconImage("Icon/start.png")));
-		ecgStart.addActionListener(new NoticeListener(this,monitorActor,MonitorRequest.MONITOR_ECG_START));
+		ecgStart.setIcon(new ImageIcon(getIconImage("Icon/start.png")));;
 		ButtonSwitchListener buttonSwitchListener=new ButtonSwitchListener();
 		buttonSwitchListener.setText(0,"开始传输");
 		buttonSwitchListener.setIcon(0,new ImageIcon(getIconImage("Icon/start.png")));
@@ -493,10 +475,11 @@ public class MainUiActor extends BaseActor{
 		sendRequest(monitorActor,MonitorRequest.ECG_UI_CONFIG,ecgShowUI);
 		ECGPanel.add(ECGData);
 
-		JPanel HeartRate=new JPanel();
+		JPanel HeartRate=new JPanel(new BorderLayout());
+		HeartRate.setLayout(null);
 		HeartRate.setBorder(etchedBorder);	//等会注释掉
 		HeartRate.setBounds((int)(WIDTH*0.60),(int)(HEIGHT*0.20),(int)(WIDTH*0.17),(int)(HEIGHT*0.22));
-		HeartRate.add(ecgShowUI.getHeartRateData());
+		HeartRate.add(ecgShowUI.getHeartRateData(),BorderLayout.CENTER);
 		ECGPanel.add(HeartRate);
 
 		JPanel Pressure=new JPanel();
@@ -505,10 +488,11 @@ public class MainUiActor extends BaseActor{
 		Pressure.add(ecgShowUI.getPressureData());
 		ECGPanel.add(Pressure);
 
-		JPanel BloodOxygen=new JPanel();
+		JPanel BloodOxygen=new JPanel(new BorderLayout());
+		BloodOxygen.setLayout(null);
 		BloodOxygen.setBorder(etchedBorder);	//等会注释掉
 		BloodOxygen.setBounds((int)(WIDTH*0.60),(int)(HEIGHT*0.64),(int)(WIDTH*0.17),(int)(HEIGHT*0.22));
-		BloodOxygen.add(ecgShowUI.getBloodOxygenData());
+		BloodOxygen.add(ecgShowUI.getBloodOxygenData(),BorderLayout.CENTER);
 		ECGPanel.add(BloodOxygen);
 
 

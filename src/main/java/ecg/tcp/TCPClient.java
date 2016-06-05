@@ -89,7 +89,7 @@ public class TCPClient extends Thread{  //跑多线程
 
 	public TCPClient(ECGDataRefresher ecgDataRefresher){
 		this.ecgDataRefresher=ecgDataRefresher;
-		this.ecgOtherData=ecgDataRefresher.getEcgOtherData();
+		//this.ecgOtherData=ecgDataRefresher.getEcgOtherData();
 	}
 
 
@@ -162,26 +162,30 @@ public class TCPClient extends Thread{  //跑多线程
 					int frameLen = (receivedBuffer[2] & 0xFF)*256 + (receivedBuffer[1] & 0xFF)+3;	//帧长度frameLen
 
 					if(receivedBuffer[0]==0x01){		//心电模块
-						heart_rate = ((receivedBuffer[14]<<8)+(receivedBuffer[15]&0xFF))+" bpm";		//心率，有符号
-						ecgOtherData.setHeart_rate(heart_rate);
+						//heart_rate = ((receivedBuffer[14]<<8)+(receivedBuffer[15]&0xFF))+" bpm";		//心率，有符号
+						//ecgOtherData.setHeart_rate(heart_rate);
+						ecgDataRefresher.refreshHeartRate(Arrays.copyOfRange(receivedBuffer, 14,2));
 						fosHeartRate.write(receivedBuffer,14,2);
 						fosEcg.write(receivedBuffer, 16, 3000);
 						ecgDataRefresher.refreshData(Arrays.copyOfRange(receivedBuffer, 16, 3016));
-						ecgDataRefresher.setEcgOtherData(ecgOtherData);
+						//ecgDataRefresher.setEcgOtherData(ecgOtherData);
 					}
 					else if(receivedBuffer[0]==0x03){	//血压模块
-						systolic_pressure = ((receivedBuffer[6]<<8)+(receivedBuffer[7]&0xFF))+" mmHg";	//收缩压，有符号
-						diastolic_pressure = ((receivedBuffer[8]<<8)+(receivedBuffer[9]&0xFF))+" mmHg";	//舒张压，有符号
-						ecgOtherData.setSystolic_pressure(systolic_pressure);
-						ecgOtherData.setDiastolic_pressure(diastolic_pressure);
+						//systolic_pressure = ((receivedBuffer[6]<<8)+(receivedBuffer[7]&0xFF))+" mmHg";	//收缩压，有符号
+						//diastolic_pressure = ((receivedBuffer[8]<<8)+(receivedBuffer[9]&0xFF))+" mmHg";	//舒张压，有符号
+						//ecgOtherData.setSystolic_pressure(systolic_pressure);
+						//ecgOtherData.setDiastolic_pressure(diastolic_pressure);
 						fosPressure.write(receivedBuffer,6,4);
-						ecgDataRefresher.setEcgOtherData(ecgOtherData);
+						//ecgDataRefresher.setEcgOtherData(ecgOtherData);
+						ecgDataRefresher.refreshSystolicPressure(Arrays.copyOfRange(receivedBuffer, 6,2));
+						ecgDataRefresher.refreshDiastolicPressure(Arrays.copyOfRange(receivedBuffer, 8,2));
 					}
 					else if(receivedBuffer[0]==0x04){	//血氧模块 饱和度，有符号
-						blood_oxygen = receivedBuffer[8]+" %";
-						ecgOtherData.setBlood_oxygen(blood_oxygen);
+						//blood_oxygen = receivedBuffer[8]+" %";
+						//ecgOtherData.setBlood_oxygen(blood_oxygen);
 						fosBloodOxygen.write(receivedBuffer,8,1);
-						ecgDataRefresher.setEcgOtherData(ecgOtherData);
+						//ecgDataRefresher.setEcgOtherData(ecgOtherData);
+						ecgDataRefresher.refreshBloodOxygen(Arrays.copyOfRange(receivedBuffer,8,1));
 					}
 
 
