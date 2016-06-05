@@ -21,13 +21,12 @@ public class GuardSerialDataProcess extends Observable {
     private File alarmMessageDataFile;
     private static boolean alarmTemperatureSolved=true;
     private static boolean alarmBloodSolved = true;
-    private static boolean alarmBubbleSolved = true;
     private GuardActorConfig guardActorConfig;
     private static int normalCount=0;
     private static int emptyCount=0;
     private static int bloodCount=0;
     private static int bubbleCount=0;
-    private static boolean  alarmBubble=false;
+    private static int lastLightValue=0;
     private GuardData guardData;
 
     public GuardSerialDataProcess(File temperatureDataFile, File alarmMessageDatafile, GuardActorConfig guardActorConfig) throws IOException {
@@ -39,18 +38,19 @@ public class GuardSerialDataProcess extends Observable {
         timer.schedule(
                 new java.util.TimerTask() {
                     public void run(){
-                        guardData.setCountMess(normalCount,emptyCount,bloodCount,bubbleCount);
+                        guardData.setCountMess();
                         normalCount=0;
                         emptyCount=0;
                         bloodCount=0;
                         bubbleCount=0;
                     }
-                },10000,10000
+                },15000,10000
         );
     }
 
     public short process(byte[] data) throws IOException {
         boolean alarmBlood=false;
+        boolean alarmBubble=false;
         float temperature;
         RealTime realTime = new RealTime();
         String nowTime = realTime.getHMS();
@@ -58,11 +58,12 @@ public class GuardSerialDataProcess extends Observable {
         byte[] alarmOutputData;
         int temperatureLow=guardActorConfig.getTemperatureLow();
         int temperatureHigh=guardActorConfig.getTemperatureHigh();
-        int defaultLightValue=guardActorConfig.getDefaultLightValue();
+//        int defaultLightValue=guardActorConfig.getDefaultLightValue();
         int bloodLightValue=guardActorConfig.getBloodLightValue();
         int bubbleLightValue=guardActorConfig.getBubbleLightValue();
-        int bubbleHoldCount=guardActorConfig.getBubbleHoldCount();
-        int normalHoldCount=guardActorConfig.getBubbleHoldCount();
+        int emptyLightValue=guardActorConfig.getEmptyLightValue();
+//        int bubbleHoldCount=guardActorConfig.getBubbleHoldCount();
+//        int normalHoldCount=guardActorConfig.getBubbleHoldCount();
         int lightValue;
         short alarmFlag=0;
         guardData.guardDataInit();
@@ -90,31 +91,38 @@ public class GuardSerialDataProcess extends Observable {
         }
 
         lightValue=(data[2]&0x1F) % 32 + (data[3] & 0x1F) * 32;
-        guardData.setLightValue(String.valueOf(lightValue));
 //        System.out.print("lightValue=");
 //        System.out.println(lightValue);
-        if(lightValue>1000){
+//        System.out.print("lastLightValue=");
+//        System.out.println(lastLightValue-bubbleLightValue);
+        guardData.setLightValue(String.valueOf(lightValue));
+
+        if(lightValue<emptyLightValue){
             emptyCount+=1;
         }
-        else if ((lightValue<bloodLightValue)&&(lightValue>bubbleLightValue)){
+        else if(lightValue<=lastLightValue-bubbleLightValue){
+            alarmBubble=true;
+            bubbleCount+=1;
+        }
+        else if ((lightValue<bloodLightValue)&&(bubbleCount==0)){
             alarmBlood=true;
             bloodCount+=1;
-        }
-        else if(lightValue<=bubbleLightValue){
-            bubbleCount+=1;
         }
         else {
             normalCount+=1;
         }
-        if(bubbleCount>bubbleHoldCount){
-            alarmBubble=true;
-        }
-        if(alarmBubble&&(bubbleCount<=bubbleHoldCount)&&(normalCount>=normalHoldCount)){
-            alarmBubble=false;
-        }
+        guardData.countMessageRefresh(normalCount,emptyCount,bloodCount,bubbleCount);
+        lastLightValue=lightValue;
+//        System.out.println(alarmBubble);
+//        if(bubbleCount>bubbleHoldCount){
+//            alarmBubble=true;
+//        }
+//        if(alarmBubble&&(bubbleCount<=bubbleHoldCount)&&(normalCount>=normalHoldCount)){
+//            alarmBubble=false;
+//        }
 
-        if((alarmBlood && alarmBloodSolved)||(alarmBubble && alarmBubbleSolved)) {
-            if (alarmBlood && alarmBloodSolved) {
+        if((alarmBlood && alarmBloodSolved)||alarmBubble) {
+            if (alarmBlood) {
                 FileOutputStream alarmStream = new FileOutputStream(alarmMessageDataFile, true);
                 alarmOutputData = (nowTime + ":" + "Blood\r\n").getBytes();
                 alarmStream.write(alarmOutputData);
@@ -123,34 +131,33 @@ public class GuardSerialDataProcess extends Observable {
                 alarmBloodSolved = false;
                 alarmFlag|=0x01;
             }
-            if (alarmBubble && alarmBubbleSolved) {
+            if (alarmBubble) {
                 FileOutputStream alarmStream = new FileOutputStream(alarmMessageDataFile, true);
                 alarmOutputData = (nowTime + ":" + "Bubble\r\n").getBytes();
                 alarmStream.write(alarmOutputData);
                 alarmStream.close();
                 guardData.setBubbleMessage("出现气泡");
-                alarmBubbleSolved = false;
                 alarmFlag|=0x02;
             }
         }
-        else if(((!alarmBloodSolved) && (!alarmBlood))||((!alarmBubbleSolved) && (!alarmBubble))) {
-            if ((!alarmBloodSolved) && (!alarmBlood)) {
-                FileOutputStream alarmStream = new FileOutputStream(alarmMessageDataFile, true);
-                alarmOutputData = (nowTime + ":" + "Blood Solved\r\n").getBytes();
-                alarmStream.write(alarmOutputData);
-                alarmStream.close();
-                guardData.setBloodMessage("不再漏血");
-                alarmBloodSolved = true;
-            }
-            if ((!alarmBubbleSolved) && (!alarmBubble)) {
-                FileOutputStream alarmStream = new FileOutputStream(alarmMessageDataFile, true);
-                alarmOutputData = (nowTime + ":" + "Bubble Solved\r\n").getBytes();
-                alarmStream.write(alarmOutputData);
-                alarmStream.close();
-                guardData.setBubbleMessage("气泡消失");
-                alarmBubbleSolved = true;
-            }
+//        else if(((!alarmBloodSolved) && (!alarmBlood))||((!alarmBubbleSolved) && (!alarmBubble))) {
+        else if ((!alarmBloodSolved) && (!alarmBlood)) {
+            FileOutputStream alarmStream = new FileOutputStream(alarmMessageDataFile, true);
+            alarmOutputData = (nowTime + ":" + "Blood Solved\r\n").getBytes();
+            alarmStream.write(alarmOutputData);
+            alarmStream.close();
+            guardData.setBloodMessage("不再漏血");
+            alarmBloodSolved = true;
         }
+//            if ((!alarmBubbleSolved) && (!alarmBubble)) {
+//                FileOutputStream alarmStream = new FileOutputStream(alarmMessageDataFile, true);
+//                alarmOutputData = (nowTime + ":" + "Bubble Solved\r\n").getBytes();
+//                alarmStream.write(alarmOutputData);
+//                alarmStream.close();
+//                guardData.setBubbleMessage("气泡消失");
+//                alarmBubbleSolved = true;
+//            }
+//        }
         guardData.setBloodLightValue(bloodLightValue);
         guardData.setBubbleLightValue(bubbleLightValue);
         setChanged();

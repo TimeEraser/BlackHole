@@ -48,17 +48,13 @@ public class GuardData {
     public String getBloodMessage(){
         return bloodMessage;
     }
-    public void setBubbleMessage(String bloodMessage){
+    public void setBubbleMessage(String bubbleMessage){
         this.bubbleMessage=bubbleMessage;
     }
     public String getBubbleMessage(){
         return bubbleMessage;
     }
-    public void setCountMess(int normalCount,int emptyCount,int bloodCount,int bubbleCount){
-        this.normalCount=normalCount;
-        this.emptyCount=emptyCount;
-        this.bloodCount=bloodCount;
-        this.bubbleCount=bubbleCount;
+    public void setCountMess(){
         countFish=true;
     }
     public boolean isCountFish(){
@@ -81,6 +77,12 @@ public class GuardData {
             onceReadCountFlag=false;
         }
         return count;
+    }
+    public void countMessageRefresh(int normalCount,int emptyCount,int bloodCount,int bubbleCount){
+        this.normalCount=normalCount;
+        this.emptyCount=emptyCount;
+        this.bloodCount=bloodCount;
+        this.bubbleCount=bubbleCount;
     }
     public String getMessage(String targetName){
         switch (targetName) {

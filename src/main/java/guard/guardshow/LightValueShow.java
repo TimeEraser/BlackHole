@@ -70,14 +70,14 @@ public class LightValueShow extends JPanel implements Observer{
     private PieDataset createDataSet(){
         lightValueDataSet=new DefaultPieDataset();
         lightValueDataSet.setValue("正常",25);
-        lightValueDataSet.setValue("无管",25);
+        lightValueDataSet.setValue("无液体",25);
         lightValueDataSet.setValue("管内气泡",25);
         lightValueDataSet.setValue("管内漏血",25);
         return lightValueDataSet;
     }
     private void setSection(PiePlot piePlot){
         piePlot.setSectionPaint("正常",Color.GREEN);
-        piePlot.setSectionPaint("无管",Color.LIGHT_GRAY);
+        piePlot.setSectionPaint("无液体",Color.LIGHT_GRAY);
         piePlot.setSectionPaint("管内气泡",Color.YELLOW);
         piePlot.setSectionPaint("管内漏血",Color.RED);
         piePlot.setSectionOutlinesVisible(false);
@@ -100,7 +100,7 @@ public class LightValueShow extends JPanel implements Observer{
     }
     private void setNullAndZeroValue(PiePlot piePlot) {
         //设置是否忽略0和null值
-        piePlot.setIgnoreNullValues(true);
+        piePlot.setIgnoreNullValues(false);
         piePlot.setIgnoreZeroValues(false);
     }
     @Override
@@ -109,7 +109,7 @@ public class LightValueShow extends JPanel implements Observer{
         if(guardData.isCountFish()){
             int[] temp=guardData.getCountMess();
             lightValueDataSet.setValue("正常",temp[0]);
-            lightValueDataSet.setValue("无管",temp[1]);
+            lightValueDataSet.setValue("无液体",temp[1]);
             lightValueDataSet.setValue("管内气泡",temp[3]);
             lightValueDataSet.setValue("管内漏血",temp[2]);
         }

@@ -60,12 +60,12 @@ public class LightValueDialPlot extends JPanel implements Observer{
         dialScale.setTickRadius(0.85D); // 值越大,与刻度盘框架边缘越近
         dialScale.setTickLabelOffset(0.1D); // 值越大,与刻度盘刻度越远0
 
-        bloodDialRange =new StandardDialRange(650D,750D, Color.red);
+        bloodDialRange =new StandardDialRange(500D,750D, Color.red);
         bloodDialRange.setInnerRadius(0.52000000000000002D);
         bloodDialRange.setOuterRadius(0.55000000000000004D);
         lightValueDialPlot.addLayer(bloodDialRange);
         //设置刻度范围（橘黄色）
-        bubbleDialRange =new StandardDialRange(0D, 650D, Color.orange);
+        bubbleDialRange =new StandardDialRange(0D, 500D, Color.black);
         bubbleDialRange.setInnerRadius(0.52000000000000002D);
         bubbleDialRange.setOuterRadius(0.55000000000000004D);
         lightValueDialPlot.addLayer(bubbleDialRange);
@@ -93,22 +93,22 @@ public class LightValueDialPlot extends JPanel implements Observer{
         this.setLayout(new BorderLayout());
         this.add(lightValueDialChartPanel);
     }
-    public StandardDialRange getNormalDialRange(){
-        return normalDialRange;
-    }
-    public StandardDialRange getBloodDialRange(){
-        return bloodDialRange;
-    }
-    public StandardDialRange getBubbleDialRange(){
-        return bubbleDialRange;
-    }
+//    public StandardDialRange getNormalDialRange(){
+//        return normalDialRange;
+//    }
+//    public StandardDialRange getBloodDialRange(){
+//        return bloodDialRange;
+//    }
+//    public StandardDialRange getBubbleDialRange(){
+//        return bubbleDialRange;
+//    }
     @Override
     public void update(Observable o, Object arg) {
         GuardData guardData=(GuardData)arg;
         dataSet.setValue(Integer.parseInt(guardData.getLightValue()));
         normalDialRange.setBounds((double) guardData.getBloodLightValue(),1024D);
         bloodDialRange.setBounds((double)guardData.getBubbleLightValue(),(double)guardData.getBloodLightValue());
-        bubbleDialRange.setBounds(0,(double)guardData.getBubbleLightValue());
+//        bubbleDialRange.setBounds(0,(double)guardData.getBubbleLightValue());
     }
 }
 
