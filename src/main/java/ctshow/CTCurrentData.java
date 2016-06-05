@@ -1,4 +1,4 @@
-package ct.ctshow;
+package ctshow;
 
 /**
  * Created by ChaomingGu on 2016/5/19.
@@ -17,7 +17,8 @@ public class CTCurrentData extends JPanel {
     private static final Color DRAWING_RECT_COLOR = Color.BLUE;
     private static final Color DRAWN_RECT_COLOR = Color.RED;
 
-    public BufferedImage image = null;
+    private BufferedImage currentImage = null;
+    private BufferedImage lastImage = null;
     private String imagePath;
 
     private BufferedImage focus = null;
@@ -37,8 +38,9 @@ public class CTCurrentData extends JPanel {
             focus=null;
             //refresh
             this.imagePath = imagePath;
-            image = ImageIO.read(new File(imagePath));
+            currentImage = ImageIO.read(new File(imagePath));
             if(!isHistory){
+                lastImage=currentImage;
                 mouseAdapter = new MyMouseAdapter();
                 addMouseListener(mouseAdapter);
                 addMouseMotionListener(mouseAdapter);
@@ -46,9 +48,9 @@ public class CTCurrentData extends JPanel {
             this.setVisible(true);
             this.getParent().getHeight();
             Integer imageX, imageY;
-            imageX = (this.getParent().getWidth() - image.getWidth()) / 2;
-            imageY = (this.getParent().getHeight() - image.getHeight()) / 2;
-            setBounds(imageX, imageY, image.getWidth(), image.getHeight());
+            imageX = (this.getParent().getWidth() - currentImage.getWidth()) / 2;
+            imageY = (this.getParent().getHeight() - currentImage.getHeight()) / 2;
+            setBounds(imageX, 0, currentImage.getWidth(), currentImage.getHeight());
             this.repaint();
         } catch (IOException e) {
             e.printStackTrace();
@@ -57,8 +59,8 @@ public class CTCurrentData extends JPanel {
 
     public void refreshResult(String result) {
         removeAll();
-        Integer ZOOM_WIDTH=image.getWidth() / 6;
-        Integer ZOOM_HEIGHT=image.getHeight() /6;
+        Integer ZOOM_WIDTH=currentImage.getWidth() / 6;
+        Integer ZOOM_HEIGHT=currentImage.getHeight() /6;
 
         JPanel resultImageJPanel =new JPanel();
         resultImageJPanel.setLayout(null);
@@ -85,8 +87,8 @@ public class CTCurrentData extends JPanel {
 
     @Override
     public Dimension getPreferredSize() {
-        if (image != null) {
-            return new Dimension(image.getWidth(), image.getHeight());
+        if (currentImage != null) {
+            return new Dimension(currentImage.getWidth(), currentImage.getHeight());
         }
         return super.getPreferredSize();
     }
@@ -95,8 +97,8 @@ public class CTCurrentData extends JPanel {
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
-        if (image != null) {
-            g.drawImage(image, 0, 0, null);
+        if (currentImage != null) {
+            g.drawImage(currentImage, 0, 0, null);
         }
         if (rect == null) {
             return;
@@ -143,7 +145,7 @@ public class CTCurrentData extends JPanel {
             System.out.println("mouseReleased X=:" + mouseReleasedX + " Y=:" + mouseReleasedY);
             drawing = false;
             repaint();
-            focus = image.getSubimage((int)rect.getX(),(int)rect.getY(),(int)rect.getWidth(), (int)rect.getHeight());
+            focus = currentImage.getSubimage((int)rect.getX(),(int)rect.getY(),(int)rect.getWidth(), (int)rect.getHeight());
         }
 
         @Override
@@ -157,4 +159,13 @@ public class CTCurrentData extends JPanel {
         double[] getCoordinate = {rect.getX(),rect.getY(), rect.getX()+rect.getWidth(), rect.getY()+rect.getHeight()};
         return getCoordinate;
     }
+    public void returnToCurrentImage(boolean isHistory){
+        currentImage=lastImage;
+        mouseAdapter = new MyMouseAdapter();
+        addMouseListener(mouseAdapter);
+        addMouseMotionListener(mouseAdapter);
+        repaint();
+        JOptionPane.showMessageDialog(null,"已是当前数据","系统提示",JOptionPane.ERROR_MESSAGE);
+    }
+
 }

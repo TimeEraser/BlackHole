@@ -1,10 +1,11 @@
-package ct.ctshow;
+package ctshow;
 
 import actor.BaseActor;
 import actor.Listener.NoticeListener;
 import command.CtRequest;
 import config.ConfigCenter;
 import util.ImageUtil;
+
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -23,7 +24,7 @@ import java.util.Vector;
  */
 public class CTHistoryData extends JScrollPane{
     private final String ROOT= ConfigCenter.getString("ct.analyse.result.save.root");
-    private final String filterFormat=ConfigCenter.getString("ct.analyse.result.save.format");
+    private final String filterFormat= ConfigCenter.getString("ct.analyse.result.save.format");
     private final String[] names={"历史信息"};
     private Integer imageWidth = 200;
     private Integer imageHeight = 200;
@@ -32,10 +33,11 @@ public class CTHistoryData extends JScrollPane{
     private JTable imageTable;
     public CTHistoryData(BaseActor boss){
         this.boss=boss;
-        getVerticalScrollBar().setPreferredSize(new Dimension(0, 0));
+        //getVerticalScrollBar().setPreferredSize(new Dimension(0, 0));
         getViewport().setBorder(null);
         setViewportBorder(null);
         setBorder(null);
+
     }
     public void refresh(String result){
         imageTableModel=new JTableButtonModel(null,names);
@@ -57,11 +59,7 @@ public class CTHistoryData extends JScrollPane{
         for (File f:files) {
             try {
                 BufferedImage image = ImageIO.read(f);
-//<<<<<<< HEAD
-//                BufferedImage zoomImage = ImageUtil.zoom(image,imageWidth,imageHeight);
-//=======
                 BufferedImage zoomImage = ImageUtil.zoom(image,imageWidth,imageHeight,Color.BLACK);
-//>>>>>>> dd2361f9a71eefb298ae36e051e3b241501c6553
                 ImageIcon show = new ImageIcon(zoomImage);
                 JButton showButton = new JButton(show);
                 showButton.addActionListener(new NoticeListener(boss, CtRequest.CT_SHOW_HISTORY,f.getAbsolutePath()));
@@ -80,11 +78,7 @@ public class CTHistoryData extends JScrollPane{
         BufferedImage image = null;
         try {
             image = ImageIO.read(f);
-//<<<<<<< HEAD
-//            BufferedImage zoomImage = ImageUtil.zoom(image,imageWidth,imageHeight);
-//=======
-            BufferedImage zoomImage = ImageUtil.zoom(image,imageWidth,imageHeight,Color.BLACK);
-//>>>>>>> dd2361f9a71eefb298ae36e051e3b241501c6553
+            BufferedImage zoomImage = ImageUtil.zoom(image,imageWidth,imageHeight, Color.BLACK);
             ImageIcon show = new ImageIcon(zoomImage);
             JButton showButton = new JButton(show);
             showButton.addActionListener(new NoticeListener(boss, CtRequest.CT_SHOW_HISTORY,f.getAbsolutePath()));

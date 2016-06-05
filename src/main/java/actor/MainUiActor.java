@@ -20,9 +20,9 @@ import actor.config.MainUiActorConfig;
 import com.alee.laf.WebLookAndFeel;
 import com.android.dx.command.Main;
 import command.*;
-import ct.ctshow.CTHistoryData;
+import ctshow.CTHistoryData;
 
-import ct.ctshow.CTShowUI;
+import ctshow.CTShowUI;
 import ecg.ecgshow.ECGShowUI;
 import ecg.tcp.TCPConfig;
 
@@ -431,7 +431,7 @@ public class MainUiActor extends BaseActor{
 		JPanel CTData = new JPanel(new FlowLayout(FlowLayout.CENTER));
 		CTData.setBorder(etchedBorder);
 
-		CTData.setBounds((int)(WIDTH*0.05),(int)(HEIGHT*0.02),(int)(WIDTH*0.65),(int)(HEIGHT*0.81));	//setBounds()设定的是四个值，分别是X坐标和y坐标（其中屏幕的左上角是原点）、宽和高
+		CTData.setBounds((int)(WIDTH*0.05),(int)(HEIGHT*0.02),(int)(WIDTH*0.65),(int)(HEIGHT*0.77));	//setBounds()设定的是四个值，分别是X坐标和y坐标（其中屏幕的左上角是原点）、宽和高
 		GridBagConstraints c = new GridBagConstraints();
 		CTData.add(ctShowUI.getCtCurrentData());
 
@@ -440,31 +440,33 @@ public class MainUiActor extends BaseActor{
 		JPanel CTControl = new JPanel();
 		CTControl.setLayout(new FlowLayout(FlowLayout.CENTER));
 		//CTControl.setBorder(etchedBorder);
-		CTControl.setBounds((int)(WIDTH*0.75),(int)(HEIGHT*0.01),(int)(WIDTH*0.2),(int)(HEIGHT*0.22));
+		CTControl.setBounds((int)(WIDTH*0.75),(int)(HEIGHT*0.005),(int)(WIDTH*0.2),(int)(HEIGHT*0.25));
 		JButton CTOpen = new JButton();
-		CTOpen.setText("打开CT图片");
+		CTOpen.setText(" 打开CT图片 ");
 		CTOpen.setIcon(new ImageIcon(getIconImage("Icon/open.png")));
 		CTOpen.addActionListener(new NoticeListener(this,MainUiRequest.MAIN_UI_CT_OPEN));
 		CTControl.add(CTOpen);
 		JButton CTAnalyse = new JButton();
-		CTAnalyse.setText("分析CT病灶");
+		CTAnalyse.setText(" 分析CT病灶 ");
 		CTAnalyse.setIcon(new ImageIcon(getIconImage("Icon/analyse_min.png")));
 		CTAnalyse.addActionListener(new NoticeListener(this,ctActor,CtRequest.CT_ANALYSIS));
 		CTControl.add(CTAnalyse);
 		JButton CTSave = new JButton();
-		CTSave.setText("保存CT结果");
+		CTSave.setText(" 保存CT结果  ");
 		CTSave.setIcon(new ImageIcon(getIconImage("Icon/save_min.png")));
-
 		CTSave.addActionListener(new NoticeListener(this,ctActor,CtRequest.CT_SAVE));
-
 		CTControl.add(CTSave);
+		JButton returnCurrent = new JButton();
+		returnCurrent.setText("返回当前数据");
+		returnCurrent.setIcon(new ImageIcon(getIconImage("Icon/ct_return.png")));
+		returnCurrent.addActionListener(new NoticeListener(blackHoleActor,CtRequest.CT_UI_RETURN));
+		CTControl.add(returnCurrent);
 		CTPanel.add(CTControl);
 
 		JPanel CTHistory = new JPanel();
-
 		CTHistory.setLayout(new BoxLayout(CTHistory,BoxLayout.Y_AXIS));
 		CTHistory.setBorder(etchedBorder);
-		CTHistory.setBounds((int)(WIDTH*0.75),(int)(HEIGHT*0.25),(int)(WIDTH*0.2),(int)(HEIGHT*0.58));
+		CTHistory.setBounds((int)(WIDTH*0.75),(int)(HEIGHT*0.27),(int)(WIDTH*0.20),(int)(HEIGHT*0.52));
 		CTHistory.add(ctShowUI.getCtHistoryData());
 		CTPanel.add(CTHistory);
 		sendRequest(ctActor,CtRequest.CT_UI_CONFIG,ctShowUI);

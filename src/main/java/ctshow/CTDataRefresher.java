@@ -1,4 +1,4 @@
-package ct.ctshow;
+package ctshow;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -13,9 +13,9 @@ public class CTDataRefresher  {
         ctCurrentData=ctShowUI.getCtCurrentData();
         ctHistoryData=ctShowUI.getCtHistoryData();
     }
-    public void refreshCTData(String imagePath ,boolean isHistory){if(imagePath!=null) {
+    public void refreshCTData(String imagePath ,boolean addMouseAdapterOrNot){if(imagePath!=null) {
         INITIALIZED.set(true);
-        ctCurrentData.refreshImage(imagePath,isHistory);
+       ctCurrentData.refreshImage(imagePath,addMouseAdapterOrNot);
     }
     }
     public void refreshCurrentResult(String result){ctCurrentData.refreshResult(result);}
@@ -29,6 +29,5 @@ public class CTDataRefresher  {
     }
     public CTCurrentData getMandelDraw(){return ctCurrentData;}
     public boolean Initialized(){return INITIALIZED.get();}
-
-
+    public void returnToCurrentImage() {ctCurrentData.returnToCurrentImage(false);}
 }

@@ -1,4 +1,4 @@
-package ct.ctshow;
+package ctshow;
 
 import actor.BaseActor;
 

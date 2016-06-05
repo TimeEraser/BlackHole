@@ -1,26 +1,31 @@
 package actor;
 
+import actor.Listener.NoticeListener;
 import actor.config.CtActorConfig;
 
-import ct.ctshow.CTDataRefresher;
-import ct.ctshow.CTCurrentData;
+import ctshow.CTDataRefresher;
+import ctshow.CTCurrentData;
 import ct.algorithm.feature.ImageFeature;
 import ct.algorithm.randomforest.RandomForest;
 import command.*;
-import ct.ctshow.CTShowUI;
+import ctshow.CTShowUI;
+import ctshow.CTDataRefresher;
 import util.FileUtil;
+import util.ImageUtil;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
+import java.net.SocketPermission;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class CtActor extends BaseActor{
     private  String CT_ANALYSE_RESULT_SAVE_ROOT;
     private  String CT_ANALYSE_RESULT_SAVE_FORMAT;
+    private String rPath;
     private CTDataRefresher ctDataRefresher;
     private ObjectInputStream ois = null;
     private RandomForest randomForest ;
@@ -56,13 +61,20 @@ public class CtActor extends BaseActor{
         }
         if(request==CtRequest.CT_ANALYSIS){
             ctAnalysis();
-            ctDataRefresher.refreshHistoryResult(CTAnalyseResult);
+            //ctDataRefresher.refreshHistoryResult(CTAnalyseResult);
         }
-        if(request==CtRequest.CT_SAVE){
+        if(request==MainUiRequest.MAIN_UI_CT_SAVE){
             saveCTAnalyseResult();
         }
         if(request==CtRequest.CT_SHOW_HISTORY)
             ctDataRefresher.refreshCTData((String) request.getConfig().getData(),true);
+        if(request==CtRequest.CT_UI_RETURN){
+            if(!ctDataRefresher.Initialized()){
+                JOptionPane.showMessageDialog(null,"请打开CT图片","操作错误",JOptionPane.ERROR_MESSAGE);
+            }else {
+                ctDataRefresher.returnToCurrentImage();
+            }
+        }
         return false;
     }
 
@@ -116,6 +128,7 @@ public class CtActor extends BaseActor{
                 }
                 System.out.println("RandomForest predict:" + CTAnalyseResult);
                 ctDataRefresher.refreshCurrentResult(CTAnalyseResult);
+                ctDataRefresher.refreshHistoryResult(CTAnalyseResult);
             } catch (FileNotFoundException e_analysis) {
                 e_analysis.printStackTrace();
             } catch (IOException e_analysis) {
@@ -162,6 +175,10 @@ public class CtActor extends BaseActor{
         return CTList;
     }
 */
+    public void returnCTCurrentData(){
+        ctDataRefresher.refreshCTData(rPath, false);
+        System.out.println("Return Successfully!");
+    }
 
 
 }
