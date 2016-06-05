@@ -10,7 +10,6 @@ public class MainUiActorConfig {
 
 	//Interactive element
 	private CtActor ctActor;
-	private GuardActor guardActor;
 	private MobileActor mobileActor;
 	private MonitorActor monitorActor;
 	private BlackHoleActor blackHoleActor;
@@ -35,8 +34,6 @@ public class MainUiActorConfig {
 	public CtActor getCtActor(){return ctActor;}
 	public  void setCtActor(CtActor ctActor){this.ctActor=ctActor;}
 
-	public GuardActor getGuardActor(){return  guardActor;}
-	public  void setGuardActor(GuardActor guardActor){this.guardActor=guardActor;}
 
 	public MobileActor getMobileActor(){return  mobileActor;}
 	public  void setMobileActor(MobileActor mobileActor){this.mobileActor=mobileActor;}

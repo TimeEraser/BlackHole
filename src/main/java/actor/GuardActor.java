@@ -15,6 +15,8 @@ import gnu.io.*;
 import java.io.File;
 import java.io.IOException;
 import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by zzq on 16/5/16.
@@ -60,7 +62,6 @@ public class GuardActor extends BaseActor {
             e1.printStackTrace();
         }
         try {
-
             guardSerialDataProcess=new GuardSerialDataProcess(temperatureDataFile,alarmMessageDataFile,guardActorConfig);
         } catch (IOException e) {
             e.printStackTrace();
@@ -84,8 +85,31 @@ public class GuardActor extends BaseActor {
             shutdown();
             sendResponse(requests,SystemResponse.SYSTEM_SUCCESS);
         }
-        if(requests==GuardRequest.GUARD_SERIAL_NUM){
-            guardActorConfig.setSerialPortNum((Integer)requests.getConfig().getData());
+        if(requests==GuardRequest.GUARD_SERIAL_DATA_PROCESS){
+            sendResponse(requests,GuardResponse.GUARD_SERIAL_DATA_PROCESS,guardSerialDataProcess);
+        }
+        if(requests==GuardRequest.GUARD_SERIAL_ASK){
+            Map<String,String> connectInfo=new HashMap<>();
+            connectInfo.put("serialNum",String.valueOf(guardActorConfig.getSerialPortNum()));
+            connectInfo.put("temperatureLow",String.valueOf(guardActorConfig.getTemperatureLow()));
+            connectInfo.put("temperatureHigh",String.valueOf(guardActorConfig.getTemperatureHigh()));
+            connectInfo.put("defaultLightValue",String.valueOf(guardActorConfig.getDefaultLightValue()));
+            connectInfo.put("bloodLightValue",String.valueOf(guardActorConfig.getBloodLightValue()));
+            connectInfo.put("bubbleLightValue",String.valueOf(guardActorConfig.getBubbleLightValue()));
+            connectInfo.put("bubbleHoldCount",String.valueOf(guardActorConfig.getBubbleHoldCount()));
+            sendResponse(requests,GuardResponse.GUARD_SERIAL_ASK,connectInfo);
+        }
+        if(requests==GuardRequest.GUARD_SERIAL_SET){
+            Map<String,String> connectInfo=(Map)requests.getConfig().getData();
+            if(connectInfo!=null){
+                guardActorConfig.setSerialPortNum(Integer.parseInt(connectInfo.get("serialNum")));
+                guardActorConfig.setTemperatureLow(Integer.parseInt(connectInfo.get("temperatureLow")));
+                guardActorConfig.setTemperatureHigh(Integer.parseInt(connectInfo.get("temperatureHigh")));
+                guardActorConfig.setDefaultLightValue(Integer.parseInt(connectInfo.get("defaultLightValue")));
+                guardActorConfig.setBloodLightValue(Integer.parseInt(connectInfo.get("bloodLightValue")));
+                guardActorConfig.setBubbleLightValue(Integer.parseInt(connectInfo.get("bubbleLightValue")));
+                guardActorConfig.setBubbleHoldCount(Integer.parseInt(connectInfo.get("bubbleHoldCount")));
+            }
         }
         if (requests == GuardRequest.GUARD_DATA) {
             byte temp;
@@ -103,8 +127,6 @@ public class GuardActor extends BaseActor {
                 data[3] = temp;
                 readFlag += 1;
             }
-
-
             //完整读取4字节后处理
             if (readFlag >= 4) {
                 //返回值为1时漏血，返回值为2时气泡
@@ -169,14 +191,6 @@ public class GuardActor extends BaseActor {
     public boolean shutdown() {
         serialComm.stopRun();
         return false;
-    }
-    public GuardActorConfig getGuardActorConfig(){
-        return guardActorConfig;
-    }
-
-
-    public GuardSerialDataProcess getGuardSerialDataProcess(){
-        return guardSerialDataProcess;
     }
 }
 

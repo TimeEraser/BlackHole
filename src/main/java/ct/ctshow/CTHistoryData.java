@@ -57,7 +57,11 @@ public class CTHistoryData extends JScrollPane{
         for (File f:files) {
             try {
                 BufferedImage image = ImageIO.read(f);
-                BufferedImage zoomImage = ImageUtil.zoom(image,imageWidth,imageHeight);
+//<<<<<<< HEAD
+//                BufferedImage zoomImage = ImageUtil.zoom(image,imageWidth,imageHeight);
+//=======
+                BufferedImage zoomImage = ImageUtil.zoom(image,imageWidth,imageHeight,Color.BLACK);
+//>>>>>>> dd2361f9a71eefb298ae36e051e3b241501c6553
                 ImageIcon show = new ImageIcon(zoomImage);
                 JButton showButton = new JButton(show);
                 showButton.addActionListener(new NoticeListener(boss, CtRequest.CT_SHOW_HISTORY,f.getAbsolutePath()));
@@ -76,7 +80,11 @@ public class CTHistoryData extends JScrollPane{
         BufferedImage image = null;
         try {
             image = ImageIO.read(f);
-            BufferedImage zoomImage = ImageUtil.zoom(image,imageWidth,imageHeight);
+//<<<<<<< HEAD
+//            BufferedImage zoomImage = ImageUtil.zoom(image,imageWidth,imageHeight);
+//=======
+            BufferedImage zoomImage = ImageUtil.zoom(image,imageWidth,imageHeight,Color.BLACK);
+//>>>>>>> dd2361f9a71eefb298ae36e051e3b241501c6553
             ImageIcon show = new ImageIcon(zoomImage);
             JButton showButton = new JButton(show);
             showButton.addActionListener(new NoticeListener(boss, CtRequest.CT_SHOW_HISTORY,f.getAbsolutePath()));

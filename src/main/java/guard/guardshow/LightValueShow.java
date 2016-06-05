@@ -2,17 +2,22 @@ package guard.guardshow;
 
 import guard.guardDataProcess.GuardData;
 import org.jfree.chart.ChartFactory;
-import org.jfree.chart.ChartFrame;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.labels.StandardPieSectionLabelGenerator;
 import org.jfree.chart.plot.PiePlot;
-import org.jfree.chart.title.LegendTitle;
+import org.jfree.chart.plot.PiePlot3D;
 import org.jfree.data.general.DefaultPieDataset;
 import org.jfree.data.general.PieDataset;
+import org.jfree.ui.HorizontalAlignment;
 import org.jfree.ui.RectangleEdge;
+import org.jfree.ui.RectangleInsets;
+import org.jfree.ui.VerticalAlignment;
+import org.jfree.util.*;
+import org.jfree.util.SortOrder;
 
 import javax.swing.*;
+import javax.swing.border.EtchedBorder;
 import java.awt.*;
 import java.util.Observable;
 import java.util.Observer;
@@ -28,37 +33,46 @@ public class LightValueShow extends JPanel implements Observer{
         JFreeChart lightValuePieChart;
         int WIDTH = (int)Toolkit.getDefaultToolkit().getScreenSize().getWidth();
         int HEIGHT = (int)Toolkit.getDefaultToolkit().getScreenSize().getHeight();
-        lightValuePieChart= ChartFactory.createPieChart("过去10秒内透光度变化",createDataSet(),true,true,false);
-//        lightValuePieChart.getRenderingHints().put(RenderingHints.KEY_TEXT_ANTIALIASING,
-//                RenderingHints.VALUE_TEXT_ANTIALIAS_OFF);
+        lightValuePieChart= ChartFactory.createPieChart3D("过去10秒内透光度变化",createDataSet(),true,true,false);
+        lightValuePieChart.setPadding(RectangleInsets.ZERO_INSETS);
         lightValuePieChart.getTitle().setFont(new Font("Dialog", Font.BOLD , 14));
+        lightValuePieChart.getTitle().setPosition(RectangleEdge.TOP);
         lightValuePieChart.setBackgroundPaint(null);
         lightValuePieChart.getLegend().setItemFont(new Font("Dialog", 0, 12));
+        lightValuePieChart.getLegend().setMargin(RectangleInsets.ZERO_INSETS);
+        lightValuePieChart.getLegend().setItemLabelPadding(RectangleInsets.ZERO_INSETS);
+        lightValuePieChart.getLegend().setPadding(RectangleInsets.ZERO_INSETS);
+        lightValuePieChart.getLegend().setLegendItemGraphicPadding(RectangleInsets.ZERO_INSETS);
         lightValuePieChart.getLegend().setPosition(RectangleEdge.RIGHT);
         lightValuePieChart.setBorderPaint(null);
-        PiePlot piePlot=(PiePlot) lightValuePieChart.getPlot();
+        PiePlot3D piePlot=(PiePlot3D) lightValuePieChart.getPlot();
         piePlot.setBackgroundPaint(null);
         piePlot.setOutlinePaint(null);
-        piePlot.setCircular(false);
+        piePlot.setBaseSectionOutlinePaint(Color.BLACK);
+        // 图形边框粗细
+        piePlot.setBaseSectionOutlineStroke(new BasicStroke(0.6f));
+        piePlot.setForegroundAlpha(0.4f);
+        piePlot.setStartAngle(360);
+
         setSection(piePlot);
         setLabel(piePlot);
         setNoDataMessage(piePlot);
         setNullAndZeroValue(piePlot);
         piePlot.setLabelLinksVisible(false);
-//        LegendTitle legendTitle = new LegendTitle(lightValuePieChart.getPlot());//创建图例
-//        legendTitle.setPosition(RectangleEdge.RIGHT);  //设置图例的位置
-        ChartPanel lightValuePieChartPanel=new ChartPanel(lightValuePieChart,(int)(WIDTH*0.31),(int)(HEIGHT*0.29), 0,0,
+        ChartPanel lightValuePieChartPanel=new ChartPanel(lightValuePieChart,(int)(WIDTH*0.35),(int)(HEIGHT*0.3), 0,0,
                 Integer.MAX_VALUE, Integer.MAX_VALUE, true, true, false,
                 true, false, false);
         lightValuePieChartPanel.setBackground(null);
+        lightValuePieChartPanel.setLayout(new BorderLayout());
+        this.setLayout(new BorderLayout());
         this.add(lightValuePieChartPanel);
     }
     private PieDataset createDataSet(){
         lightValueDataSet=new DefaultPieDataset();
-        lightValueDataSet.setValue("正常",0);
-        lightValueDataSet.setValue("无管",0);
-        lightValueDataSet.setValue("管内气泡",0);
-        lightValueDataSet.setValue("管内漏血",0);
+        lightValueDataSet.setValue("正常",25);
+        lightValueDataSet.setValue("无管",25);
+        lightValueDataSet.setValue("管内气泡",25);
+        lightValueDataSet.setValue("管内漏血",25);
         return lightValueDataSet;
     }
     private void setSection(PiePlot piePlot){
@@ -69,13 +83,12 @@ public class LightValueShow extends JPanel implements Observer{
         piePlot.setSectionOutlinesVisible(false);
     }
     private void setLabel(PiePlot pieplot) {
-        //设置扇区标签显示格式：关键字：值(百分比)
-        pieplot.setLabelGenerator(new StandardPieSectionLabelGenerator(
-                "{0}：{2} percent"));
-        //设置扇区标签颜色
-        pieplot.setLabelBackgroundPaint(new Color(220, 220, 220));
-        pieplot.setLabelFont((new Font("Dialog", Font.PLAIN, 12)));
+        pieplot.setLabelGenerator(null);
+        pieplot.setLabelBackgroundPaint(null);
+        pieplot.setLabelShadowPaint(null);
+        pieplot.setLabelOutlinePaint(null);
         pieplot.setLabelLinksVisible(false);
+        pieplot.setLabelFont(new Font(null));
     }
     private void setNoDataMessage(PiePlot pieplot) {
         //设置没有数据时显示的信息
@@ -88,7 +101,7 @@ public class LightValueShow extends JPanel implements Observer{
     private void setNullAndZeroValue(PiePlot piePlot) {
         //设置是否忽略0和null值
         piePlot.setIgnoreNullValues(true);
-        piePlot.setIgnoreZeroValues(true);
+        piePlot.setIgnoreZeroValues(false);
     }
     @Override
     public void update(Observable o, Object arg) {
@@ -102,3 +115,4 @@ public class LightValueShow extends JPanel implements Observer{
         }
     }
 }
+

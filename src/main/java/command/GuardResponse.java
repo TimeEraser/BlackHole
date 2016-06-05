@@ -10,7 +10,9 @@ public enum  GuardResponse implements Response {
     GUARD_BUBBLE,
     GUARD_BLOOD_LEAK,
     GUARD_TEMPERATURE,
-    GUARD_SERIAL_NUM,
+    GUARD_SERIAL_ASK,
+    GUARD_SERIAL_SET,
+    GUARD_SERIAL_DATA_PROCESS,
     GUARD_START,
     GUARD_ERROR;
     //if CommandConfig==null abandon the response

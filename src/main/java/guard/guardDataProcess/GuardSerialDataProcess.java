@@ -151,10 +151,10 @@ public class GuardSerialDataProcess extends Observable {
                 alarmBubbleSolved = true;
             }
         }
+        guardData.setBloodLightValue(bloodLightValue);
+        guardData.setBubbleLightValue(bubbleLightValue);
         setChanged();
         notifyObservers(guardData);
-//        System.out.print("alarmFlag=");
-//        System.out.println(alarmFlag);
         return alarmFlag;
     }
 }
