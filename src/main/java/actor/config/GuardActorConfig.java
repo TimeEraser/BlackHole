@@ -12,9 +12,9 @@ public class GuardActorConfig {
     private BlackHoleActor blackHoleActor;
     private int temperatureLow=25;
     private int temperatureHigh=38;
-    private int defaultLightValue=1050;
+    private int defaultLightValue=1020;
     private int emptyLightValue=500;
-    private int bloodLightValue=1020;
+    private int bloodLightValue=1000;
     private int bubbleLightValue=20;
     private int bubbleHoldCount=1;
 //    private int normalHoldCount=10;
