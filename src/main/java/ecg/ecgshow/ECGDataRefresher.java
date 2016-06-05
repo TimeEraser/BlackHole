@@ -208,11 +208,24 @@ public class ECGDataRefresher extends Observable implements Observer{
 						if(stopFlag==false){
 							for(int j = 0; j< ECGShowUI.LEAD_COUNT; j++){
 								ecgSerises[j].add(time, 2000);//该方法在超过指定长度后会将最久的数据丢弃
-								//ecgSerises[j].add(time, 2000);//该方法在超过指定长度后会将最久的数据丢弃
+								//ecgSerises[j].add(time, datas[j][currentPoint]);//该方法在超过指定长度后会将最久的数据丢弃
 								//ecgSerises[j+ ECGShowUI.LEAD_COUNT].add(time, datas[j][currentPoint]);//该方法在超过指定长度后会将最久的数据丢弃
 								ecgSerises[j+ ECGShowUI.LEAD_COUNT].add(time, 2000);//该方法在超过指定长度后会将最久的数据丢弃
+
 								currentTimeMillis+=10;
 							}
+							HeartRatedatas[0]=HeartRatedatas[0];
+							BloodOxygendatas[0]=BloodOxygendatas[0];
+							//SystolicPressureSeries[0].add(time, SystolicPressuredatas[0]);
+							//SystolicPressureSeries[1].add(time, SystolicPressuredatas[0]);
+							//DiastolicPressureSeries[0].add(time, DiastolicPressuredatas[0]);
+							//DiastolicPressureSeries[1].add(time, DiastolicPressuredatas[0]);
+
+							SystolicPressureSeries[0].add(time, 40);
+							SystolicPressureSeries[1].add(time, 40);
+							DiastolicPressureSeries[0].add(time, 20);
+							DiastolicPressureSeries[1].add(time, 20);
+
 						}
 						time= new Millisecond(new Date(currentTimeMillis));
 						currentPoint+=LOWSAMPLE;
