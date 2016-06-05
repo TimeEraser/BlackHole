@@ -139,13 +139,14 @@ public class ECGShowUI extends JPanel {
     private void createHeartRateData(long timeZone) {
         HeartRatedatas=new short[1];
         HeartRateData=new JPanel();
-        HeartRateData.setLayout(new BorderLayout());
+        //HeartRateData.setLayout(new BorderLayout());
+        HeartRateData.setLayout(new FlowLayout());
         HeartRateData.setBounds(0,0,(int)(WIDTH * 0.14), (int) (HEIGHT * 0.15));
         HeartRateData.setBackground(Color.BLACK);
 
-        JLabel jLabel1=new JLabel("--");
+        JLabel jLabel1=new JLabel("---");
         if (HeartRatedatas[0]==0x00||HeartRatedatas==null){
-            jLabel1.setText("--");
+            jLabel1.setText("---");
         }
         else
         {
@@ -156,9 +157,26 @@ public class ECGShowUI extends JPanel {
         jLabel1.setBackground(Color.BLACK);
         jLabel1.setForeground(Color.GREEN);
         jLabel1.setBounds(0,0,100,100);
-        jLabel1.setOpaque(true);
+        jLabel1.setOpaque(true);    //设置控件不透明
 
-        HeartRateData.add(jLabel1,BorderLayout.CENTER);
+        JLabel jLabelName=new JLabel("心率 ");
+        jLabelName.setFont(new Font("SansSerif", 0, 14));
+        jLabelName.setBackground(Color.BLACK);
+        jLabelName.setForeground(new Color(237, 65, 43));
+        jLabelName.setBounds(0,0,100,100);
+        jLabelName.setOpaque(true);    //设置控件不透明
+
+        JLabel jLabelUnit=new JLabel(" bpm");
+        jLabelUnit.setFont(new Font("SansSerif", 0, 14));
+        jLabelUnit.setBackground(Color.BLACK);
+        jLabelUnit.setForeground(Color.GREEN);
+        jLabelUnit.setBounds(0,0,100,100);
+        jLabelUnit.setOpaque(true);    //设置控件不透明
+
+        HeartRateData.add(jLabelName);
+        HeartRateData.add(jLabel1);
+        HeartRateData.add(jLabelUnit);
+
         System.out.println("HeartRatedatas"+Short.toString(HeartRatedatas[0]));
     }
 
@@ -227,13 +245,13 @@ public class ECGShowUI extends JPanel {
     private void createBloodOxygenData(long timeZone){
         BloodOxygendatas=new short [1];
         BloodOxygenData=new JPanel();
-        BloodOxygenData.setLayout(new BorderLayout());
+        BloodOxygenData.setLayout(new FlowLayout());
         BloodOxygenData.setBounds(0,0,(int) (WIDTH * 0.14), (int) (HEIGHT * 0.15));
         BloodOxygenData.setBackground(Color.BLACK);
 
-        JLabel jLabel1=new JLabel("--");
+        JLabel jLabel1=new JLabel("---");
         if (BloodOxygendatas[0]==0x00||BloodOxygendatas==null){
-            jLabel1.setText("--");
+            jLabel1.setText("---");
         }
         else {
             jLabel1.setText(Short.toString((short)BloodOxygendatas[0]));
@@ -245,8 +263,23 @@ public class ECGShowUI extends JPanel {
         jLabel1.setBounds(0,0,100,100);
         jLabel1.setOpaque(true);
 
-        BloodOxygenData.add(jLabel1,BorderLayout.CENTER);
+        JLabel jLabelName=new JLabel("血氧 ");
+        jLabelName.setFont(new Font("SansSerif", 0, 14));
+        jLabelName.setBackground(Color.BLACK);
+        jLabelName.setForeground(new Color(237, 65, 43));
+        jLabelName.setBounds(0,0,100,100);
+        jLabelName.setOpaque(true);    //设置控件不透明
 
+        JLabel jLabelUnit=new JLabel(" %");
+        jLabelUnit.setFont(new Font("SansSerif", 0, 14));
+        jLabelUnit.setBackground(Color.BLACK);
+        jLabelUnit.setForeground(Color.GREEN);
+        jLabelUnit.setBounds(0,0,100,100);
+        jLabelUnit.setOpaque(true);    //设置控件不透明
+
+        BloodOxygenData.add(jLabelName);
+        BloodOxygenData.add(jLabel1);
+        BloodOxygenData.add( jLabelUnit);
     }
 
 
