@@ -9,8 +9,11 @@ package ecg.ecgshow;
 import java.awt.*;
 import java.io.File;
 import java.io.InputStream;
+import java.util.Observable;
+import java.util.Observer;
 import javax.swing.*;
 
+import guard.guardDataProcess.GuardData;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.DateAxis;
@@ -27,7 +30,7 @@ import static javafx.scene.text.Font.loadFont;
  *
  * @author MCH
  */
-public class ECGShowUI extends JPanel {
+public class ECGShowUI extends JPanel implements Observer {
 
 //	// Variables declaration - do not modify//GEN-BEGIN:variables
 //    private JPanel contentPane=new JPanel();
@@ -46,6 +49,11 @@ public class ECGShowUI extends JPanel {
     private Integer HEIGHT;
     //ECGData
     private JPanel ECGData;
+    private JPanel temperatureData;
+    private JPanel lightValueData;
+
+    private JLabel temperatureLabel;
+    private JLabel lightValueLabel;
     private DateAxis[] dateAxises ;
     private DateAxis[] PressuredateAxises ;
    // private ECGOtherData ecgOtherData=new ECGOtherData();
@@ -70,7 +78,7 @@ public class ECGShowUI extends JPanel {
         createHeartRateData(timeZone);
         createPressureData(timeZone);
         createBloodOxygenData(timeZone);
-
+        createGuardData();
 
     }
 
@@ -139,13 +147,14 @@ public class ECGShowUI extends JPanel {
     private void createHeartRateData(long timeZone) {
         HeartRatedatas=new short[1];
         HeartRateData=new JPanel();
-        HeartRateData.setLayout(new BorderLayout());
+        //HeartRateData.setLayout(new BorderLayout());
+        HeartRateData.setLayout(new FlowLayout());
         HeartRateData.setBounds(0,0,(int)(WIDTH * 0.14), (int) (HEIGHT * 0.15));
         HeartRateData.setBackground(Color.BLACK);
 
-        JLabel jLabel1=new JLabel("--");
+        JLabel jLabel1=new JLabel("---");
         if (HeartRatedatas[0]==0x00||HeartRatedatas==null){
-            jLabel1.setText("00");
+            jLabel1.setText("---");
         }
         else
         {
@@ -156,23 +165,44 @@ public class ECGShowUI extends JPanel {
         jLabel1.setBackground(Color.BLACK);
         jLabel1.setForeground(Color.GREEN);
         jLabel1.setBounds(0,0,100,100);
-        jLabel1.setOpaque(true);
+        jLabel1.setOpaque(true);    //设置控件不透明
 
-        HeartRateData.add(jLabel1,BorderLayout.CENTER);
+        JLabel jLabelName=new JLabel("心率 ");
+        jLabelName.setFont(new Font("SansSerif", 0, 14));
+        jLabelName.setBackground(Color.BLACK);
+        jLabelName.setForeground(new Color(237, 65, 43));
+        jLabelName.setBounds(0,0,100,100);
+        jLabelName.setOpaque(true);    //设置控件不透明
+
+        JLabel jLabelUnit=new JLabel(" bpm");
+        jLabelUnit.setFont(new Font("SansSerif", 0, 14));
+        jLabelUnit.setBackground(Color.BLACK);
+        jLabelUnit.setForeground(Color.GREEN);
+        jLabelUnit.setBounds(0,0,100,100);
+        jLabelUnit.setOpaque(true);    //设置控件不透明
+
+        HeartRateData.add(jLabelName);
+        HeartRateData.add(jLabel1);
+        HeartRateData.add(jLabelUnit);
+
         System.out.println("HeartRatedatas"+Short.toString(HeartRatedatas[0]));
     }
 
     private void createPressureData(long timeZone){
         PressureData=new JPanel();
         PressuredateAxises = new DateAxis[1];
-        SystolicPressureSeries= new TimeSeries[2];//0是测试空数据，1的实际数据
+        SystolicPressureSeries= new TimeSeries[2];
         DiastolicPressureSeries= new TimeSeries[2];
 
         TimeSeriesCollection timeseriescollection = new TimeSeriesCollection();
         SystolicPressureSeries[0] = new TimeSeries("");
         SystolicPressureSeries[0].setMaximumItemAge(timeZone);
-        SystolicPressureSeries[0].setMaximumItemCount(50);
+        SystolicPressureSeries[0].setMaximumItemCount(500);
+        SystolicPressureSeries[1] = new TimeSeries("");
+        SystolicPressureSeries[1].setMaximumItemAge(timeZone);
+        SystolicPressureSeries[1].setMaximumItemCount(2);
         timeseriescollection.addSeries(SystolicPressureSeries[0]);
+        timeseriescollection.addSeries(SystolicPressureSeries[1]);
 
         PressuredateAxises[0] = new DateAxis("");
         PressuredateAxises[0].setTickLabelFont(new Font("SansSerif", 0, 12));
@@ -182,8 +212,12 @@ public class ECGShowUI extends JPanel {
 
         DiastolicPressureSeries[0] = new TimeSeries("");
         DiastolicPressureSeries[0].setMaximumItemAge(timeZone);
-        DiastolicPressureSeries[0].setMaximumItemCount(50);
+        DiastolicPressureSeries[0].setMaximumItemCount(500);
+        DiastolicPressureSeries[1] = new TimeSeries("");
+        DiastolicPressureSeries[1].setMaximumItemAge(timeZone);
+        DiastolicPressureSeries[1].setMaximumItemCount(2);
         timeseriescollection.addSeries(DiastolicPressureSeries[0]);
+        timeseriescollection.addSeries(DiastolicPressureSeries[1]);
 
         NumberAxis numberaxis = new NumberAxis("Pressure");
         numberaxis.setTickLabelFont(new Font("SansSerif", 0, 12));
@@ -195,11 +229,20 @@ public class ECGShowUI extends JPanel {
 
         XYLineAndShapeRenderer xylineandshaperenderer = new XYLineAndShapeRenderer(true,false);
         xylineandshaperenderer.setSeriesPaint(0, Color.GREEN);  //线段颜色为绿
-        xylineandshaperenderer.setSeriesStroke(0,new BasicStroke(2));
+        xylineandshaperenderer.setSeriesStroke(0,new BasicStroke(2));   //线粗
         xylineandshaperenderer.setSeriesPaint(1, Color.LIGHT_GRAY);  //线段颜色为红
         xylineandshaperenderer.setSeriesStroke(1,new BasicStroke(5));
 
-        XYPlot xyplot = new XYPlot(timeseriescollection, PressuredateAxises[0], numberaxis, xylineandshaperenderer);
+        xylineandshaperenderer.setSeriesPaint(2, Color.ORANGE);  //线段颜色为绿
+        xylineandshaperenderer.setSeriesStroke(2,new BasicStroke(2));   //线粗
+        xylineandshaperenderer.setSeriesPaint(3, Color.LIGHT_GRAY);  //线段颜色为红
+        xylineandshaperenderer.setSeriesStroke(3,new BasicStroke(5));
+
+
+
+        //XYPlot xyplot = new XYPlot(timeseriescollection, PressuredateAxises[0], numberaxis, xylineandshaperenderer);
+        XYPlot xyplot = new XYPlot(timeseriescollection, dateAxises[0], numberaxis, xylineandshaperenderer);
+
         xyplot.setBackgroundPaint(Color.LIGHT_GRAY);
         xyplot.setDomainGridlinePaint(Color.LIGHT_GRAY);
         xyplot.setRangeGridlinePaint(Color.LIGHT_GRAY);
@@ -211,7 +254,7 @@ public class ECGShowUI extends JPanel {
         jfreechart.getLegend().setVisible(false);
 
         ChartPanel chartpanel = new ChartPanel(jfreechart,
-                (int) (WIDTH * 0.16), (int) (HEIGHT * 0.18), 0, 0,
+                (int) (WIDTH * 0.155), (int) (HEIGHT * 0.18), 0, 0,
                 Integer.MAX_VALUE, Integer.MAX_VALUE, true, true, false,
                 true, false, false);
 
@@ -219,20 +262,59 @@ public class ECGShowUI extends JPanel {
                 BorderFactory.createEmptyBorder(0, 0, 0, 0)     //边界线条间距为0
                 ,BorderFactory.createEmptyBorder()          //边界线条不可见
         ));
+        chartpanel.setMouseZoomable(false);
         PressureData.add(chartpanel);
 
     }
+    private void createGuardData(){
+        temperatureData=new JPanel();
+        temperatureData.setLayout(new FlowLayout(FlowLayout.LEFT));
+        temperatureData.setBounds(0,0,(int) (WIDTH * 0.28), (int) (HEIGHT * 0.15));
+        temperatureData.setBackground(Color.BLACK);
+        temperatureLabel=new JLabel("--.-");
+        temperatureLabel.setFont(loadFont("LED.tff",64.0f));
+        temperatureLabel.setBackground(Color.BLACK);
+        temperatureLabel.setForeground(Color.GREEN);
+        temperatureLabel.setBounds(0,0,200,100);
+        temperatureLabel.setOpaque(true);
+        JLabel temperatureLabelNamee=new JLabel("温度 ");
+        temperatureLabelNamee.setFont(new Font("SansSerif", 0, 14));
+        temperatureLabelNamee.setBackground(Color.BLACK);
+        temperatureLabelNamee.setForeground(new Color(237, 65, 43));
+        temperatureLabelNamee.setBounds(0,0,100,100);
+        temperatureLabelNamee.setOpaque(true);    //设置控件不透明
+        temperatureData.add(temperatureLabelNamee);
+        temperatureData.add(temperatureLabel);
 
+        lightValueData=new JPanel();
+        lightValueData.setLayout(new FlowLayout(FlowLayout.LEFT));
+        lightValueData.setBounds(0,0,(int) (WIDTH * 0.28), (int) (HEIGHT * 0.15));
+        lightValueData.setBackground(Color.BLACK);
+        lightValueLabel=new JLabel("----");
+        lightValueLabel.setFont(loadFont("LED.tff",64.0f));
+        lightValueLabel.setBackground(Color.BLACK);
+        lightValueLabel.setForeground(Color.GREEN);
+        lightValueLabel.setBounds(0,0,200,100);
+        lightValueLabel.setOpaque(true);
+        JLabel lightValueLabelName=new JLabel("透光度 ");
+        lightValueLabelName.setFont(new Font("SansSerif", 0, 14));
+        lightValueLabelName.setBackground(Color.BLACK);
+        lightValueLabelName.setForeground(new Color(237, 65, 43));
+        lightValueLabelName.setBounds(0,0,100,100);
+        lightValueLabelName.setOpaque(true);    //设置控件不透明
+        lightValueData.add(lightValueLabelName);
+        lightValueData.add(lightValueLabel);
+    }
     private void createBloodOxygenData(long timeZone){
         BloodOxygendatas=new short [1];
         BloodOxygenData=new JPanel();
-        BloodOxygenData.setLayout(new BorderLayout());
+        BloodOxygenData.setLayout(new FlowLayout());
         BloodOxygenData.setBounds(0,0,(int) (WIDTH * 0.14), (int) (HEIGHT * 0.15));
         BloodOxygenData.setBackground(Color.BLACK);
 
-        JLabel jLabel1=new JLabel("--");
+        JLabel jLabel1=new JLabel("---");
         if (BloodOxygendatas[0]==0x00||BloodOxygendatas==null){
-            jLabel1.setText("00");
+            jLabel1.setText("---");
         }
         else {
             jLabel1.setText(Short.toString((short)BloodOxygendatas[0]));
@@ -244,8 +326,23 @@ public class ECGShowUI extends JPanel {
         jLabel1.setBounds(0,0,100,100);
         jLabel1.setOpaque(true);
 
-        BloodOxygenData.add(jLabel1,BorderLayout.CENTER);
+        JLabel jLabelName=new JLabel("血氧 ");
+        jLabelName.setFont(new Font("SansSerif", 0, 14));
+        jLabelName.setBackground(Color.BLACK);
+        jLabelName.setForeground(new Color(237, 65, 43));
+        jLabelName.setBounds(0,0,100,100);
+        jLabelName.setOpaque(true);    //设置控件不透明
 
+        JLabel jLabelUnit=new JLabel(" %");
+        jLabelUnit.setFont(new Font("SansSerif", 0, 14));
+        jLabelUnit.setBackground(Color.BLACK);
+        jLabelUnit.setForeground(Color.GREEN);
+        jLabelUnit.setBounds(0,0,100,100);
+        jLabelUnit.setOpaque(true);    //设置控件不透明
+
+        BloodOxygenData.add(jLabelName);
+        BloodOxygenData.add(jLabel1);
+        BloodOxygenData.add( jLabelUnit);
     }
 
 
@@ -271,7 +368,12 @@ public class ECGShowUI extends JPanel {
     public JPanel getHeartRateData(){return HeartRateData;}
     public JPanel getPressureData(){return PressureData;}
     public JPanel getBloodOxygenData(){return BloodOxygenData;}
-
+    public JPanel getTemperatureData(){
+        return temperatureData;
+    }
+    public JPanel getLightValueData(){
+        return lightValueData;
+    }
 
 
     public TimeSeries[] getECGSeries() {
@@ -335,6 +437,13 @@ public class ECGShowUI extends JPanel {
             e.printStackTrace();
             return new java.awt.Font("宋体", Font.PLAIN, 64);
         }
+    }
+
+    @Override
+    public void update(Observable o, Object arg) {
+        GuardData guardData=(GuardData)arg;
+        temperatureLabel.setText(guardData.getTemperature());
+        lightValueLabel.setText(guardData.getLightValue());
     }
 
 //    public ECGOtherData getECGOtherData(){return ecgOtherData;}

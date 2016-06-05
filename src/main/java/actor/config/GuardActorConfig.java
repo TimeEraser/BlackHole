@@ -12,11 +12,12 @@ public class GuardActorConfig {
     private BlackHoleActor blackHoleActor;
     private int temperatureLow=25;
     private int temperatureHigh=38;
-    private int defaultLightValue=1000;
-    private int bloodLightValue=750;
-    private int bubbleLightValue=650;
-    private int bubbleHoldCount=2;
-    private int normalHoldCount=10;
+    private int defaultLightValue=1020;
+    private int emptyLightValue=500;
+    private int bloodLightValue=1000;
+    private int bubbleLightValue=20;
+    private int bubbleHoldCount=1;
+//    private int normalHoldCount=10;
 
     public void  setSerialPortNum(int serialPortNum){
         this.serialPortNum=serialPortNum;
@@ -60,17 +61,23 @@ public class GuardActorConfig {
     public int getBubbleLightValue(){
         return bubbleLightValue;
     }
+    public int getEmptyLightValue(){
+        return emptyLightValue;
+    }
+    public void setEmptyLightValue(int emptyLightValue){
+        this.emptyLightValue=emptyLightValue;
+    }
     public void setBubbleHoldCount(int bubbleHoldCount){
         this.bubbleHoldCount=bubbleHoldCount;
     }
     public int getBubbleHoldCount(){
         return bubbleHoldCount;
     }
-    public void setNormalHoldCount(int normalHoldCount){
-        this.normalHoldCount=normalHoldCount;
-    }
-    public int getNormalHoldCount(){
-        return normalHoldCount;
-    }
+//    public void setNormalHoldCount(int normalHoldCount){
+//        this.normalHoldCount=normalHoldCount;
+//    }
+//    public int getNormalHoldCount(){
+//        return normalHoldCount;
+//    }
 
 }
