@@ -36,11 +36,12 @@ import java.util.Observer;
  */
 public class TemperatureShow extends JPanel implements Observer{
     private TimeSeries tempLine;
+    private int HEIGHT;
     public TemperatureShow() {
         ChartPanel chartPanel;
         // 创建时序图对象
         int WIDTH = (int)Toolkit.getDefaultToolkit().getScreenSize().getWidth();
-        int HEIGHT = (int)Toolkit.getDefaultToolkit().getScreenSize().getHeight();
+        HEIGHT = (int)Toolkit.getDefaultToolkit().getScreenSize().getHeight();
         Second second=new Second();
         float firstTemperature=(float)25.0;
         tempLine=new TimeSeries("温度");
@@ -72,10 +73,10 @@ public class TemperatureShow extends JPanel implements Observer{
 
     private void configFont(JFreeChart chart){
         // 配置字体
-        Font xfont = new Font("Dialog", 0, 12);// X轴
-        Font yfont = new Font("Dialog", 0, 12);// Y轴
-        Font kfont = new Font("Dialog", 0, 12);// 底部
-        Font titleFont = new Font("Dialog", Font.BOLD , 14) ; // 图片标题
+        Font xfont = new Font("Dialog", 0,(int)(HEIGHT*0.016) );// X轴
+        Font yfont = new Font("Dialog", 0, (int)(HEIGHT*0.016) );// Y轴
+        Font kfont = new Font("Dialog", 0, (int)(HEIGHT*0.016) );// 底部
+        Font titleFont = new Font("Dialog", Font.BOLD , (int)(HEIGHT*0.018) ) ; // 图片标题
         XYPlot plot = chart.getXYPlot();// 图形的绘制结构对象
         // 图片标题
         chart.setTitle(new TextTitle(chart.getTitle().getText(),titleFont));

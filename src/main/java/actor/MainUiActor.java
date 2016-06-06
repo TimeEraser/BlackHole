@@ -78,9 +78,9 @@ public class MainUiActor extends BaseActor{
 		if(request==SystemRequest.BOOT)
 			start();
 		if(request==MainUiRequest.MAIN_UI_ECG_CONFIG)
-			sendRequest(monitorActor,MonitorRequest.MONITOR_ECG_DATA,getECGConnectInfo());
+			sendRequest(blackHoleActor,MonitorRequest.MONITOR_ECG_DATA,getECGConnectInfo());
 		if(request==MainUiRequest.MAIN_UI_CT_OPEN)
-			sendRequest(ctActor,CtRequest.CT_OPEN_IMG,getCTImagePath());
+			sendRequest(blackHoleActor,CtRequest.CT_OPEN_IMG,getCTImagePath());
 		if(request==MainUiRequest.MAIN_UI_GUARD_SERIAL_PORT_SET){
 			sendRequest(blackHoleActor,GuardRequest.GUARD_SERIAL_ASK);
 		}
