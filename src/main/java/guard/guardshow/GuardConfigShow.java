@@ -204,6 +204,7 @@ public class GuardConfigShow extends JDialog implements Observer{
         else{
             errorFlag=true;
         }
+//        System.out.println(errorFlag);
         int temperatureLow=Integer.parseInt(temperatureLowText.getText());
         if(!errorFlag&&temperatureLow<35&&temperatureLow>15){
             this.temperatureLow=temperatureLow;
@@ -211,13 +212,15 @@ public class GuardConfigShow extends JDialog implements Observer{
         else {
             errorFlag=true;
         }
+//        System.out.println(errorFlag);
         int temperatureHigh=Integer.parseInt(temperatureHighText.getText());
-        if (!errorFlag&&temperatureHigh>30&&temperatureHigh>temperatureLow&&temperatureHigh<45){
+        if (!errorFlag&&temperatureHigh>30&&temperatureHigh<45){
             this.temperatureHigh=temperatureHigh;
         }
-        else{
-            errorFlag=true;
+        else {
+            errorFlag = true;
         }
+//        System.out.println(errorFlag);
         int defaultLightValue=Integer.parseInt(defaultLightValueText.getText());
         if(!errorFlag&&defaultLightValue>0&&defaultLightValue<1024){
             this.defaultLightValue=defaultLightValue;
@@ -225,6 +228,7 @@ public class GuardConfigShow extends JDialog implements Observer{
         else{
             errorFlag=true;
         }
+//        System.out.println(errorFlag);
         int bloodLightValue=Integer.parseInt(bloodLightValueText.getText());
         if(!errorFlag&&bloodLightValue>0&&defaultLightValue<1024){
             this.bloodLightValue=bloodLightValue;
@@ -232,16 +236,22 @@ public class GuardConfigShow extends JDialog implements Observer{
         else {
             errorFlag=true;
         }
+//        System.out.println(errorFlag);
         int bubbleLightValue=Integer.parseInt(bubbleLightValueText.getText());
-        if(!errorFlag&&bubbleLightValue>10&&bloodLightValue<50){
+//        System.out.println(bubbleLightValue);
+        if(!errorFlag&&bubbleLightValue>10&&bubbleLightValue<50){
             this.bubbleLightValue=bubbleLightValue;
         }
         else {
             errorFlag=true;
         }
-        if(!(!errorFlag&&bloodLightValue>bubbleLightValue&&defaultLightValue>bloodLightValue)){
+//        System.out.println(errorFlag);
+//        System.out.println(defaultLightValue);
+//        System.out.println(bloodLightValue);
+        if(!errorFlag&&defaultLightValue<bloodLightValue){
             errorFlag=true;
         }
+//        System.out.println(errorFlag);
         int bubbleHoldCount=Integer.parseInt(bubbleHoldCountText.getText());
         if(!errorFlag&&bubbleHoldCount>=1&&bubbleHoldCount<=10){
             this.bubbleHoldCount=bubbleHoldCount;
@@ -249,6 +259,7 @@ public class GuardConfigShow extends JDialog implements Observer{
         else {
             errorFlag=true;
         }
+//        System.out.println(errorFlag);
         if(errorFlag) {
             JOptionPane.showMessageDialog(null, "配置参数有误", "系统错误", JOptionPane.ERROR_MESSAGE);
         }

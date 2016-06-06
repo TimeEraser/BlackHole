@@ -22,8 +22,8 @@ public class MainUiActorConfig {
 	private Integer Height = (int)(screenHeight*0.8);
 	private Integer LEFT = (screenWidth-WIDTH)/2;
 	private Integer TOP = (screenHeight-Height)/2;
-	private Integer MENU_FONT_SIZE=12;
-	private Integer CONTENT_FONT_SIZE=18;
+	private Integer MENU_FONT_SIZE=(int)(0.011*WIDTH);
+	private Integer CONTENT_FONT_SIZE=(int)(0.017*WIDTH);
 
 	public MonitorActor getMonitorActor() {return monitorActor;}
 	public void setMonitorActor(MonitorActor monitorActor) {this.monitorActor = monitorActor;}
