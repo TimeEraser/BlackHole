@@ -68,9 +68,9 @@ public class CTCurrentData extends JPanel {
         resultImageJPanel.setBounds(0, 0,ZOOM_WIDTH+40, ZOOM_HEIGHT + 40);
 
         BufferedImage focusZoom= ImageUtil.zoom(focus,ZOOM_WIDTH,ZOOM_HEIGHT,Color.BLACK);
-        JLabel resultImage = new JLabel();
+        JLabel resultImage = new JLabel(new ImageIcon(focusZoom));
         resultImage.setBounds(0,0,ZOOM_WIDTH,ZOOM_HEIGHT);
-        resultImage.setIcon(new ImageIcon(focusZoom));
+        //resultImage.setIcon(new ImageIcon(focusZoom));
         resultImageJPanel.add(resultImage);
 
         JLabel resultText = new JLabel(result);
