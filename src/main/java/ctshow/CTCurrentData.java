@@ -22,6 +22,8 @@ public class CTCurrentData extends JPanel {
     private String imagePath;
 
     private BufferedImage focus = null;
+
+    private JPanel resultImageJPanel =new JPanel();
     //mouse event
     private MyMouseAdapter mouseAdapter;
     private Rectangle rect = null;
@@ -62,7 +64,7 @@ public class CTCurrentData extends JPanel {
         Integer ZOOM_WIDTH=currentImage.getWidth() / 6;
         Integer ZOOM_HEIGHT=currentImage.getHeight() /6;
 
-        JPanel resultImageJPanel =new JPanel();
+        //JPanel resultImageJPanel =new JPanel();
         resultImageJPanel.setLayout(null);
         resultImageJPanel.setBackground(Color.BLACK);
         resultImageJPanel.setBounds(0, 0,ZOOM_WIDTH+40, ZOOM_HEIGHT + 40);
