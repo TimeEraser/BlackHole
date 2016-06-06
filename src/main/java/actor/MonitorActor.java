@@ -8,6 +8,7 @@ import ecg.ecgshow.ECGShowUI;
 import ecg.tcp.*;
 
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.Map;
 
 /**
@@ -36,7 +37,16 @@ public class MonitorActor extends BaseActor{
 
             if(client!=null) {
                 client.stopFlag = true;
-                if (ecgDataRefresher != null) ecgDataRefresher.setStopFlag();
+                try {
+                    client.getS().close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+               if (ecgDataRefresher != null) ecgDataRefresher.setStopFlag();
+                client.interrupt();
+                client.stop();
+                client=null;
 
                 sendResponse(request,SystemResponse.SYSTEM_SUCCESS);
                 System.out.println("client.stopFlag =true");
@@ -50,8 +60,6 @@ public class MonitorActor extends BaseActor{
         if(request==MonitorRequest.MONITOR_ECG_DATA) {
             connectInfo= (Map) request.getConfig().getData();
             start();
-
-
         }
         if(request==MonitorRequest.ECG_UI_CONFIG){
             ecgShowUI = (ECGShowUI)request.getConfig().getData();

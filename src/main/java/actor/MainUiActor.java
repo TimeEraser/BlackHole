@@ -575,6 +575,7 @@ public class MainUiActor extends BaseActor{
 
 	private Map<String, String> getECGConnectInfo(){
 		TCPConfig tcpConfig = new TCPConfig(InitializationInterface,true);
+
 		tcpConfig.setVisible(true);
 		String host=tcpConfig.getjTextField1().getText();//主机域名
 		String port=tcpConfig.getjTextField2().getText();//主机端口号

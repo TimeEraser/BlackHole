@@ -11,6 +11,9 @@ import java.io.File;
 import java.io.InputStream;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import javax.swing.*;
 
 import guard.guardDataProcess.GuardData;
@@ -145,7 +148,7 @@ public class ECGShowUI extends JPanel implements Observer {
     }
 
     private void createHeartRateData(long timeZone) {
-        HeartRatedatas=new short[1];
+        HeartRatedatas=new short[2];
         HeartRateData=new JPanel();
         //HeartRateData.setLayout(new BorderLayout());
         HeartRateData.setLayout(new FlowLayout());
@@ -184,8 +187,15 @@ public class ECGShowUI extends JPanel implements Observer {
         HeartRateData.add(jLabelName);
         HeartRateData.add(jLabel1);
         HeartRateData.add(jLabelUnit);
-
         System.out.println("HeartRatedatas"+Short.toString(HeartRatedatas[0]));
+        ScheduledExecutorService scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
+        scheduledExecutorService.scheduleAtFixedRate(new Runnable() {
+            @Override
+            public void run() {
+                jLabel1.setText( String.valueOf(HeartRatedatas[0]));
+                HeartRateData.repaint();
+            }
+        },0,3, TimeUnit.SECONDS);
     }
 
     private void createPressureData(long timeZone){
@@ -304,9 +314,10 @@ public class ECGShowUI extends JPanel implements Observer {
         lightValueLabelName.setOpaque(true);    //设置控件不透明
         lightValueData.add(lightValueLabelName);
         lightValueData.add(lightValueLabel);
+
     }
     private void createBloodOxygenData(long timeZone){
-        BloodOxygendatas=new short [1];
+        BloodOxygendatas=new short [2];
         BloodOxygenData=new JPanel();
         BloodOxygenData.setLayout(new FlowLayout());
         BloodOxygenData.setBounds(0,0,(int) (WIDTH * 0.14), (int) (HEIGHT * 0.15));
@@ -343,6 +354,15 @@ public class ECGShowUI extends JPanel implements Observer {
         BloodOxygenData.add(jLabelName);
         BloodOxygenData.add(jLabel1);
         BloodOxygenData.add( jLabelUnit);
+
+        ScheduledExecutorService scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
+        scheduledExecutorService.scheduleAtFixedRate(new Runnable() {
+            @Override
+            public void run() {
+                jLabel1.setText( String.valueOf(BloodOxygendatas[0]));
+                BloodOxygenData.repaint();
+            }
+        },0,3, TimeUnit.SECONDS);
     }
 
 
