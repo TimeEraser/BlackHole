@@ -543,7 +543,7 @@ public class MainUiActor extends BaseActor{
 			JButton ecgStop = new JButton();
 			ecgStop.setText(" 停止传输 ");
 			ecgStop.setIcon(new ImageIcon(startBufferImage));
-			ecgStop.addActionListener(new NoticeListener(this, monitorActor, MonitorRequest.MONITOR_SHUTDOWM));
+			ecgStop.addActionListener(new NoticeListener(this, monitorActor, MonitorRequest.MONITOR_SHUTDOWM,ecgStart.getText()));
 			ECGControl.add(ecgStop);
 
 			JButton ecgAnalyse = new JButton();

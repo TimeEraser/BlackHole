@@ -36,20 +36,25 @@ public class MonitorActor extends BaseActor{
         if(request==MonitorRequest.MONITOR_SHUTDOWM){
 
             if(client!=null) {
-                client.stopFlag = true;
-                try {
-                    client.getS().close();
-                } catch (IOException e) {
-                    e.printStackTrace();
+                if ((String) request.getConfig().getData() == " 开始传输 ") {
+                    client.stopFlag = true;
+                    try {
+                        client.getS().close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+                    if (ecgDataRefresher != null) ecgDataRefresher.setStopFlag();
+                    client.interrupt();
+                    client.stop();
+                    client = null;
+
+                    sendResponse(request, SystemResponse.SYSTEM_SUCCESS);
+                    System.out.println("client.stopFlag =true");
                 }
-
-               if (ecgDataRefresher != null) ecgDataRefresher.setStopFlag();
-                client.interrupt();
-                client.stop();
-                client=null;
-
-                sendResponse(request,SystemResponse.SYSTEM_SUCCESS);
-                System.out.println("client.stopFlag =true");
+                else {
+                    sendResponse(request,SystemResponse.SYSTEM_FAILURE,"请先暂停传输");
+                }
             }
             else
             {
