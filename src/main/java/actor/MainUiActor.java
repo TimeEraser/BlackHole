@@ -434,7 +434,7 @@ public class MainUiActor extends BaseActor{
 		GuardErrorShow guardErrorShow=new GuardErrorShow(InitializationInterface,true,displayString);
 		guardErrorShow.setVisible(true);
 	}
-
+	//CT部分UI设置
 	private JPanel createCTJPanel(){
 		JPanel CTPanel= new JPanel(null);
 		Border etchedBorder = BorderFactory.createEtchedBorder(EtchedBorder.LOWERED,Color.LIGHT_GRAY,Color.LIGHT_GRAY);	//创建一个具有“浮雕化”外观效果的边框，将组件的当前背景色用于高亮显示和阴影显示。
@@ -492,6 +492,7 @@ public class MainUiActor extends BaseActor{
 		CTHistory.setBounds((int)(WIDTH*0.75),(int)(HEIGHT*0.31),(int)(WIDTH*0.20),(int)(HEIGHT*0.47));
 		CTHistory.add(ctShowUI.getCtHistoryData());
 		CTPanel.add(CTHistory);
+
 		sendRequest(ctActor,CtRequest.CT_UI_CONFIG,ctShowUI);
 		CTPanel.setVisible(false);
 		return CTPanel;
@@ -609,6 +610,7 @@ public class MainUiActor extends BaseActor{
 
 	private Map<String, String> getECGConnectInfo(){
 		TCPConfig tcpConfig = new TCPConfig(InitializationInterface,true);
+
 		tcpConfig.setVisible(true);
 		String host=tcpConfig.getjTextField1().getText();//主机域名
 		String port=tcpConfig.getjTextField2().getText();//主机端口号

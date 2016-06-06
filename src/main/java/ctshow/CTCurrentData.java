@@ -47,9 +47,9 @@ public class CTCurrentData extends JPanel {
             }
             this.setVisible(true);
             this.getParent().getHeight();
-            Integer imageX, imageY;
+            Integer imageX;
             imageX = (this.getParent().getWidth() - currentImage.getWidth()) / 2;
-            imageY = (this.getParent().getHeight() - currentImage.getHeight()) / 2;
+            //imageY = (this.getParent().getHeight() - currentImage.getHeight()) / 2;
             setBounds(imageX, 0, currentImage.getWidth(), currentImage.getHeight());
             this.repaint();
         } catch (IOException e) {
@@ -165,7 +165,7 @@ public class CTCurrentData extends JPanel {
         addMouseListener(mouseAdapter);
         addMouseMotionListener(mouseAdapter);
         repaint();
-        JOptionPane.showMessageDialog(null,"已是当前数据","系统提示",JOptionPane.ERROR_MESSAGE);
+        JOptionPane.showMessageDialog(null,"已是当前数据","系统提示",JOptionPane.INFORMATION_MESSAGE);
     }
 
 }

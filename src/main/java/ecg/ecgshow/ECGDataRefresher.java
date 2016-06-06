@@ -44,8 +44,8 @@ public class ECGDataRefresher extends Observable implements Observer{
 	private short[][] datas=new short[ECGShowUI.LEAD_COUNT][DATA_LENGTH];	//短整型二维数组
 	private  short[] SystolicPressuredatas=new short[1];
 	private  short[] DiastolicPressuredatas=new short[1];
-	private  short[] HeartRatedatas=new short[1];
-	private  short[] BloodOxygendatas=new short[1];
+	private  short[] HeartRatedatas=new short[2];
+	private  short[] BloodOxygendatas=new short[2];
 
 
 	private volatile int currentPoint=2;	//用于多线程的变量，现在的点
@@ -160,7 +160,8 @@ public class ECGDataRefresher extends Observable implements Observer{
 
 
 	public void refreshHeartRate(byte[] message){
-		HeartRatedatas[0]=(short)(((message[0])<<8)|(message[1]&0xff));
+		HeartRatedatas[1]=(short)(((message[0])<<8)|(message[1]&0xff));
+
 	}
 
 	public void refreshSystolicPressure(byte[] message){
@@ -173,7 +174,7 @@ public class ECGDataRefresher extends Observable implements Observer{
 	}
 
 	public void refreshBloodOxygen(byte[] message){
-		BloodOxygendatas[0]=(short)message[0];
+		BloodOxygendatas[1]=(short)message[0];
 	}
 
 
@@ -195,36 +196,42 @@ public class ECGDataRefresher extends Observable implements Observer{
 		public void run() {
 			long currentTimeMillis =System.currentTimeMillis();
 			time = new Millisecond(new Date(currentTimeMillis));
-			if(currentTimeMillis > upperBound) {
-				for (DateAxis d :
-						dateAxises) {
-					d.setRange(new Date(currentTimeMillis), new Date(currentTimeMillis + 5000));
+			if(stopFlag==false) {
+
+				if (currentTimeMillis > upperBound) {
+					for (DateAxis d :
+							dateAxises) {
+						d.setRange(new Date(currentTimeMillis), new Date(currentTimeMillis + 5000));
+					}
+					upperBound = currentTimeMillis + 5000;
 				}
-				upperBound=currentTimeMillis+5000;
 			}
 			if(datas!=null){
 				for(int i=0;i<REFRESH_TIME/LOWSAMPLE/2;i++){
 					if(currentPoint< DATA_LENGTH){
 						if(stopFlag==false){
 							for(int j = 0; j< ECGShowUI.LEAD_COUNT; j++){
-								ecgSerises[j].add(time, 2000);//该方法在超过指定长度后会将最久的数据丢弃
-								//ecgSerises[j].add(time, datas[j][currentPoint]);//该方法在超过指定长度后会将最久的数据丢弃
-								//ecgSerises[j+ ECGShowUI.LEAD_COUNT].add(time, datas[j][currentPoint]);//该方法在超过指定长度后会将最久的数据丢弃
-								ecgSerises[j+ ECGShowUI.LEAD_COUNT].add(time, 2000);//该方法在超过指定长度后会将最久的数据丢弃
+								//ecgSerises[j].addOrUpdate(time, 2000);//该方法在超过指定长度后会将最久的数据丢弃
+								//ecgSerises[j+ ECGShowUI.LEAD_COUNT].addOrUpdate(time, 2000);//该方法在超过指定长度后会将最久的数据丢弃
+								ecgSerises[j].addOrUpdate(time, datas[j][currentPoint]);
+								ecgSerises[j+ ECGShowUI.LEAD_COUNT].addOrUpdate(time, datas[j][currentPoint]);
+
 
 								currentTimeMillis+=10;
 							}
-							HeartRatedatas[0]=HeartRatedatas[0];
-							BloodOxygendatas[0]=BloodOxygendatas[0];
-							//SystolicPressureSeries[0].add(time, SystolicPressuredatas[0]);
-							//SystolicPressureSeries[1].add(time, SystolicPressuredatas[0]);
-							//DiastolicPressureSeries[0].add(time, DiastolicPressuredatas[0]);
-							//DiastolicPressureSeries[1].add(time, DiastolicPressuredatas[0]);
 
-							SystolicPressureSeries[0].add(time, 40);
-							SystolicPressureSeries[1].add(time, 40);
-							DiastolicPressureSeries[0].add(time, 20);
-							DiastolicPressureSeries[1].add(time, 20);
+							HeartRatedatas[0]=HeartRatedatas[1];
+
+							BloodOxygendatas[0]=BloodOxygendatas[1];
+							//SystolicPressureSeries[0].addOrUpdate(time, SystolicPressuredatas[0]);
+							//SystolicPressureSeries[1].addOrUpdate(time, SystolicPressuredatas[0]);
+							//DiastolicPressureSeries[0].addOrUpdate(time, DiastolicPressuredatas[0]);
+							//DiastolicPressureSeries[1].addOrUpdate(time, DiastolicPressuredatas[0]);
+
+							SystolicPressureSeries[0].addOrUpdate(time, 40);
+							SystolicPressureSeries[1].addOrUpdate(time, 40);
+							DiastolicPressureSeries[0].addOrUpdate(time, 20);
+							DiastolicPressureSeries[1].addOrUpdate(time, 20);
 
 						}
 						time= new Millisecond(new Date(currentTimeMillis));
@@ -238,44 +245,6 @@ public class ECGDataRefresher extends Observable implements Observer{
 			else{
 				System.out.println("数据尚未准备好！");
 			}
-
-//			if (SystolicPressuredatas!=null&&DiastolicPressuredatas!=null){
-//
-//				for(int i=0;i<REFRESH_TIME/LOWSAMPLE/2;i++){
-//						if(stopFlag==false){
-//							if(count==0 || everStop ==true) {
-////								for (DateAxis d:PressuredateAxises) {
-//									long beginMilliSecond=time.getFirstMillisecond();
-//								PressuredateAxises[0].setRange(new Date(beginMilliSecond),new Date(beginMilliSecond+5000));
-////								}
-//								everStop=false;
-//								count=0;
-//							}
-//								//SystolicPressureSeries[0].add(time, 20);//该方法在超过指定长度后会将最久的数据丢弃
-//								//DiastolicPressureSeries[0].add(time, 20);//该方法在超过指定长度后会将最久的数据丢弃
-//
-//							//	SystolicPressureSeries[1].add(time, SystolicPressuredatas[0]);
-//							//	DiastolicPressureSeries[1].add(time, DiastolicPressuredatas[0]);
-//							count++;
-//							if(count==50){
-//								count=0;
-//							}
-//						}
-//						time=(Millisecond) time.next().next().next().next().next().next().next().next().next().next();
-//				}
-//
-//			}
-//			else{
-//				System.out.println("数据尚未准备好！");
-//			}
-//
-//
-//			if (BloodOxygendatas!=null){
-//				BloodOxygendatas[0]=BloodOxygendatas[0];
-//			}
-//			else{
-//				System.out.println("数据尚未准备好！");
-//			}
 
 
 		}	//run()  end

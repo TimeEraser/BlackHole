@@ -25,7 +25,6 @@ import java.util.Date;
 public class CtActor extends BaseActor{
     private  String CT_ANALYSE_RESULT_SAVE_ROOT;
     private  String CT_ANALYSE_RESULT_SAVE_FORMAT;
-    private String rPath;
     private CTDataRefresher ctDataRefresher;
     private ObjectInputStream ois = null;
     private RandomForest randomForest ;
@@ -68,12 +67,8 @@ public class CtActor extends BaseActor{
         }
         if(request==CtRequest.CT_SHOW_HISTORY)
             ctDataRefresher.refreshCTData((String) request.getConfig().getData(),true);
-        if(request==CtRequest.CT_UI_RETURN){
-            if(!ctDataRefresher.Initialized()){
-                JOptionPane.showMessageDialog(null,"请打开CT图片","操作错误",JOptionPane.ERROR_MESSAGE);
-            }else {
-                ctDataRefresher.returnToCurrentImage();
-            }
+        if(request==CtRequest.CT_UI_RETURN) {
+            returnCTCurrentData();
         }
         return false;
     }
@@ -163,22 +158,16 @@ public class CtActor extends BaseActor{
             }
         }
     }
-    /*public String getFileName(){
-        return filename;
-    }
-*/
-    public String getResult(){
-        return CTAnalyseResult;
-    }
 
-    /*public JList getCTList(){
-        return CTList;
-    }
-*/
     public void returnCTCurrentData(){
-        ctDataRefresher.refreshCTData(rPath, false);
-        System.out.println("Return Successfully!");
+        if(!ctDataRefresher.Initialized()){
+            JOptionPane.showMessageDialog(null,"请打开CT图片","操作错误",JOptionPane.ERROR_MESSAGE);
+        }else {
+            ctDataRefresher.returnToCurrentImage();
+        }
     }
-
 
 }
+
+
+
