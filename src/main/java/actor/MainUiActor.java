@@ -571,7 +571,7 @@ public class MainUiActor extends BaseActor{
 
 		JPanel Pressure=new JPanel();
 		//Pressure.setBorder(etchedBorder);	//等会注释掉
-		Pressure.setBounds((int)(WIDTH*0.594),(int)(HEIGHT*0.32),(int)(WIDTH*0.20),(int)(HEIGHT*0.22));
+		Pressure.setBounds((int)(WIDTH*0.594),(int)(HEIGHT*0.33),(int)(WIDTH*0.20),(int)(HEIGHT*0.22));
 		Pressure.add(ecgShowUI.getPressureData());
 		ECGPanel.add(Pressure);
 
