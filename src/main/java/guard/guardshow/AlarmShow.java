@@ -25,9 +25,9 @@ public class AlarmShow extends JPanel{
 
     public AlarmShow(Observable observable){
         this.observable=observable;
-        temperatureTablePanel=new AlarmTablePanel("                               温度报警信息","血温","Temperature");
-        bloodTablePanel=new AlarmTablePanel("                               漏血报警信息","漏血透光值","Blood");
-        bubbleTablePanel=new AlarmTablePanel("                               气泡报警信息","气泡大小","Bubble");
+        temperatureTablePanel=new AlarmTablePanel("                               温度信息","血温","Temperature");
+        bloodTablePanel=new AlarmTablePanel("                               漏血信息","漏血透光值","Blood");
+        bubbleTablePanel=new AlarmTablePanel("                               气泡信息","气泡大小","Bubble");
         beginObserve();
         BoxLayout layout = new BoxLayout(this,BoxLayout.Y_AXIS);     //BoxLayout布局
         this.setLayout(layout);

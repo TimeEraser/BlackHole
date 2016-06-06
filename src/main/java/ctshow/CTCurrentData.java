@@ -81,8 +81,9 @@ public class CTCurrentData extends JPanel {
         resultText.setBounds(20,ZOOM_HEIGHT,ZOOM_WIDTH,40);
 
         resultImageJPanel.add(resultText);
-        add(resultImageJPanel);
-        this.repaint();
+        add(resultImageJPanel,new Integer(Integer.MAX_VALUE));
+        resultImageJPanel.addNotify();
+        repaint();
     }
 
     @Override
