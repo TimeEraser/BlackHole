@@ -541,8 +541,10 @@ public class MainUiActor extends BaseActor{
 
 			JButton ecgStop = new JButton();
 			ecgStop.setText(" 停止传输 ");
-			ecgStop.setIcon(new ImageIcon(stopBufferImage));
-			ecgStop.addActionListener(new NoticeListener(this, monitorActor, MonitorRequest.MONITOR_SHUTDOWM));
+
+			ecgStop.setIcon(new ImageIcon(startBufferImage));
+			ecgStop.addActionListener(new NoticeListener(this, monitorActor, MonitorRequest.MONITOR_SHUTDOWM,ecgStart.getText()));
+
 			ECGControl.add(ecgStop);
 
 			JButton ecgAnalyse = new JButton();
@@ -569,7 +571,7 @@ public class MainUiActor extends BaseActor{
 
 		JPanel Pressure=new JPanel();
 		//Pressure.setBorder(etchedBorder);	//等会注释掉
-		Pressure.setBounds((int)(WIDTH*0.594),(int)(HEIGHT*0.32),(int)(WIDTH*0.20),(int)(HEIGHT*0.22));
+		Pressure.setBounds((int)(WIDTH*0.594),(int)(HEIGHT*0.33),(int)(WIDTH*0.20),(int)(HEIGHT*0.22));
 		Pressure.add(ecgShowUI.getPressureData());
 		ECGPanel.add(Pressure);
 
@@ -581,21 +583,23 @@ public class MainUiActor extends BaseActor{
 		ECGPanel.add(BloodOxygen);
 
 
-		JPanel Temperature = new JPanel();
+		JPanel GuardDataPanel= new JPanel();
 		//ECGAnalyse.setBorder(etchedBorder);	//等会注释掉
-		Temperature.setBounds((int)(WIDTH*0.80),(int)(HEIGHT*0.15),(int)(WIDTH*0.18),(int)(HEIGHT*0.18));
+		GuardDataPanel.setBounds((int)(WIDTH*0.80),(int)(HEIGHT*0.15),(int)(WIDTH*0.18),(int)(HEIGHT*0.60));
+		GuardDataPanel.setBackground(new Color(0,150,255));
 		guardSerialDataProcess.addObserver(ecgShowUI);
-		Temperature.setLayout(new BorderLayout());
-		Temperature.add(ecgShowUI.getTemperatureData(),BorderLayout.CENTER);
 
-		JPanel LightValue=new JPanel();
-		LightValue.setBounds((int)(WIDTH*0.80),(int)(HEIGHT*0.35),(int)(WIDTH*0.18),(int)(HEIGHT*0.32));
-		LightValue.setLayout(new BorderLayout());
-		LightValue.add(ecgShowUI.getLightValueData(),BorderLayout.CENTER);
+		GuardDataPanel.add(ecgShowUI.getGuardDataPanel());
+//		Temperature.setLayout(new BorderLayout());
+//		Temperature.add(ecgShowUI.getTemperatureData(),BorderLayout.CENTER);
+//
+//		JPanel LightValue=new JPanel();
+//		LightValue.setBounds((int)(WIDTH*0.80),(int)(HEIGHT*0.35),(int)(WIDTH*0.18),(int)(HEIGHT*0.32));
+//		LightValue.setLayout(new BorderLayout());
+//		LightValue.add(ecgShowUI.getLightValueData(),BorderLayout.CENTER);
 
 		//ECGAnalyse.add(ecgShowUI.getECGInfo());
-		ECGPanel.add(Temperature);
-		ECGPanel.add(LightValue);
+		ECGPanel.add(GuardDataPanel);
 
 		ECGPanel.setVisible(false);
 		return ECGPanel;

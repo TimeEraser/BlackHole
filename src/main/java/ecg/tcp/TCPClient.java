@@ -91,6 +91,7 @@ public class TCPClient extends Thread{  //跑多线程
 
 	public TCPClient(ECGDataRefresher ecgDataRefresher){
 		this.ecgDataRefresher=ecgDataRefresher;
+		this.connectFlag =false;
 		//this.ecgOtherData=ecgDataRefresher.getEcgOtherData();
 	}
 

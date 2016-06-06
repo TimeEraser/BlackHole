@@ -17,6 +17,7 @@ import java.util.concurrent.TimeUnit;
 import javax.swing.*;
 
 import guard.guardDataProcess.GuardData;
+import org.apache.log4j.Layout;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.DateAxis;
@@ -56,8 +57,8 @@ public class ECGShowUI extends JPanel implements Observer {
     private Integer HEIGHT;
     //ECGData
     private JPanel ECGData;
-    private JPanel temperatureData;
-    private JPanel lightValueData;
+    private JPanel GuardDataPanel;
+//    private JLabel alarmMessLabel;
 
     private JLabel temperatureLabel;
     private DefaultValueDataset lightValueDataSet;
@@ -109,15 +110,15 @@ public class ECGShowUI extends JPanel implements Observer {
 
             //DateAxis dateaxis = new DateAxis("Time");
             dateAxises[i] = new DateAxis("");
-            dateAxises[i].setTickLabelFont(new Font("SansSerif", 0, 12));
-            dateAxises[i].setLabelFont(new Font("SansSerif", 0, 14));
+            dateAxises[i].setTickLabelFont(new Font("SansSerif", 0, (int)(HEIGHT*0.016)));
+            dateAxises[i].setLabelFont(new Font("SansSerif", 0, (int)(HEIGHT*0.018)));
             dateAxises[i].setTickLabelsVisible(true);
             dateAxises[i].setVisible(false);
 
             //NumberAxis numberaxis = new NumberAxis("ecg");
             NumberAxis numberaxis = new NumberAxis("ecg");
-            numberaxis.setTickLabelFont(new Font("SansSerif", 0, 12));
-            numberaxis.setLabelFont(new Font("SansSerif", 0, 14));
+            numberaxis.setTickLabelFont(new Font("SansSerif", 0, (int)(HEIGHT*0.016)));
+            numberaxis.setLabelFont(new Font("SansSerif", 0, (int)(HEIGHT*0.018)));
             numberaxis.setStandardTickUnits(NumberAxis.createIntegerTickUnits());
             numberaxis.setVisible(false);
             numberaxis.setLowerBound(1500D);
@@ -171,21 +172,21 @@ public class ECGShowUI extends JPanel implements Observer {
             jLabel1.setText(Short.toString((short)HeartRatedatas[0]));
         }
 
-        jLabel1.setFont(loadFont("LED.tff",64.0f));
+        jLabel1.setFont(loadFont("LED.tff",(float) (HEIGHT * 0.070)));
         jLabel1.setBackground(Color.BLACK);
         jLabel1.setForeground(Color.GREEN);
         jLabel1.setBounds(0,0,100,100);
         jLabel1.setOpaque(true);    //设置控件不透明
 
         JLabel jLabelName=new JLabel("心率 ");
-        jLabelName.setFont(new Font("SansSerif", 0, 14));
+        jLabelName.setFont(new Font("SansSerif", 0, (int)(HEIGHT *0.020)));
         jLabelName.setBackground(Color.BLACK);
         jLabelName.setForeground(new Color(237, 65, 43));
         jLabelName.setBounds(0,0,100,100);
         jLabelName.setOpaque(true);    //设置控件不透明
 
         JLabel jLabelUnit=new JLabel(" bpm");
-        jLabelUnit.setFont(new Font("SansSerif", 0, 14));
+        jLabelUnit.setFont(new Font("SansSerif", 0, (int)(HEIGHT *0.020)));
         jLabelUnit.setBackground(Color.BLACK);
         jLabelUnit.setForeground(Color.GREEN);
         jLabelUnit.setBounds(0,0,100,100);
@@ -199,7 +200,12 @@ public class ECGShowUI extends JPanel implements Observer {
         scheduledExecutorService.scheduleAtFixedRate(new Runnable() {
             @Override
             public void run() {
-                jLabel1.setText( String.valueOf(HeartRatedatas[0]));
+                if (HeartRatedatas[0]==-100||HeartRatedatas[0]==156||HeartRatedatas[0]==0){
+                    jLabel1.setText("--");
+                }
+                else {
+                    jLabel1.setText( String.valueOf(HeartRatedatas[0]));
+                }
                 HeartRateData.repaint();
             }
         },0,3, TimeUnit.SECONDS);
@@ -222,8 +228,8 @@ public class ECGShowUI extends JPanel implements Observer {
         timeseriescollection.addSeries(SystolicPressureSeries[1]);
 
         PressuredateAxises[0] = new DateAxis("");
-        PressuredateAxises[0].setTickLabelFont(new Font("SansSerif", 0, 12));
-        PressuredateAxises[0].setLabelFont(new Font("SansSerif", 0, 14));
+        PressuredateAxises[0].setTickLabelFont(new Font("SansSerif", 0, (int)(HEIGHT*0.016)));
+        PressuredateAxises[0].setLabelFont(new Font("SansSerif", 0, (int)(HEIGHT*0.018)));
         PressuredateAxises[0].setTickLabelsVisible(true);
         PressuredateAxises[0].setVisible(false);
 
@@ -237,8 +243,8 @@ public class ECGShowUI extends JPanel implements Observer {
         timeseriescollection.addSeries(DiastolicPressureSeries[1]);
 
         NumberAxis numberaxis = new NumberAxis("Pressure");
-        numberaxis.setTickLabelFont(new Font("SansSerif", 0, 12));
-        numberaxis.setLabelFont(new Font("SansSerif", 0, 14));
+        numberaxis.setTickLabelFont(new Font("SansSerif", 0, (int)(HEIGHT*0.016)));
+        numberaxis.setLabelFont(new Font("SansSerif", 0, (int)(HEIGHT*0.018)));
         numberaxis.setStandardTickUnits(NumberAxis.createIntegerTickUnits());
         numberaxis.setVisible(false);
         numberaxis.setLowerBound(0D);
@@ -284,28 +290,42 @@ public class ECGShowUI extends JPanel implements Observer {
 
     }
     private void createGuardData(){
-        temperatureData=new JPanel();
+        GuardDataPanel=new JPanel();
+        GuardDataPanel.setBackground(new Color(0,150,255));
+//        GuardDataPanel.setBounds();
+//        BoxLayout layout=new BoxLayout(GuardDataPanel,BoxLayout.Y_AXIS);
+//        GuardDataPanel.setLayout(layout);
+        GroupLayout layout=new GroupLayout(GuardDataPanel);
+        GuardDataPanel.setLayout(layout);
+        JPanel temperatureData=new JPanel();
         temperatureData.setLayout(new FlowLayout(FlowLayout.CENTER));
-        temperatureData.setBounds(0,0,(int) (WIDTH * 0.28), (int) (HEIGHT * 0.15));
+//        temperatureData.setBounds(0,0,(int) (WIDTH * 0.14), (int) (HEIGHT * 0.15));
+        temperatureData.setSize((int) (WIDTH * 0.14), (int) (HEIGHT * 0.11));
         temperatureData.setBackground(new Color(0,150,255));
         temperatureLabel=new JLabel("--.-");
-        temperatureLabel.setFont(loadFont("LED.tff",64.0f));
+        temperatureLabel.setFont(loadFont("LED.tff",(float) (HEIGHT * 0.070)));
         temperatureLabel.setBackground(new Color(0,150,255));
         temperatureLabel.setForeground(Color.RED);
         temperatureLabel.setBounds(0,0,200,100);
         temperatureLabel.setOpaque(true);
         JLabel temperatureLabelName=new JLabel("温度 ");
-        temperatureLabelName.setFont(new Font("SansSerif", 0, 14));
+        temperatureLabelName.setFont(new Font("SansSerif", 0,(int)(HEIGHT *0.020)));
         temperatureLabelName.setBackground(new Color(0,150,255));
         temperatureLabelName.setForeground(Color.BLACK);
         temperatureLabelName.setBounds(0,0,100,100);
         temperatureLabelName.setOpaque(true);    //设置控件不透明
         temperatureData.add(temperatureLabelName);
         temperatureData.add(temperatureLabel);
+//        JPanel emptyPanel=new JPanel();
+//        emptyPanel.setSize((int)(WIDTH*0.14),(int)(HEIGHT*0.2));
+//        emptyPanel.setBackground(new Color(0,150,255));
+//        GuardDataPanel.add(emptyPanel);
 
-        lightValueData=new JPanel();
+        JPanel lightValueData=new JPanel();
         lightValueData.setLayout(new BorderLayout());
-        lightValueData.setBounds(0,0,(int)(WIDTH*0.28),(int)(HEIGHT*0.52));
+        lightValueData.setBackground(new Color(0,150,255));
+//        lightValueData.setBounds(0,(int)(HEIGHT*0.28),(int)(WIDTH*0.14),(int)(HEIGHT*0.30));
+        lightValueData.setSize((int)(WIDTH*0.14),(int)(HEIGHT*0.22));
         lightValueDataSet=new DefaultValueDataset();
         DialPlot lightValueDialPlot=new DialPlot();
         lightValueDialPlot.setDataset(lightValueDataSet);
@@ -313,7 +333,7 @@ public class ECGShowUI extends JPanel implements Observer {
         dialFrame.setVisible(false);
         lightValueDialPlot.setDialFrame(dialFrame);
 
-        GradientPaint gradientpaint=new GradientPaint(new Point(), new Color(0, 200, 255), new Point(), new Color(170, 170, 220));
+        GradientPaint gradientpaint=new GradientPaint(new Point(), new Color(255, 255, 255), new Point(), new Color(170, 170, 170));
         DialBackground dialBackground=new DialBackground(gradientpaint);
         dialBackground.setGradientPaintTransformer(new StandardGradientPaintTransformer(
                 GradientPaintTransformType.VERTICAL));
@@ -364,14 +384,40 @@ public class ECGShowUI extends JPanel implements Observer {
         DialCap dialCap=new DialCap();
         dialCap.setRadius(0.07D);
         JFreeChart lightValueDialChart=new JFreeChart(lightValueDialPlot);
-        lightValueDialChart.setBackgroundPaint(null);
+        lightValueDialChart.setBackgroundPaint(new Color(0,150,255));
         lightValueDialChart.setTitle("当前透光度");
-        lightValueDialChart.getTitle().setFont(new Font("Dialog", Font.BOLD , (int)(HEIGHT*0.018)));
-        ChartPanel lightValueDialChartPanel=new ChartPanel(lightValueDialChart,(int)(WIDTH*0.28),(int)(HEIGHT*0.52), 0,0,
+        lightValueDialChart.getTitle().setFont(new Font("SansSerif", 0,(int)(HEIGHT *0.020)));
+        ChartPanel lightValueDialChartPanel=new ChartPanel(lightValueDialChart,(int)(WIDTH*0.15),(int)(HEIGHT*0.27), 0,0,
                 Integer.MAX_VALUE, Integer.MAX_VALUE, true, true, false,
                 true, false, false);
-        lightValueData.add(lightValueDialChartPanel);
+        lightValueData.add(lightValueDialChartPanel,BorderLayout.CENTER);
+        layout.setHorizontalGroup(
+                layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(GroupLayout.Alignment.TRAILING)
+                                .addComponent(temperatureData, GroupLayout.Alignment.LEADING)
+                                .addComponent(lightValueData, GroupLayout.Alignment.LEADING)
+                        )
+                )
+        );
+        layout.setVerticalGroup(
+                layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                        .addGroup(layout.createSequentialGroup()
+                                .addGap((int)(HEIGHT*0.05),(int)(HEIGHT*0.05),(int)(HEIGHT*0.05))
+                                .addComponent(temperatureData)
+                                .addGap((int)(HEIGHT*0.05),(int)(HEIGHT*0.05),(int)(HEIGHT*0.05))
+                                .addComponent(lightValueData)
+                                .addGap((int)(HEIGHT*0.05),(int)(HEIGHT*0.05),(int)(HEIGHT*0.05))
+                        )
+        );
 
+//        JPanel alarmMessage=new JPanel();
+//        alarmMessage.setBackground(new Color(0,150,255));
+//        alarmMessLabel=new JLabel("无报警");
+//        alarmMessLabel.setFont(new Font("SansSerif", 0, (int)(HEIGHT *0.020)));
+//        alarmMessLabel.setBackground(new Color(0,150,255));
+//        alarmMessage.add(alarmMessLabel);
+//        GuardDataPanel.add(alarmMessage);
     }
     private void createBloodOxygenData(long timeZone){
         BloodOxygendatas=new short [2];
@@ -388,21 +434,21 @@ public class ECGShowUI extends JPanel implements Observer {
             jLabel1.setText(Short.toString((short)BloodOxygendatas[0]));
         }
         System.out.println("BloodOxygendatas"+Short.toString(BloodOxygendatas[0]));
-        jLabel1.setFont(loadFont("LED.tff",64.0f));
+        jLabel1.setFont(loadFont("LED.tff",(float) (HEIGHT * 0.070)));
         jLabel1.setBackground(Color.BLACK);
         jLabel1.setForeground(Color.GREEN);
         jLabel1.setBounds(0,0,100,100);
         jLabel1.setOpaque(true);
 
         JLabel jLabelName=new JLabel("血氧 ");
-        jLabelName.setFont(new Font("SansSerif", 0, 14));
+        jLabelName.setFont(new Font("SansSerif", 0, (int)(HEIGHT *0.020)));
         jLabelName.setBackground(Color.BLACK);
         jLabelName.setForeground(new Color(237, 65, 43));
         jLabelName.setBounds(0,0,100,100);
         jLabelName.setOpaque(true);    //设置控件不透明
 
         JLabel jLabelUnit=new JLabel(" %");
-        jLabelUnit.setFont(new Font("SansSerif", 0, 14));
+        jLabelUnit.setFont(new Font("SansSerif", 0, (int)(HEIGHT *0.020)));
         jLabelUnit.setBackground(Color.BLACK);
         jLabelUnit.setForeground(Color.GREEN);
         jLabelUnit.setBounds(0,0,100,100);
@@ -416,7 +462,12 @@ public class ECGShowUI extends JPanel implements Observer {
         scheduledExecutorService.scheduleAtFixedRate(new Runnable() {
             @Override
             public void run() {
-                jLabel1.setText( String.valueOf(BloodOxygendatas[0]));
+                if (BloodOxygendatas[0]==0){
+                    jLabel1.setText("--");
+                }
+                else {
+                    jLabel1.setText( String.valueOf(BloodOxygendatas[0]));
+                }
                 BloodOxygenData.repaint();
             }
         },0,3, TimeUnit.SECONDS);
@@ -445,13 +496,10 @@ public class ECGShowUI extends JPanel implements Observer {
     public JPanel getHeartRateData(){return HeartRateData;}
     public JPanel getPressureData(){return PressureData;}
     public JPanel getBloodOxygenData(){return BloodOxygenData;}
-    public JPanel getTemperatureData(){
-        return temperatureData;
-    }
-    public JPanel getLightValueData(){
-        return lightValueData;
-    }
 
+    public JPanel getGuardDataPanel() {
+        return GuardDataPanel;
+    }
 
     public TimeSeries[] getECGSeries() {
         return ECGSeries;
@@ -520,7 +568,10 @@ public class ECGShowUI extends JPanel implements Observer {
     public void update(Observable o, Object arg) {
         GuardData guardData=(GuardData)arg;
         temperatureLabel.setText(guardData.getTemperature());
-
+        lightValueDataSet.setValue(Integer.parseInt(guardData.getLightValue()));
+        normalDialRange.setBounds((double) guardData.getBloodLightValue(),1024D);
+        bloodDialRange.setBounds((double)guardData.getBubbleLightValue(),(double)guardData.getBloodLightValue());
+//        if(!guardData.getTemperatureMessage().equals("温度正常")&&guardData.getBloodMessage().equals())
     }
 
 //    public ECGOtherData getECGOtherData(){return ecgOtherData;}
