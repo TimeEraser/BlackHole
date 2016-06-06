@@ -12,10 +12,14 @@ import org.jfree.chart.renderer.category.BarRenderer;
 import org.jfree.data.category.DefaultCategoryDataset;
 import org.jfree.data.general.DefaultPieDataset;
 import org.jfree.data.general.PieDataset;
+import util.ImageUtil;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.Arc2D;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.net.URL;
 import java.util.*;
 
@@ -32,26 +36,36 @@ public class GuardBottomShow extends JPanel implements Observer {
     private static int connectFlashFlag = 0;
     private static boolean connectStartFlag = false;
     private static int connectLostCount = 0;
+    private int HEIGHT;
 
     public GuardBottomShow() {
+        int WIDTH = (int)Toolkit.getDefaultToolkit().getScreenSize().getWidth();
+        HEIGHT = (int)Toolkit.getDefaultToolkit().getScreenSize().getHeight();
         JPanel connectStatePointPanel;
         JPanel temperatureStatePointPanel;
         JPanel lightValueStatePointPanel;
         JLabel connectState = new JLabel("报警模块连接状态");
-        connectState.setFont(new Font("Dialog", 0, 14));
-        connectState.setPreferredSize(new Dimension(120, 45));
+        connectState.setFont(new Font("Dialog", 0, (int)(HEIGHT*0.018)));
+        connectState.setPreferredSize(new Dimension((int)(WIDTH*0.088),(int)(HEIGHT*0.059)));
         JLabel temperatureState = new JLabel("血温状态");
-        temperatureState.setFont(new Font("Dialog", 0, 14));
-        temperatureState.setPreferredSize(new Dimension(60, 45));
+        temperatureState.setFont(new Font("Dialog", 0, (int)(HEIGHT*0.018)));
+        temperatureState.setPreferredSize(new Dimension((int)(WIDTH*0.056), (int)(HEIGHT*0.059)));
         JLabel lightValueState = new JLabel("管内流体状态");
-        lightValueState.setFont(new Font("Dialog", 0, 14));
-        lightValueState.setPreferredSize(new Dimension(90, 45));
-        greenPoint = new ImageIcon(getIconImage("Icon/green.png"));
-        redPoint = new ImageIcon(getIconImage("Icon/red.png"));
+        lightValueState.setFont(new Font("Dialog", 0, (int)(HEIGHT*0.018)));
+        lightValueState.setPreferredSize(new Dimension((int)(WIDTH*0.066), (int)(HEIGHT*0.059)));
+        try {
+            Image greenImage = ImageIO.read(getIconImage("Icon/green.png"));
+            BufferedImage greenBufferImage = ImageUtil.zoom(greenImage, (int) (WIDTH * 0.023), (int) (HEIGHT * 0.042), new Color(1f, 1f, 1f, 0f));
+            Image redImage = ImageIO.read(getIconImage("Icon/red.png"));
+            BufferedImage redBufferImage = ImageUtil.zoom(redImage, (int) (WIDTH * 0.023), (int) (HEIGHT * 0.042), new Color(1f, 1f, 1f, 0f));
+            greenPoint = new ImageIcon(greenBufferImage);
+            redPoint = new ImageIcon(redBufferImage);
+        }catch (IOException e){}
+
         connectStatePoint = new JLabel(redPoint);
         connectStatePointPanel = new JPanel();
         connectStatePointPanel.setLayout(new FlowLayout(FlowLayout.LEADING));
-        connectStatePointPanel.setPreferredSize(new Dimension(38, 38));
+        connectStatePointPanel.setPreferredSize(new Dimension((int)(WIDTH*0.028),(int)(WIDTH*0.028)));
         connectStatePointPanel.add(connectStatePoint);
         temperatureStatePointPanel = new JPanel();
         temperatureStatePointPanel.setLayout(new FlowLayout(FlowLayout.LEADING));
@@ -61,18 +75,18 @@ public class GuardBottomShow extends JPanel implements Observer {
         lightValueStatePointPanel.add(createLightValueChartPanel());
 
         JPanel connectStatePanel = new JPanel();
-        connectStatePanel.setLayout(new FlowLayout(FlowLayout.LEFT, 20, 0));
-        connectStatePanel.setPreferredSize(new Dimension(400, 45));
+        connectStatePanel.setLayout(new FlowLayout(FlowLayout.LEFT, (int)(WIDTH*0.015), 0));
+        connectStatePanel.setPreferredSize(new Dimension((int)(WIDTH*0.293), (int)(HEIGHT*0.059)));
         connectStatePanel.add(connectState);
         connectStatePanel.add(connectStatePointPanel);
         JPanel temperatureStatePanel = new JPanel();
-        temperatureStatePanel.setLayout(new FlowLayout(FlowLayout.LEFT, 20, 0));
-        temperatureStatePanel.setPreferredSize(new Dimension(400, 45));
+        temperatureStatePanel.setLayout(new FlowLayout(FlowLayout.LEFT, (int)(WIDTH*0.015), 0));
+        temperatureStatePanel.setPreferredSize(new Dimension((int)(WIDTH*0.293), (int)(HEIGHT*0.059)));
         temperatureStatePanel.add(temperatureState);
         temperatureStatePanel.add(temperatureStatePointPanel);
         JPanel lightValueStatePanel = new JPanel();
-        lightValueStatePanel.setLayout(new FlowLayout(FlowLayout.LEFT, 20, 0));
-        lightValueStatePanel.setPreferredSize(new Dimension(200, 45));
+        lightValueStatePanel.setLayout(new FlowLayout(FlowLayout.LEFT, (int)(WIDTH*0.015), 0));
+        lightValueStatePanel.setPreferredSize(new Dimension((int)(WIDTH*0.146), (int)(HEIGHT*0.059)));
         lightValueStatePanel.add(lightValueState);
         lightValueStatePanel.add(lightValueStatePointPanel);
 
@@ -118,7 +132,7 @@ public class GuardBottomShow extends JPanel implements Observer {
         temperatureCategoryPlot.setRangeGridlinesVisible(false);
         temperatureRenderer.setSeriesPaint(0, Color.GREEN);
         temperatureCategoryPlot.setRenderer(temperatureRenderer);
-        ChartPanel temperatureChartPanel = new ChartPanel(temperatureChart, 36, 36, 0, 0,
+        ChartPanel temperatureChartPanel = new ChartPanel(temperatureChart,(int)(HEIGHT*0.047),(int)(HEIGHT*0.047), 0, 0,
                 Integer.MAX_VALUE, Integer.MAX_VALUE, false, true, false,
                 true, false, false);
         return temperatureChartPanel;
@@ -146,7 +160,7 @@ public class GuardBottomShow extends JPanel implements Observer {
         piePlot.setLabelLinksVisible(false);
         piePlot.setLabelFont(new Font(null));
         piePlot.setShadowPaint(null);
-        ChartPanel lightValuePieChartPanel = new ChartPanel(lightValueChart, 38, 38, 0, 0,
+        ChartPanel lightValuePieChartPanel = new ChartPanel(lightValueChart, (int)(HEIGHT*0.0495), (int)(HEIGHT*0.0495), 0, 0,
                 Integer.MAX_VALUE, Integer.MAX_VALUE, true, true, false,
                 true, false, false);
         lightValuePieChartPanel.setBackground(null);

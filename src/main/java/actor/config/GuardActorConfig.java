@@ -13,7 +13,7 @@ public class GuardActorConfig {
     private int temperatureLow=25;
     private int temperatureHigh=38;
     private int defaultLightValue=750;
-    private int emptyLightValue=400;
+    private int emptyLightValue=450;
     private int bloodLightValue=710;
     private int bubbleLightValue=20;
     private int bubbleHoldCount=1;

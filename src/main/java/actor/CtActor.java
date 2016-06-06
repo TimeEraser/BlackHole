@@ -83,7 +83,7 @@ public class CtActor extends BaseActor{
     public boolean shutdown() {return false;}
 
 
-    public void ctAnalysis(){
+    private void ctAnalysis(){
         if(!ctDataRefresher.Initialized()){
             JOptionPane.showMessageDialog(null,"请打开CT图片","操作错误",JOptionPane.ERROR_MESSAGE);
         }else {
@@ -131,7 +131,7 @@ public class CtActor extends BaseActor{
             }
         }
     }
-    public void saveCTAnalyseResult() {
+    private void saveCTAnalyseResult() {
         if(CTAnalyseResult==null){
             JOptionPane.showMessageDialog(null,"请分析CT病灶","操作错误",JOptionPane.ERROR_MESSAGE);
         }else {

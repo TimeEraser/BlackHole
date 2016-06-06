@@ -72,7 +72,6 @@ public class MainUiActor extends BaseActor{
 		TOP = mainUiActorConfig.getTOP();
 	}
 
-
 	@Override
 	public boolean processActorRequest(Request  request) {
 
@@ -445,7 +444,7 @@ public class MainUiActor extends BaseActor{
 		CTData.setBorder(etchedBorder);
 
 		CTData.setBounds((int)(WIDTH*0.05),(int)(HEIGHT*0.02),(int)(WIDTH*0.65),(int)(HEIGHT*0.77));	//setBounds()设定的是四个值，分别是X坐标和y坐标（其中屏幕的左上角是原点）、宽和高
-		GridBagConstraints c = new GridBagConstraints();
+//		GridBagConstraints c = new GridBagConstraints();
 		CTData.add(ctShowUI.getCtCurrentData());
 
 		CTPanel.add(CTData);
@@ -542,7 +541,7 @@ public class MainUiActor extends BaseActor{
 
 			JButton ecgStop = new JButton();
 			ecgStop.setText(" 停止传输 ");
-			ecgStop.setIcon(new ImageIcon(startBufferImage));
+			ecgStop.setIcon(new ImageIcon(stopBufferImage));
 			ecgStop.addActionListener(new NoticeListener(this, monitorActor, MonitorRequest.MONITOR_SHUTDOWM));
 			ECGControl.add(ecgStop);
 
