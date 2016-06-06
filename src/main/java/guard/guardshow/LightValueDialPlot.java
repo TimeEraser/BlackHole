@@ -40,12 +40,12 @@ public class LightValueDialPlot extends JPanel implements Observer{
         lightValueDialPlot.setBackground(dialBackground);
         // 设置显示在表盘中央位置的信息
         DialTextAnnotation dialtextannotation = new DialTextAnnotation("透光值");
-        dialtextannotation.setFont(new Font("Dialog", 0, 12));
+        dialtextannotation.setFont(new Font("Dialog", 0, (int)(0.016*HEIGHT)));
         dialtextannotation.setRadius(0.1D);
         lightValueDialPlot.addLayer(dialtextannotation);
 
         DialValueIndicator dialValueIndicator=new DialValueIndicator(0);
-        dialValueIndicator.setFont(new Font("Dialog", Font.PLAIN, 10));
+        dialValueIndicator.setFont(new Font("Dialog", Font.PLAIN, (int)(0.011*HEIGHT)));
         dialValueIndicator.setOutlinePaint(Color.darkGray);
         dialValueIndicator.setRadius(0.4D);
         dialValueIndicator.setAngle(-90.0);
@@ -75,7 +75,7 @@ public class LightValueDialPlot extends JPanel implements Observer{
         normalDialRange.setOuterRadius(0.55000000000000004D);
         lightValueDialPlot.addLayer(normalDialRange);
 
-        dialScale.setTickLabelFont(new Font("Dialog", 0, 8)); // 刻度盘刻度字体
+        dialScale.setTickLabelFont(new Font("Dialog", 0,(int)(0.011*HEIGHT))); // 刻度盘刻度字体
         lightValueDialPlot.addScale(0,dialScale);
 
         DialPointer.Pointer  pointer=new DialPointer.Pointer();
@@ -86,7 +86,7 @@ public class LightValueDialPlot extends JPanel implements Observer{
         JFreeChart lightValueDialChart=new JFreeChart(lightValueDialPlot);
         lightValueDialChart.setBackgroundPaint(null);
         lightValueDialChart.setTitle("当前透光度");
-        lightValueDialChart.getTitle().setFont(new Font("Dialog", Font.BOLD , 14));
+        lightValueDialChart.getTitle().setFont(new Font("Dialog", Font.BOLD , (int)(HEIGHT*0.018)));
         ChartPanel lightValueDialChartPanel=new ChartPanel(lightValueDialChart,(int)(WIDTH*0.14),(int)(HEIGHT*0.26), 0,0,
                 Integer.MAX_VALUE, Integer.MAX_VALUE, true, true, false,
                 true, false, false);

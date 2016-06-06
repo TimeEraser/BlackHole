@@ -167,9 +167,9 @@ public class GuardActor extends BaseActor {
         boolean successFlag=false;
 
         String winSerialPort="COM"+String.valueOf(guardActorConfig.getSerialPortNum());
-        String unixSerialPort="/dev/term/"+String.valueOf((char)(guardActorConfig.getSerialPortNum()+64));
+        String unixSerialPort="/dev/term/"+String.valueOf((char)(guardActorConfig.getSerialPortNum()+96));
         System.out.println(winSerialPort);
-
+        System.out.println(unixSerialPort);
         while (portList.hasMoreElements()) {
             portId = (CommPortIdentifier) portList.nextElement();
             /*getPortType方法返回端口类型*/

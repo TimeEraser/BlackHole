@@ -11,6 +11,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Map;
 
+import static java.lang.Thread.sleep;
+
 /**
  * Created by zzq on 16/5/16.
  */
@@ -36,7 +38,6 @@ public class MonitorActor extends BaseActor{
         if(request==MonitorRequest.MONITOR_SHUTDOWM){
 
             if(client!=null) {
-                if ((String) request.getConfig().getData() == " 开始传输 ") {
                     client.stopFlag = true;
                     try {
                         client.getS().close();
@@ -51,10 +52,6 @@ public class MonitorActor extends BaseActor{
 
                     sendResponse(request, SystemResponse.SYSTEM_SUCCESS);
                     System.out.println("client.stopFlag =true");
-                }
-                else {
-                    sendResponse(request,SystemResponse.SYSTEM_FAILURE,"请先暂停传输");
-                }
             }
             else
             {
@@ -64,7 +61,10 @@ public class MonitorActor extends BaseActor{
         }
         if(request==MonitorRequest.MONITOR_ECG_DATA) {
             connectInfo= (Map) request.getConfig().getData();
-            start();
+            if (!start()){
+                client=null;
+                sendResponse(request,SystemResponse.SYSTEM_FAILURE,"连接失败");
+            }
         }
         if(request==MonitorRequest.ECG_UI_CONFIG){
             ecgShowUI = (ECGShowUI)request.getConfig().getData();
@@ -124,10 +124,21 @@ public class MonitorActor extends BaseActor{
             //client.setMainUiActor((MainUiActor) request.getConfig().getSendActor());
             client.start();        //客户端线程开始运行
 
+        try {
+            sleep(100);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
-        ecgDataRefresher.start();
+        System.out.println("client.connectFlag: "+Boolean.toString(client.connectFlag));
 
-        return false;
+        if (client.connectFlag) {
+            ecgDataRefresher.start();
+            return true;
+        }
+        else {
+            return false;
+        }
     }
 
     @Override

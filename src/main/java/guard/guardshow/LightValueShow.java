@@ -35,10 +35,10 @@ public class LightValueShow extends JPanel implements Observer{
         int HEIGHT = (int)Toolkit.getDefaultToolkit().getScreenSize().getHeight();
         lightValuePieChart= ChartFactory.createPieChart3D("过去10秒内透光度变化",createDataSet(),true,true,false);
         lightValuePieChart.setPadding(RectangleInsets.ZERO_INSETS);
-        lightValuePieChart.getTitle().setFont(new Font("Dialog", Font.BOLD , 14));
+        lightValuePieChart.getTitle().setFont(new Font("Dialog", Font.BOLD , (int)(0.018*HEIGHT)));
         lightValuePieChart.getTitle().setPosition(RectangleEdge.TOP);
         lightValuePieChart.setBackgroundPaint(null);
-        lightValuePieChart.getLegend().setItemFont(new Font("Dialog", 0, 12));
+        lightValuePieChart.getLegend().setItemFont(new Font("Dialog", 0, (int)(0.016*HEIGHT)));
         lightValuePieChart.getLegend().setMargin(RectangleInsets.ZERO_INSETS);
         lightValuePieChart.getLegend().setItemLabelPadding(RectangleInsets.ZERO_INSETS);
         lightValuePieChart.getLegend().setPadding(RectangleInsets.ZERO_INSETS);
@@ -94,7 +94,7 @@ public class LightValueShow extends JPanel implements Observer{
         //设置没有数据时显示的信息
         pieplot.setNoDataMessage("请连接报警设备");
         //设置没有数据时显示的信息的字体
-        pieplot.setNoDataMessageFont(new Font("Dialog", Font.BOLD, 14));
+        pieplot.setNoDataMessageFont(new Font("Dialog", Font.BOLD, (int)(0.018*HEIGHT)));
         //设置没有数据时显示的信息的颜色
         pieplot.setNoDataMessagePaint(Color.red);
     }
