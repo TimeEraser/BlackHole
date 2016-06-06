@@ -589,7 +589,7 @@ public class MainUiActor extends BaseActor{
 		Temperature.add(ecgShowUI.getTemperatureData(),BorderLayout.CENTER);
 
 		JPanel LightValue=new JPanel();
-		LightValue.setBounds((int)(WIDTH*0.80),(int)(HEIGHT*0.57),(int)(WIDTH*0.18),(int)(HEIGHT*0.18));
+		LightValue.setBounds((int)(WIDTH*0.80),(int)(HEIGHT*0.35),(int)(WIDTH*0.18),(int)(HEIGHT*0.32));
 		LightValue.setLayout(new BorderLayout());
 		LightValue.add(ecgShowUI.getLightValueData(),BorderLayout.CENTER);
 

@@ -22,10 +22,14 @@ import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.DateAxis;
 import org.jfree.chart.axis.NumberAxis;
 import org.jfree.chart.plot.XYPlot;
+import org.jfree.chart.plot.dial.*;
 import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
+import org.jfree.data.general.DefaultValueDataset;
 import org.jfree.data.time.TimeSeries;
 import org.jfree.data.time.TimeSeriesCollection;
+import org.jfree.ui.GradientPaintTransformType;
 import org.jfree.ui.RectangleInsets;
+import org.jfree.ui.StandardGradientPaintTransformer;
 
 import static javafx.scene.text.Font.loadFont;
 
@@ -56,7 +60,10 @@ public class ECGShowUI extends JPanel implements Observer {
     private JPanel lightValueData;
 
     private JLabel temperatureLabel;
-    private JLabel lightValueLabel;
+    private DefaultValueDataset lightValueDataSet;
+    private StandardDialRange normalDialRange;
+    private StandardDialRange bloodDialRange;
+
     private DateAxis[] dateAxises ;
     private DateAxis[] PressuredateAxises ;
    // private ECGOtherData ecgOtherData=new ECGOtherData();
@@ -278,42 +285,92 @@ public class ECGShowUI extends JPanel implements Observer {
     }
     private void createGuardData(){
         temperatureData=new JPanel();
-        temperatureData.setLayout(new FlowLayout(FlowLayout.LEFT));
+        temperatureData.setLayout(new FlowLayout(FlowLayout.CENTER));
         temperatureData.setBounds(0,0,(int) (WIDTH * 0.28), (int) (HEIGHT * 0.15));
-        temperatureData.setBackground(Color.BLACK);
+        temperatureData.setBackground(new Color(0,150,255));
         temperatureLabel=new JLabel("--.-");
         temperatureLabel.setFont(loadFont("LED.tff",64.0f));
-        temperatureLabel.setBackground(Color.BLACK);
-        temperatureLabel.setForeground(Color.GREEN);
+        temperatureLabel.setBackground(new Color(0,150,255));
+        temperatureLabel.setForeground(Color.RED);
         temperatureLabel.setBounds(0,0,200,100);
         temperatureLabel.setOpaque(true);
-        JLabel temperatureLabelNamee=new JLabel("温度 ");
-        temperatureLabelNamee.setFont(new Font("SansSerif", 0, 14));
-        temperatureLabelNamee.setBackground(Color.BLACK);
-        temperatureLabelNamee.setForeground(new Color(237, 65, 43));
-        temperatureLabelNamee.setBounds(0,0,100,100);
-        temperatureLabelNamee.setOpaque(true);    //设置控件不透明
-        temperatureData.add(temperatureLabelNamee);
+        JLabel temperatureLabelName=new JLabel("温度 ");
+        temperatureLabelName.setFont(new Font("SansSerif", 0, 14));
+        temperatureLabelName.setBackground(new Color(0,150,255));
+        temperatureLabelName.setForeground(Color.BLACK);
+        temperatureLabelName.setBounds(0,0,100,100);
+        temperatureLabelName.setOpaque(true);    //设置控件不透明
+        temperatureData.add(temperatureLabelName);
         temperatureData.add(temperatureLabel);
 
         lightValueData=new JPanel();
-        lightValueData.setLayout(new FlowLayout(FlowLayout.LEFT));
-        lightValueData.setBounds(0,0,(int) (WIDTH * 0.28), (int) (HEIGHT * 0.15));
-        lightValueData.setBackground(Color.BLACK);
-        lightValueLabel=new JLabel("----");
-        lightValueLabel.setFont(loadFont("LED.tff",64.0f));
-        lightValueLabel.setBackground(Color.BLACK);
-        lightValueLabel.setForeground(Color.GREEN);
-        lightValueLabel.setBounds(0,0,200,100);
-        lightValueLabel.setOpaque(true);
-        JLabel lightValueLabelName=new JLabel("透光度 ");
-        lightValueLabelName.setFont(new Font("SansSerif", 0, 14));
-        lightValueLabelName.setBackground(Color.BLACK);
-        lightValueLabelName.setForeground(new Color(237, 65, 43));
-        lightValueLabelName.setBounds(0,0,100,100);
-        lightValueLabelName.setOpaque(true);    //设置控件不透明
-        lightValueData.add(lightValueLabelName);
-        lightValueData.add(lightValueLabel);
+        lightValueData.setLayout(new BorderLayout());
+        lightValueData.setBounds(0,0,(int)(WIDTH*0.28),(int)(HEIGHT*0.52));
+        lightValueDataSet=new DefaultValueDataset();
+        DialPlot lightValueDialPlot=new DialPlot();
+        lightValueDialPlot.setDataset(lightValueDataSet);
+        StandardDialFrame dialFrame=new StandardDialFrame();
+        dialFrame.setVisible(false);
+        lightValueDialPlot.setDialFrame(dialFrame);
+
+        GradientPaint gradientpaint=new GradientPaint(new Point(), new Color(0, 200, 255), new Point(), new Color(170, 170, 220));
+        DialBackground dialBackground=new DialBackground(gradientpaint);
+        dialBackground.setGradientPaintTransformer(new StandardGradientPaintTransformer(
+                GradientPaintTransformType.VERTICAL));
+        lightValueDialPlot.setBackground(dialBackground);
+        // 设置显示在表盘中央位置的信息
+        DialTextAnnotation dialtextannotation = new DialTextAnnotation("");
+        dialtextannotation.setFont(new Font("Dialog", 0, (int)(0.016*HEIGHT)));
+        dialtextannotation.setRadius(0.1D);
+        lightValueDialPlot.addLayer(dialtextannotation);
+
+        DialValueIndicator dialValueIndicator=new DialValueIndicator(0);
+        dialValueIndicator.setFont(new Font("Dialog", Font.PLAIN, (int)(0.011*HEIGHT)));
+        dialValueIndicator.setOutlinePaint(Color.darkGray);
+        dialValueIndicator.setRadius(0.4D);
+        dialValueIndicator.setAngle(-90.0);
+        lightValueDialPlot.addLayer(dialValueIndicator);
+
+        StandardDialScale dialScale = new StandardDialScale();
+        dialScale.setLowerBound(0D); // 最底表盘刻度
+        dialScale.setUpperBound(1024); // 最高表盘刻度
+        dialScale.setMajorTickIncrement(100);
+        dialScale.setStartAngle(-120D); // 弧度为120,刚好与人的正常视觉对齐
+        dialScale.setExtent(-300D); // 弧度为300,刚好与人的正常视觉对齐
+        dialScale.setTickRadius(0.85D); // 值越大,与刻度盘框架边缘越近
+        dialScale.setTickLabelOffset(0.1D); // 值越大,与刻度盘刻度越远0
+
+        bloodDialRange =new StandardDialRange(500D,750D, Color.red);
+        bloodDialRange.setInnerRadius(0.52000000000000002D);
+        bloodDialRange.setOuterRadius(0.55000000000000004D);
+        lightValueDialPlot.addLayer(bloodDialRange);
+        //设置刻度范围（橘黄色）
+        StandardDialRange bubbleDialRange =new StandardDialRange(0D, 500D, Color.black);
+        bubbleDialRange.setInnerRadius(0.52000000000000002D);
+        bubbleDialRange.setOuterRadius(0.55000000000000004D);
+        lightValueDialPlot.addLayer(bubbleDialRange);
+        //设置刻度范围（绿色）
+        normalDialRange =new StandardDialRange(750D,1024D, Color.green);
+        normalDialRange.setInnerRadius(0.52000000000000002D);
+        normalDialRange.setOuterRadius(0.55000000000000004D);
+        lightValueDialPlot.addLayer(normalDialRange);
+
+        dialScale.setTickLabelFont(new Font("Dialog", 0,(int)(0.011*HEIGHT))); // 刻度盘刻度字体
+        lightValueDialPlot.addScale(0,dialScale);
+
+        DialPointer.Pointer  pointer=new DialPointer.Pointer();
+        lightValueDialPlot.addPointer(pointer);
+        lightValueDialPlot.mapDatasetToScale(0,0);
+        DialCap dialCap=new DialCap();
+        dialCap.setRadius(0.07D);
+        JFreeChart lightValueDialChart=new JFreeChart(lightValueDialPlot);
+        lightValueDialChart.setBackgroundPaint(null);
+        lightValueDialChart.setTitle("当前透光度");
+        lightValueDialChart.getTitle().setFont(new Font("Dialog", Font.BOLD , (int)(HEIGHT*0.018)));
+        ChartPanel lightValueDialChartPanel=new ChartPanel(lightValueDialChart,(int)(WIDTH*0.28),(int)(HEIGHT*0.52), 0,0,
+                Integer.MAX_VALUE, Integer.MAX_VALUE, true, true, false,
+                true, false, false);
+        lightValueData.add(lightValueDialChartPanel);
 
     }
     private void createBloodOxygenData(long timeZone){
@@ -463,7 +520,7 @@ public class ECGShowUI extends JPanel implements Observer {
     public void update(Observable o, Object arg) {
         GuardData guardData=(GuardData)arg;
         temperatureLabel.setText(guardData.getTemperature());
-        lightValueLabel.setText(guardData.getLightValue());
+
     }
 
 //    public ECGOtherData getECGOtherData(){return ecgOtherData;}
