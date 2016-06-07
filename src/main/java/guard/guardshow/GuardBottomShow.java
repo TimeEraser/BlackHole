@@ -1,6 +1,8 @@
 package guard.guardshow;
 
+import ecg.ecgshow.ECGDataRefresher;
 import guard.guardDataProcess.GuardData;
+import guard.guardDataProcess.GuardSerialDataProcess;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
@@ -30,23 +32,32 @@ public class GuardBottomShow extends JPanel implements Observer {
     private Icon greenPoint;
     private Icon redPoint;
     private JLabel connectStatePoint;
+    private JLabel ecgConnectStatePoint;
     private DefaultCategoryDataset temperatureDataSet;
     private BarRenderer temperatureRenderer;
     private DefaultPieDataset lightValueDataSet;
-    private static int connectFlashFlag = 0;
-    private static boolean connectStartFlag = false;
-    private static int connectLostCount = 0;
+    private static int guardConnectFlashFlag = 0;
+    private static boolean guardConnectStartFlag = false;
+    private static int guardConnectLostCount = 0;
+
+    private static int ecgConnectFlashFlag = 0;
+    private static boolean ecgConnectStartFlag = false;
+    private static int ecgConnectLostCount = 0;
     private int HEIGHT;
 
     public GuardBottomShow() {
         int WIDTH = (int)Toolkit.getDefaultToolkit().getScreenSize().getWidth();
         HEIGHT = (int)Toolkit.getDefaultToolkit().getScreenSize().getHeight();
         JPanel connectStatePointPanel;
+        JPanel ecgConnectStatePointPanel;
         JPanel temperatureStatePointPanel;
         JPanel lightValueStatePointPanel;
         JLabel connectState = new JLabel("报警模块连接状态");
         connectState.setFont(new Font("Dialog", 0, (int)(HEIGHT*0.018)));
-        connectState.setPreferredSize(new Dimension((int)(WIDTH*0.088),(int)(HEIGHT*0.059)));
+        connectState.setPreferredSize(new Dimension((int)(WIDTH*0.08),(int)(HEIGHT*0.059)));
+        JLabel ecgConnectState = new JLabel("心电仪连接状态");
+        ecgConnectState.setFont(new Font("Dialog", 0, (int)(HEIGHT*0.018)));
+        ecgConnectState.setPreferredSize(new Dimension((int)(WIDTH*0.07),(int)(HEIGHT*0.059)));
         JLabel temperatureState = new JLabel("血温状态");
         temperatureState.setFont(new Font("Dialog", 0, (int)(HEIGHT*0.018)));
         temperatureState.setPreferredSize(new Dimension((int)(WIDTH*0.056), (int)(HEIGHT*0.059)));
@@ -67,6 +78,11 @@ public class GuardBottomShow extends JPanel implements Observer {
         connectStatePointPanel.setLayout(new FlowLayout(FlowLayout.LEADING));
         connectStatePointPanel.setPreferredSize(new Dimension((int)(WIDTH*0.028),(int)(WIDTH*0.028)));
         connectStatePointPanel.add(connectStatePoint);
+        ecgConnectStatePoint=new JLabel(redPoint);
+        ecgConnectStatePointPanel = new JPanel();
+        ecgConnectStatePointPanel.setLayout(new FlowLayout(FlowLayout.LEADING));
+        ecgConnectStatePointPanel.setPreferredSize(new Dimension((int)(WIDTH*0.028),(int)(WIDTH*0.028)));
+        ecgConnectStatePointPanel.add(ecgConnectStatePoint);
         temperatureStatePointPanel = new JPanel();
         temperatureStatePointPanel.setLayout(new FlowLayout(FlowLayout.LEADING));
         temperatureStatePointPanel.add(createTemperatureChartPanel());
@@ -75,23 +91,29 @@ public class GuardBottomShow extends JPanel implements Observer {
         lightValueStatePointPanel.add(createLightValueChartPanel());
 
         JPanel connectStatePanel = new JPanel();
-        connectStatePanel.setLayout(new FlowLayout(FlowLayout.LEFT, (int)(WIDTH*0.015), 0));
-        connectStatePanel.setPreferredSize(new Dimension((int)(WIDTH*0.293), (int)(HEIGHT*0.059)));
+        connectStatePanel.setLayout(new FlowLayout(FlowLayout.LEFT, (int)(WIDTH*0.005), 0));
+        connectStatePanel.setPreferredSize(new Dimension((int)(WIDTH*0.2), (int)(HEIGHT*0.059)));
         connectStatePanel.add(connectState);
         connectStatePanel.add(connectStatePointPanel);
+        JPanel ecgConnectStatePanel = new JPanel();
+        ecgConnectStatePanel.setLayout(new FlowLayout(FlowLayout.LEFT, (int)(WIDTH*0.005), 0));
+        ecgConnectStatePanel.setPreferredSize(new Dimension((int)(WIDTH*0.2), (int)(HEIGHT*0.059)));
+        ecgConnectStatePanel.add(ecgConnectState);
+        ecgConnectStatePanel.add(ecgConnectStatePointPanel);
         JPanel temperatureStatePanel = new JPanel();
-        temperatureStatePanel.setLayout(new FlowLayout(FlowLayout.LEFT, (int)(WIDTH*0.015), 0));
-        temperatureStatePanel.setPreferredSize(new Dimension((int)(WIDTH*0.293), (int)(HEIGHT*0.059)));
+        temperatureStatePanel.setLayout(new FlowLayout(FlowLayout.LEFT, (int)(WIDTH*0.005), 0));
+        temperatureStatePanel.setPreferredSize(new Dimension((int)(WIDTH*0.2), (int)(HEIGHT*0.059)));
         temperatureStatePanel.add(temperatureState);
         temperatureStatePanel.add(temperatureStatePointPanel);
         JPanel lightValueStatePanel = new JPanel();
-        lightValueStatePanel.setLayout(new FlowLayout(FlowLayout.LEFT, (int)(WIDTH*0.015), 0));
+        lightValueStatePanel.setLayout(new FlowLayout(FlowLayout.LEFT, (int)(WIDTH*0.005), 0));
         lightValueStatePanel.setPreferredSize(new Dimension((int)(WIDTH*0.146), (int)(HEIGHT*0.059)));
         lightValueStatePanel.add(lightValueState);
         lightValueStatePanel.add(lightValueStatePointPanel);
 
         setLayout(new FlowLayout(FlowLayout.LEFT));
         add(connectStatePanel);
+        add(ecgConnectStatePanel);
         add(temperatureStatePanel);
         add(lightValueStatePanel);
 
@@ -99,13 +121,21 @@ public class GuardBottomShow extends JPanel implements Observer {
         timer.schedule(
                 new java.util.TimerTask() {
                     public void run() {
-                        if (connectStartFlag) {
-                            connectLostCount += 1;
+                        if (guardConnectStartFlag) {
+                            guardConnectLostCount += 1;
                         }
-                        if (connectLostCount > 3) {
-                            connectStartFlag = false;
+                        if (guardConnectLostCount > 3) {
+                            guardConnectStartFlag = false;
                             connectStatePoint.setIcon(redPoint);
                             connectStatePoint.setVisible(true);
+                        }
+                        if(ecgConnectStartFlag) {
+                            ecgConnectLostCount += 1;
+                        }
+                        if(ecgConnectLostCount>2){
+                            ecgConnectStartFlag=false;
+                            ecgConnectStatePoint.setIcon(redPoint);
+                            ecgConnectStatePoint.setVisible(true);
                         }
                     }
                 }, 2000, 2000
@@ -132,10 +162,10 @@ public class GuardBottomShow extends JPanel implements Observer {
         temperatureCategoryPlot.setRangeGridlinesVisible(false);
         temperatureRenderer.setSeriesPaint(0, Color.GREEN);
         temperatureCategoryPlot.setRenderer(temperatureRenderer);
-        ChartPanel temperatureChartPanel = new ChartPanel(temperatureChart,(int)(HEIGHT*0.047),(int)(HEIGHT*0.047), 0, 0,
+        return new ChartPanel(temperatureChart,(int)(HEIGHT*0.047),(int)(HEIGHT*0.047), 0, 0,
                 Integer.MAX_VALUE, Integer.MAX_VALUE, false, true, false,
                 true, false, false);
-        return temperatureChartPanel;
+
     }
 
     private ChartPanel createLightValueChartPanel() {
@@ -182,36 +212,47 @@ public class GuardBottomShow extends JPanel implements Observer {
 
     @Override
     public void update(Observable o, Object arg) {
-        GuardData guardData = (GuardData) arg;
-        if (!connectStartFlag) {
-            connectStatePoint.setIcon(greenPoint);
-            connectStartFlag = true;
-        }
-        connectLostCount = 0;
-        connectStatePoint.setVisible((connectFlashFlag % 2 == 1));
-        connectFlashFlag += 1;
-        temperatureDataSet.setValue(Float.parseFloat(guardData.getTemperature()), "temperatureChart", "temperature");
-        if (guardData.getTemperatureMessage() != null) {
-            switch (guardData.getTemperatureMessage()) {
-                case "血温正常":
-                    temperatureRenderer.setSeriesPaint(0, Color.GREEN, true);
-                    break;
-                case "血温过高":
-                    temperatureRenderer.setSeriesPaint(0, Color.RED, true);
-                    break;
-                case "血温过低":
-                    temperatureRenderer.setSeriesPaint(0, Color.BLUE, true);
-                    break;
-                default:
-                    ;
+        if (o instanceof GuardSerialDataProcess) {
+            GuardData guardData = (GuardData) arg;
+            if (!guardConnectStartFlag) {
+                connectStatePoint.setIcon(greenPoint);
+                guardConnectStartFlag = true;
+            }
+            guardConnectLostCount = 0;
+            connectStatePoint.setVisible((guardConnectFlashFlag % 2 == 1));
+            guardConnectFlashFlag += 1;
+            temperatureDataSet.setValue(Float.parseFloat(guardData.getTemperature()), "temperatureChart", "temperature");
+            if (guardData.getTemperatureMessage() != null) {
+                switch (guardData.getTemperatureMessage()) {
+                    case "血温正常":
+                        temperatureRenderer.setSeriesPaint(0, Color.GREEN, true);
+                        break;
+                    case "血温过高":
+                        temperatureRenderer.setSeriesPaint(0, Color.RED, true);
+                        break;
+                    case "血温过低":
+                        temperatureRenderer.setSeriesPaint(0, Color.BLUE, true);
+                        break;
+                    default:
+                        ;
+                }
+            }
+            if (guardData.isCountFish()) {
+                int[] temp = guardData.getCountMess();
+                lightValueDataSet.setValue("正常", temp[0]);
+                lightValueDataSet.setValue("无管", temp[1]);
+                lightValueDataSet.setValue("管内气泡", temp[3]);
+                lightValueDataSet.setValue("管内漏血", temp[2]);
             }
         }
-        if (guardData.isCountFish()) {
-            int[] temp = guardData.getCountMess();
-            lightValueDataSet.setValue("正常", temp[0]);
-            lightValueDataSet.setValue("无管", temp[1]);
-            lightValueDataSet.setValue("管内气泡", temp[3]);
-            lightValueDataSet.setValue("管内漏血", temp[2]);
+        else if(o instanceof ECGDataRefresher){
+            if(!ecgConnectStartFlag){
+                ecgConnectStatePoint.setIcon(greenPoint);
+                ecgConnectStartFlag=true;
+            }
+            ecgConnectLostCount=0;
+            ecgConnectStatePoint.setVisible(ecgConnectFlashFlag%16==0);
+            ecgConnectFlashFlag+=1;
         }
     }
 }

@@ -23,6 +23,7 @@ import command.*;
 import ctshow.CTHistoryData;
 
 import ctshow.CTShowUI;
+import ecg.ecgshow.ECGDataRefresher;
 import ecg.ecgshow.ECGShowUI;
 import ecg.tcp.TCPConfig;
 
@@ -52,6 +53,8 @@ public class MainUiActor extends BaseActor{
 	private Integer TOP;
 
 	private GuardSerialDataProcess guardSerialDataProcess;
+	private ECGDataRefresher ecgDataRefresher;
+	private GuardBottomShow guardBottomShow;
 
 	private static boolean temperatureAlarmEnable=true;
 	private static boolean bloodAlarmEnable=true;
@@ -144,6 +147,9 @@ public class MainUiActor extends BaseActor{
 		if(request==MainUiRequest.MAIN_UI_GUARD_START){
 			sendRequest(blackHoleActor,MainUiRequest.MAIN_UI_GUARD_START);
 		}
+		if(request==MainUiRequest.MAIN_UI_ECG_START_SUCCESS){
+			sendRequest(blackHoleActor,MonitorRequest.MONITOR_ECG_DATA_REFRESH);
+		}
 		return false;
 	}
 
@@ -168,7 +174,13 @@ public class MainUiActor extends BaseActor{
 			}
 		}
 		if(response==GuardResponse.GUARD_SERIAL_DATA_PROCESS){
-			this.guardSerialDataProcess=(GuardSerialDataProcess)response.getConfig().getData();
+			guardSerialDataProcess=(GuardSerialDataProcess)response.getConfig().getData();
+		}
+		if(response==MonitorResponse.MONITOR_ECG_DATA_REFRESH){
+			ecgDataRefresher=(ECGDataRefresher)response.getConfig().getData();
+			if(ecgDataRefresher!=null) {
+				ecgDataRefresher.addObserver(guardBottomShow);
+			}
 		}
 		return false;
 	}
@@ -307,7 +319,7 @@ public class MainUiActor extends BaseActor{
 
 	private JPanel createBOTTOMJPanel(){
 		JPanel GuardBottom=new JPanel();
-		GuardBottomShow guardBottomShow=new GuardBottomShow();
+		guardBottomShow=new GuardBottomShow();
 		guardSerialDataProcess.addObserver(guardBottomShow);
 		GuardBottom.setBounds(0,(int)(HEIGHT*0.87),(int)(WIDTH*0.985),(int)(HEIGHT*0.15));
 		GuardBottom.setLayout(new BorderLayout());

@@ -17,7 +17,7 @@ import static java.lang.Thread.sleep;
  * Created by zzq on 16/5/16.
  */
 public class MonitorActor extends BaseActor{
-
+    private MonitorActorConfig monitorActorConfig;
     private static FileOutputStream fos;
     Map connectInfo;
     private ECGShowUI ecgShowUI;
@@ -30,6 +30,7 @@ public class MonitorActor extends BaseActor{
     private TCPClient client;
 
     public MonitorActor(MonitorActorConfig monitorActorConfig){
+        this.monitorActorConfig=monitorActorConfig;
         //TO DO Initialize the MonitorActor
     }
 
@@ -79,6 +80,7 @@ public class MonitorActor extends BaseActor{
                 ecgDataRefresher.setStartFlag();
                 System.out.println(ecgDataRefresher.isStopFlag());
                 sendResponse(request,SystemResponse.SYSTEM_SUCCESS);
+                sendRequest(monitorActorConfig.getBlackHoleActor(),MainUiRequest.MAIN_UI_ECG_START_SUCCESS);
             }else {
                 sendResponse(request,SystemResponse.SYSTEM_FAILURE,"请配置心电仪");
             }
@@ -91,6 +93,9 @@ public class MonitorActor extends BaseActor{
             }else {
                 sendResponse(request,SystemResponse.SYSTEM_FAILURE,"请配置心电仪");
             }
+        }
+        if(request==MonitorRequest.MONITOR_ECG_DATA_REFRESH){
+            sendResponse(request,MonitorResponse.MONITOR_ECG_DATA_REFRESH,ecgDataRefresher);
         }
         return false;
     }
