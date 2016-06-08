@@ -21,14 +21,15 @@ public class CTCurrentData extends JPanel {
     private BufferedImage lastImage = null;
     private String imagePath;
 
-    private BufferedImage focus = null;
+    private static BufferedImage focus = null;
 
-    private JPanel resultImageJPanel =new JPanel();
+//    private JPanel resultImageJPanel =new JPanel();
     //mouse event
     private MyMouseAdapter mouseAdapter;
     private Rectangle rect = null;
     private boolean drawing = false;
     public CTCurrentData() {
+
     }
     public void refreshImage(String imagePath,boolean isHistory) {
         try {
@@ -48,45 +49,49 @@ public class CTCurrentData extends JPanel {
                 addMouseMotionListener(mouseAdapter);
             }
             this.setVisible(true);
-            this.getParent().getHeight();
-            Integer imageX;
-            imageX = (this.getParent().getWidth() - currentImage.getWidth()) / 2;
+//            this.getParent().getHeight();
+//            Integer imageX;
+//            imageX = (this.getParent().getWidth() - currentImage.getWidth()) / 2;
             //imageY = (this.getParent().getHeight() - currentImage.getHeight()) / 2;
-            setBounds(imageX, 0, currentImage.getWidth(), currentImage.getHeight());
-            this.repaint();
+            setBounds(0, 0, currentImage.getWidth(), currentImage.getHeight());
+//            this.repaint();
         } catch (IOException e) {
             e.printStackTrace();
         }
+        this.addNotify();
+        this.repaint();
+        System.out.println(getWidth());
+        System.out.println(getHeight());
     }
 
-    public void refreshResult(String result) {
-        removeAll();
-        Integer ZOOM_WIDTH=currentImage.getWidth() / 6;
-        Integer ZOOM_HEIGHT=currentImage.getHeight() /6;
-
-        //JPanel resultImageJPanel =new JPanel();
-        resultImageJPanel.setLayout(null);
-        resultImageJPanel.setBackground(Color.BLACK);
-        resultImageJPanel.setBounds(0, 0,ZOOM_WIDTH+40, ZOOM_HEIGHT + 40);
-
-        BufferedImage focusZoom= ImageUtil.zoom(focus,ZOOM_WIDTH,ZOOM_HEIGHT,Color.BLACK);
-        JLabel resultImage = new JLabel(new ImageIcon(focusZoom));
-        resultImage.setBounds(0,0,ZOOM_WIDTH,ZOOM_HEIGHT);
-        //resultImage.setIcon(new ImageIcon(focusZoom));
-        resultImageJPanel.add(resultImage);
-
-        JLabel resultText = new JLabel(result);
-        resultText.setLayout(new FlowLayout(FlowLayout.CENTER));
-        resultText.setOpaque(false);//背景透明
-        resultText.setForeground(Color.RED);//字体颜色
-        resultText.setFont(new Font("Dialog",0,14));//字体大小
-        resultText.setBounds(20,ZOOM_HEIGHT,ZOOM_WIDTH,40);
-
-        resultImageJPanel.add(resultText);
-        add(resultImageJPanel,new Integer(Integer.MAX_VALUE));
-        resultImageJPanel.addNotify();
-        repaint();
-    }
+//    public void refreshResult(String result) {
+//        resultImageJPanel.removeAll();
+//        Integer ZOOM_WIDTH=currentImage.getWidth() / 6;
+//        Integer ZOOM_HEIGHT=currentImage.getHeight() /6;
+//
+//        //JPanel resultImageJPanel =new JPanel();
+//        resultImageJPanel.setLayout(null);
+//        resultImageJPanel.setBackground(Color.BLACK);
+//        resultImageJPanel.setBounds(0, 0,ZOOM_WIDTH+40, ZOOM_HEIGHT + 40);
+//
+//        BufferedImage focusZoom= ImageUtil.zoom(focus,ZOOM_WIDTH,ZOOM_HEIGHT,Color.BLACK);
+//        JLabel resultImage = new JLabel(new ImageIcon(focusZoom));
+//        resultImage.setBounds(0,0,ZOOM_WIDTH,ZOOM_HEIGHT);
+//        //resultImage.setIcon(new ImageIcon(focusZoom));
+//        resultImageJPanel.add(resultImage);
+//
+//        JLabel resultText = new JLabel(result);
+//        resultText.setLayout(new FlowLayout(FlowLayout.CENTER));
+//        resultText.setOpaque(false);//背景透明
+//        resultText.setForeground(Color.RED);//字体颜色
+//        resultText.setFont(new Font("Dialog",0,14));//字体大小
+//        resultText.setBounds(20,ZOOM_HEIGHT,ZOOM_WIDTH,40);
+//
+//        resultImageJPanel.add(resultText);
+////        add(resultImageJPanel,new Integer(Integer.MAX_VALUE));
+//        resultImageJPanel.addNotify();
+//        resultImageJPanel.repaint();
+//    }
 
     @Override
     public Dimension getPreferredSize() {
@@ -170,5 +175,10 @@ public class CTCurrentData extends JPanel {
         repaint();
         JOptionPane.showMessageDialog(null,"已是当前数据","系统提示",JOptionPane.INFORMATION_MESSAGE);
     }
-
+    public BufferedImage getCurrentImage(){
+        return currentImage;
+    }
+    public BufferedImage getFocus(){
+        return focus;
+    }
 }

@@ -94,6 +94,7 @@ public class GuardActor extends BaseActor {
             connectInfo.put("temperatureLow",String.valueOf(guardActorConfig.getTemperatureLow()));
             connectInfo.put("temperatureHigh",String.valueOf(guardActorConfig.getTemperatureHigh()));
             connectInfo.put("defaultLightValue",String.valueOf(guardActorConfig.getDefaultLightValue()));
+            connectInfo.put("emptyLightValue",String.valueOf(guardActorConfig.getEmptyLightValue()));
             connectInfo.put("bloodLightValue",String.valueOf(guardActorConfig.getBloodLightValue()));
             connectInfo.put("bubbleLightValue",String.valueOf(guardActorConfig.getBubbleLightValue()));
             connectInfo.put("bubbleHoldCount",String.valueOf(guardActorConfig.getBubbleHoldCount()));
@@ -106,6 +107,7 @@ public class GuardActor extends BaseActor {
                 guardActorConfig.setTemperatureLow(Integer.parseInt(connectInfo.get("temperatureLow")));
                 guardActorConfig.setTemperatureHigh(Integer.parseInt(connectInfo.get("temperatureHigh")));
                 guardActorConfig.setDefaultLightValue(Integer.parseInt(connectInfo.get("defaultLightValue")));
+                guardActorConfig.setEmptyLightValue(Integer.parseInt(connectInfo.get("emptyLightValue")));
                 guardActorConfig.setBloodLightValue(Integer.parseInt(connectInfo.get("bloodLightValue")));
                 guardActorConfig.setBubbleLightValue(Integer.parseInt(connectInfo.get("bubbleLightValue")));
                 guardActorConfig.setBubbleHoldCount(Integer.parseInt(connectInfo.get("bubbleHoldCount")));
@@ -167,7 +169,7 @@ public class GuardActor extends BaseActor {
         boolean successFlag=false;
 
         String winSerialPort="COM"+String.valueOf(guardActorConfig.getSerialPortNum());
-        String unixSerialPort="/dev/term/"+String.valueOf((char)(guardActorConfig.getSerialPortNum()+96));
+        String unixSerialPort="/dev/ttyS/"+String.valueOf((char)(guardActorConfig.getSerialPortNum()));
         System.out.println(winSerialPort);
         System.out.println(unixSerialPort);
         while (portList.hasMoreElements()) {

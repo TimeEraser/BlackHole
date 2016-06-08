@@ -53,7 +53,6 @@ public class MainUiActor extends BaseActor{
 	private Integer TOP;
 
 	private GuardSerialDataProcess guardSerialDataProcess;
-	private ECGDataRefresher ecgDataRefresher;
 	private GuardBottomShow guardBottomShow;
 
 	private static boolean temperatureAlarmEnable=true;
@@ -177,7 +176,7 @@ public class MainUiActor extends BaseActor{
 			guardSerialDataProcess=(GuardSerialDataProcess)response.getConfig().getData();
 		}
 		if(response==MonitorResponse.MONITOR_ECG_DATA_REFRESH){
-			ecgDataRefresher=(ECGDataRefresher)response.getConfig().getData();
+			ECGDataRefresher ecgDataRefresher=(ECGDataRefresher)response.getConfig().getData();
 			if(ecgDataRefresher!=null) {
 				ecgDataRefresher.addObserver(guardBottomShow);
 			}
@@ -413,6 +412,7 @@ public class MainUiActor extends BaseActor{
 		guardConfigShow.setTemperatureLow(Integer.parseInt(connectInfo.get("temperatureLow")));
 		guardConfigShow.setTemperatureHigh(Integer.parseInt(connectInfo.get("temperatureHigh")));
 		guardConfigShow.setDefaultLightValue(Integer.parseInt(connectInfo.get("defaultLightValue")));
+		guardConfigShow.setEmptyLightValue(Integer.parseInt(connectInfo.get("emptyLightValue")));
 		guardConfigShow.setBloodLightValue(Integer.parseInt(connectInfo.get("bloodLightValue")));
 		guardConfigShow.setBubbleLightValue(Integer.parseInt(connectInfo.get("bubbleLightValue")));
 		guardConfigShow.setBubbleHoldCount(Integer.parseInt(connectInfo.get("bubbleHoldCount")));
@@ -428,6 +428,7 @@ public class MainUiActor extends BaseActor{
 		String temperatureLow=String.valueOf(guardConfigShow.getTemperatureLow());
 		String temperatureHigh=String.valueOf(guardConfigShow.getTemperatureHigh());
 		String defaultLightValue=String.valueOf(guardConfigShow.getDefaultLightValue());
+		String emptyLightValue=String .valueOf(guardConfigShow.getEmptyLightValue());
 		String bloodLightValue= String.valueOf(guardConfigShow.getBloodLightValue());
 		String bubbleLightValue=String.valueOf(guardConfigShow.getBubbleLightValue());
 		String bubbleHoldCount=String.valueOf(guardConfigShow.getBubbleHoldCount());
@@ -436,6 +437,7 @@ public class MainUiActor extends BaseActor{
 		connectInfo.put("temperatureLow",temperatureLow);
 		connectInfo.put("temperatureHigh",temperatureHigh);
 		connectInfo.put("defaultLightValue",defaultLightValue);
+		connectInfo.put("emptyLightValue",emptyLightValue);
 		connectInfo.put("bloodLightValue",bloodLightValue);
 		connectInfo.put("bubbleLightValue",bubbleLightValue);
 		connectInfo.put("bubbleHoldCount",bubbleHoldCount);
@@ -452,12 +454,9 @@ public class MainUiActor extends BaseActor{
 		CTPanel.setBounds(0,0,WIDTH,(int)(HEIGHT*0.9));
 
 		CTShowUI ctShowUI = new CTShowUI(blackHoleActor);
-		JPanel CTData = new JPanel(new FlowLayout(FlowLayout.CENTER));
-		CTData.setBorder(etchedBorder);
-
-		CTData.setBounds((int)(WIDTH*0.05),(int)(HEIGHT*0.02),(int)(WIDTH*0.65),(int)(HEIGHT*0.77));	//setBounds()设定的是四个值，分别是X坐标和y坐标（其中屏幕的左上角是原点）、宽和高
-//		GridBagConstraints c = new GridBagConstraints();
-		CTData.add(ctShowUI.getCtCurrentData());
+		JPanel CTData = new JPanel(null);
+		CTData.setBounds((int)(WIDTH*0.375)-256,(int)(HEIGHT*0.02),512,512);	//setBounds()设定的是四个值，分别是X坐标和y坐标（其中屏幕的左上角是原点）、宽和高
+		CTData.add(ctShowUI.getCtData());
 
 		CTPanel.add(CTData);
 		JPanel CTControl = new JPanel();

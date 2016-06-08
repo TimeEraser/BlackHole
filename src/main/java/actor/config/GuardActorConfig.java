@@ -12,11 +12,11 @@ public class GuardActorConfig {
     private BlackHoleActor blackHoleActor;
     private int temperatureLow=25;
     private int temperatureHigh=38;
-    private int defaultLightValue=750;
-    private int emptyLightValue=450;
-    private int bloodLightValue=710;
-    private int bubbleLightValue=20;
-    private int bubbleHoldCount=1;
+    private int defaultLightValue=750;  //正常阈值
+    private int emptyLightValue=450;  //空管阈值
+    private int bloodLightValue=710;  //漏血阈值
+    private int bubbleLightValue=20; //气泡差值
+    private int bubbleHoldCount=1;   //最大气泡阈值
 //    private int normalHoldCount=10;
 
     public void  setSerialPortNum(int serialPortNum){

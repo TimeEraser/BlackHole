@@ -6,6 +6,7 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.*;
+import java.util.Timer;
 
 /**
  * Created by adminstrator on 2016/5/29.
@@ -15,6 +16,7 @@ public class GuardConfigShow extends JDialog implements Observer{
     private JTextField temperatureLowText;
     private JTextField temperatureHighText;
     private JTextField defaultLightValueText;
+    private JTextField emptyLightValueText;
     private JTextField bloodLightValueText;
     private JTextField bubbleLightValueText;
     private JTextField bubbleHoldCountText;
@@ -23,6 +25,7 @@ public class GuardConfigShow extends JDialog implements Observer{
     private int temperatureLow;
     private int temperatureHigh;
     private int defaultLightValue;
+    private int emptyLightValue;
     private int bloodLightValue;
     private int bubbleLightValue;
     private int bubbleHoldCount;
@@ -30,8 +33,9 @@ public class GuardConfigShow extends JDialog implements Observer{
     private boolean temperatureAdjustEnableFlag=false;
     private boolean defaultLightValueAdjustEnableFlag=false;
     private boolean bloodLightValueAdjustEnableFlag=false;
-//    private boolean bubbleLightValueAdjustEnableFlag=false;
+    private boolean emptyLightValueAdjustEnableFlag=false;
     private boolean beginAdjust=false;
+    private boolean emptyLightValueHasAdjust=false;
 
     public GuardConfigShow(JFrame jFrame,Boolean model){
         super(jFrame,model);
@@ -42,6 +46,7 @@ public class GuardConfigShow extends JDialog implements Observer{
         JLabel temperatureLowLabel=new JLabel("下限温度(15-35)");
         JLabel temperatureHighLabel=new JLabel("上限温度(30-45)");
         JLabel defaultLightValueLabel=new JLabel("正常工作透光值(0-1024)");
+        JLabel emptyLightValueLabel=new JLabel("管内无液体阈值(0-1024)");
         JLabel bloodLightValueLabel=new JLabel("漏血报警阈值(0-1024)");
         JLabel bubbleLightValueLabel=new JLabel("气泡报警差值(10-50)");
         JLabel bubbleHoldCountLabel=new JLabel("气泡大小报警阈值(1-10)");
@@ -50,6 +55,7 @@ public class GuardConfigShow extends JDialog implements Observer{
         temperatureLowText=new JTextField(String.valueOf(temperatureLow));
         temperatureHighText=new JTextField(String.valueOf(temperatureHigh));
         defaultLightValueText=new JTextField(String.valueOf(defaultLightValue));
+        emptyLightValueText=new JTextField(String .valueOf(emptyLightValue));
         bloodLightValueText=new JTextField(String.valueOf(bloodLightValue));
         bubbleLightValueText=new JTextField(String.valueOf(bubbleLightValue));
         bubbleHoldCountText=new JTextField(String.valueOf(bubbleHoldCount));
@@ -82,13 +88,13 @@ public class GuardConfigShow extends JDialog implements Observer{
                 bloodLightValueAdjustButtonActionPerformed(evt);
             }
         } );
-//        JButton bubbleLightValueAdjustButton=new JButton();
-//        bubbleLightValueAdjustButton.setText("校准");
-//        bubbleLightValueAdjustButton.addActionListener(new ActionListener(){
-//            public void actionPerformed(ActionEvent evt){
-//                bubbleLightValueButtonActionPerformed(evt);
-//            }
-//        } );
+        JButton emptyValueAdjustButton=new JButton();
+        emptyValueAdjustButton.setText("校准");
+        emptyValueAdjustButton.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent evt){
+                emptyLightValueButtonActionPerformed(evt);
+            }
+        } );
         JButton cancelButton=new JButton();
         cancelButton.setText("取消");
         cancelButton.addActionListener(new ActionListener(){
@@ -109,6 +115,7 @@ public class GuardConfigShow extends JDialog implements Observer{
                                                         .addComponent(temperatureLowLabel,GroupLayout.Alignment.LEADING)
                                                         .addComponent(temperatureHighLabel,GroupLayout.Alignment.LEADING)
                                                         .addComponent(defaultLightValueLabel,GroupLayout.Alignment.LEADING)
+                                                        .addComponent(emptyLightValueLabel,GroupLayout.Alignment.LEADING)
                                                         .addComponent(bloodLightValueLabel,GroupLayout.Alignment.LEADING)
                                                         .addComponent(bubbleLightValueLabel,GroupLayout.Alignment.LEADING)
                                                         .addComponent(bubbleHoldCountLabel,GroupLayout.Alignment.LEADING)
@@ -124,6 +131,7 @@ public class GuardConfigShow extends JDialog implements Observer{
                                                         .addComponent(temperatureLowText, GroupLayout.PREFERRED_SIZE, 160, GroupLayout.PREFERRED_SIZE)
                                                         .addComponent(temperatureHighText, GroupLayout.PREFERRED_SIZE, 160, GroupLayout.PREFERRED_SIZE)
                                                         .addComponent(defaultLightValueText, GroupLayout.PREFERRED_SIZE, 160, GroupLayout.PREFERRED_SIZE)
+                                                        .addComponent(emptyLightValueText, GroupLayout.PREFERRED_SIZE, 160, GroupLayout.PREFERRED_SIZE)
                                                         .addComponent(bloodLightValueText, GroupLayout.PREFERRED_SIZE, 160, GroupLayout.PREFERRED_SIZE)
                                                         .addComponent(bubbleLightValueText, GroupLayout.PREFERRED_SIZE, 160, GroupLayout.PREFERRED_SIZE)
                                                         .addComponent(bubbleHoldCountText, GroupLayout.PREFERRED_SIZE, 160, GroupLayout.PREFERRED_SIZE)
@@ -133,7 +141,7 @@ public class GuardConfigShow extends JDialog implements Observer{
                                                 .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                                                         .addComponent(defaultLightValueAdjustButton, GroupLayout.Alignment.CENTER)
                                                         .addComponent(bloodLightValueAdjustButton, GroupLayout.Alignment.CENTER)
-//                                                        .addComponent(bubbleLightValueAdjustButton, GroupLayout.Alignment.CENTER)
+                                                        .addComponent(emptyValueAdjustButton, GroupLayout.Alignment.CENTER)
                                                 )
                                         )
                                 )
@@ -164,6 +172,12 @@ public class GuardConfigShow extends JDialog implements Observer{
                                         .addComponent(defaultLightValueLabel)
                                         .addComponent(defaultLightValueText, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                                         .addComponent(defaultLightValueAdjustButton, GroupLayout.Alignment.BASELINE)
+                                )
+                                .addGap(20,20,20)
+                                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                                        .addComponent(emptyLightValueLabel)
+                                        .addComponent(emptyLightValueText, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(emptyValueAdjustButton, GroupLayout.Alignment.BASELINE)
                                 )
                                 .addGap(20,20,20)
                                 .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
@@ -228,6 +242,21 @@ public class GuardConfigShow extends JDialog implements Observer{
         else{
             errorFlag=true;
         }
+        int emptyLightValue=Integer.parseInt(emptyLightValueText.getText());
+        if(emptyLightValueHasAdjust) {
+            if (!errorFlag && emptyLightValue+30 > 0 && emptyLightValue+30 < 1024) {
+                this.emptyLightValue = emptyLightValue + 30;
+            } else {
+                errorFlag = true;
+            }
+        }
+        else {
+            if (!errorFlag && emptyLightValue > 0 && emptyLightValue < 1024) {
+                this.emptyLightValue = emptyLightValue ;
+            } else {
+                errorFlag = true;
+            }
+        }
 //        System.out.println(errorFlag);
         int bloodLightValue=Integer.parseInt(bloodLightValueText.getText());
         if(!errorFlag&&bloodLightValue>0&&defaultLightValue<1024){
@@ -248,7 +277,7 @@ public class GuardConfigShow extends JDialog implements Observer{
 //        System.out.println(errorFlag);
 //        System.out.println(defaultLightValue);
 //        System.out.println(bloodLightValue);
-        if(!errorFlag&&defaultLightValue<bloodLightValue){
+        if(!errorFlag&&defaultLightValue<bloodLightValue&&emptyLightValue+30<defaultLightValue){
             errorFlag=true;
         }
 //        System.out.println(errorFlag);
@@ -316,22 +345,22 @@ public class GuardConfigShow extends JDialog implements Observer{
             );
         }
     }
-//    private void bubbleLightValueButtonActionPerformed(java.awt.event.ActionEvent evt){
-//        if(!bubbleLightValueAdjustEnableFlag) {
-//            bubbleLightValueAdjustEnableFlag = true;
-//            beginAdjust = true;
-//            java.util.Timer timer=new java.util.Timer();
-//            timer.schedule(
-//                    new java.util.TimerTask() {
-//                        public void run(){
-//                            if(beginAdjust){
-//                                JOptionPane.showMessageDialog(null, "请先连接设备", "系统错误", JOptionPane.ERROR_MESSAGE);
-//                            }
-//                        }
-//                    },4000
-//            );
-//        }
-//    }
+    private void emptyLightValueButtonActionPerformed(ActionEvent evt){
+        if(!emptyLightValueAdjustEnableFlag) {
+            emptyLightValueAdjustEnableFlag = true;
+            beginAdjust = true;
+            Timer timer=new Timer();
+            timer.schedule(
+                    new TimerTask() {
+                        public void run(){
+                            if(beginAdjust){
+                                JOptionPane.showMessageDialog(null, "请先连接设备", "系统错误", JOptionPane.ERROR_MESSAGE);
+                            }
+                        }
+                    },4000
+            );
+        }
+    }
     private void cancelButtonActionPerformed(java.awt.event.ActionEvent evt){
         confirmFlag=false;
         this.dispose();
@@ -346,14 +375,15 @@ public class GuardConfigShow extends JDialog implements Observer{
         defaultLightValueText.setText(data.getLightValue());
         defaultLightValueAdjustEnableFlag=false;
     }
+    private void adjustEmptyLightValue(GuardData data){
+        emptyLightValueText.setText(data.getLightValue());
+        emptyLightValueAdjustEnableFlag=false;
+        emptyLightValueHasAdjust=true;
+    }
     private void adjustBloodLightValue(GuardData data){
         bloodLightValueText.setText(data.getLightValue());
         bloodLightValueAdjustEnableFlag=false;
     }
-//    private void adjustBubbleLightValue(GuardData data){
-//        bubbleLightValueText.setText(data.getLightValue());
-//        bubbleLightValueAdjustEnableFlag=false;
-//    }
     public void setTemperatureLow(int temperatureLow){
         this.temperatureLow=temperatureLow;
     }
@@ -371,6 +401,12 @@ public class GuardConfigShow extends JDialog implements Observer{
     }
     public int getDefaultLightValue(){
         return defaultLightValue;
+    }
+    public void setEmptyLightValue(int emptyLightValue){
+        this.emptyLightValue=emptyLightValue;
+    }
+    public int getEmptyLightValue(){
+        return emptyLightValue;
     }
     public void setBloodLightValue(int bloodLightValue){
         this.bloodLightValue=bloodLightValue;
@@ -414,10 +450,10 @@ public class GuardConfigShow extends JDialog implements Observer{
             beginAdjust=false;
             adjustBloodLightValue((GuardData)arg);
         }
-//        if (bubbleLightValueAdjustEnableFlag){
-//            beginAdjust=false;
-//            adjustBubbleLightValue((GuardData)arg);
-//        }
+        if (emptyLightValueAdjustEnableFlag){
+            beginAdjust=false;
+            adjustEmptyLightValue((GuardData)arg);
+        }
     }
 }
 
