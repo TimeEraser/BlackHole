@@ -67,6 +67,7 @@ public class TemperatureShow extends JPanel implements Observer{
         chartPanel=new ChartPanel(jfreechart,(int)(WIDTH*0.32),(int)(HEIGHT*0.35), 0,0,
                 Integer.MAX_VALUE, Integer.MAX_VALUE, false, true, false,
                 true, false, false);
+        chartPanel.setMouseZoomable(false);
         this.setLayout(new BorderLayout());
         this.add(chartPanel);
     }

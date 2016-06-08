@@ -251,7 +251,7 @@ public class GuardBottomShow extends JPanel implements Observer {
                 ecgConnectStartFlag=true;
             }
             ecgConnectLostCount=0;
-            ecgConnectStatePoint.setVisible(ecgConnectFlashFlag%16==0);
+            ecgConnectStatePoint.setVisible(ecgConnectFlashFlag%8>=4);
             ecgConnectFlashFlag+=1;
         }
     }

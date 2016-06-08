@@ -152,8 +152,11 @@ public class ECGDataRefresher extends Observable implements Observer{
 		for (int i = 0; i < ECGShowUI.LEAD_COUNT; i++) {
     		for (int j = i*numOfBytes/ ECGShowUI.LEAD_COUNT; j < (i+1)*numOfBytes/ ECGShowUI.LEAD_COUNT; j+=2) {
     			datas[i][(j-i*numOfBytes/ ECGShowUI.LEAD_COUNT)/2]=(short)(((message[j]&0xff)<<8)|(message[j+1]&0xff));
-    		}
+
+			}
 		}
+		setChanged();
+		notifyObservers();
 	}
 
 
@@ -189,7 +192,7 @@ public class ECGDataRefresher extends Observable implements Observer{
 	 *
 	 */
 	class AddToShowTask implements Runnable{
-		private static final int LOWSAMPLE=5;
+		private static final int LOWSAMPLE=20;
 		private long upperBound=0;
 		private Millisecond time;
 		@Override
@@ -203,6 +206,10 @@ public class ECGDataRefresher extends Observable implements Observer{
 							dateAxises) {
 						d.setRange(new Date(currentTimeMillis), new Date(currentTimeMillis + 5000));
 					}
+					for (TimeSeries t:
+						 ecgSerises) {
+						t.removeAgedItems(true);
+					}
 					upperBound = currentTimeMillis + 5000;
 				}
 			}
@@ -215,9 +222,7 @@ public class ECGDataRefresher extends Observable implements Observer{
 								//ecgSerises[j+ ECGShowUI.LEAD_COUNT].addOrUpdate(time, 2000);//该方法在超过指定长度后会将最久的数据丢弃
 								ecgSerises[j].addOrUpdate(time, datas[j][currentPoint]);
 								ecgSerises[j+ ECGShowUI.LEAD_COUNT].addOrUpdate(time, datas[j][currentPoint]);
-
-
-								currentTimeMillis+=10;
+								currentTimeMillis+=40;
 							}
 
 							HeartRatedatas[0]=HeartRatedatas[1];
@@ -241,6 +246,8 @@ public class ECGDataRefresher extends Observable implements Observer{
 						currentPoint=2;
 					}
 				}
+
+
 			}
 			else{
 				System.out.println("数据尚未准备好！");

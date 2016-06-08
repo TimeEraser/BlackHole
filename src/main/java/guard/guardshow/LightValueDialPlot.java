@@ -90,6 +90,7 @@ public class LightValueDialPlot extends JPanel implements Observer{
         ChartPanel lightValueDialChartPanel=new ChartPanel(lightValueDialChart,(int)(WIDTH*0.14),(int)(HEIGHT*0.26), 0,0,
                 Integer.MAX_VALUE, Integer.MAX_VALUE, true, true, false,
                 true, false, false);
+        lightValueDialChartPanel.setMouseZoomable(false); //禁止鼠标缩放
         this.setLayout(new BorderLayout());
         this.add(lightValueDialChartPanel);
     }
