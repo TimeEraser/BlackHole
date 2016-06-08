@@ -64,6 +64,7 @@ public class LightValueShow extends JPanel implements Observer{
                 true, false, false);
         lightValuePieChartPanel.setBackground(null);
         lightValuePieChartPanel.setLayout(new BorderLayout());
+        lightValuePieChartPanel.setMouseZoomable(false);
         this.setLayout(new BorderLayout());
         this.add(lightValuePieChartPanel);
     }

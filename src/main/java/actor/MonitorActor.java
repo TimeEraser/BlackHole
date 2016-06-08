@@ -130,7 +130,7 @@ public class MonitorActor extends BaseActor{
             client.start();        //客户端线程开始运行
 
         try {
-            sleep(100);
+            sleep(1000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
