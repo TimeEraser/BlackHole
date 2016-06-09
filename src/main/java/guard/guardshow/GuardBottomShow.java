@@ -162,7 +162,7 @@ public class GuardBottomShow extends JPanel implements Observer {
         temperatureCategoryPlot.setRangeGridlinesVisible(false);
         temperatureRenderer.setSeriesPaint(0, Color.GREEN);
         temperatureCategoryPlot.setRenderer(temperatureRenderer);
-        return new ChartPanel(temperatureChart,(int)(HEIGHT*0.047),(int)(HEIGHT*0.047), 0, 0,
+        return new ChartPanel(temperatureChart,(int)(HEIGHT*0.045),(int)(HEIGHT*0.045), 0, 0,
                 Integer.MAX_VALUE, Integer.MAX_VALUE, false, true, false,
                 true, false, false);
 
@@ -190,7 +190,7 @@ public class GuardBottomShow extends JPanel implements Observer {
         piePlot.setLabelLinksVisible(false);
         piePlot.setLabelFont(new Font(null));
         piePlot.setShadowPaint(null);
-        ChartPanel lightValuePieChartPanel = new ChartPanel(lightValueChart, (int)(HEIGHT*0.0495), (int)(HEIGHT*0.0495), 0, 0,
+        ChartPanel lightValuePieChartPanel = new ChartPanel(lightValueChart, (int)(HEIGHT*0.045), (int)(HEIGHT*0.045), 0, 0,
                 Integer.MAX_VALUE, Integer.MAX_VALUE, true, true, false,
                 true, false, false);
         lightValuePieChartPanel.setBackground(null);

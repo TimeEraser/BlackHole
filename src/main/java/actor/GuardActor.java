@@ -72,7 +72,7 @@ public class GuardActor extends BaseActor {
     @Override
     protected boolean processActorRequest(Request requests) {
         if (requests == GuardRequest.GUARD_START) {
-            System.out.println("GuardRequest.GUARD_START");
+//            System.out.println("GuardRequest.GUARD_START");
             if(!start()){
                 sendResponse(requests,SystemResponse.SYSTEM_FAILURE,"请检查报警模块及配置");
             }
@@ -170,8 +170,8 @@ public class GuardActor extends BaseActor {
 
         String winSerialPort="COM"+String.valueOf(guardActorConfig.getSerialPortNum());
         String unixSerialPort="/dev/ttyS/"+String.valueOf((char)(guardActorConfig.getSerialPortNum()));
-        System.out.println(winSerialPort);
-        System.out.println(unixSerialPort);
+//        System.out.println(winSerialPort);
+//        System.out.println(unixSerialPort);
         while (portList.hasMoreElements()) {
             portId = (CommPortIdentifier) portList.nextElement();
             /*getPortType方法返回端口类型*/

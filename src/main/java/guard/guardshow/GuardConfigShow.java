@@ -277,8 +277,18 @@ public class GuardConfigShow extends JDialog implements Observer{
 //        System.out.println(errorFlag);
 //        System.out.println(defaultLightValue);
 //        System.out.println(bloodLightValue);
-        if(!errorFlag&&defaultLightValue<bloodLightValue&&emptyLightValue+30<defaultLightValue){
-            errorFlag=true;
+//        System.out.println(emptyLightValue);
+//        System.out.println(bloodLightValue);
+//        System.out.println(emptyLightValueHasAdjust);
+        if(emptyLightValueHasAdjust){
+            if(!errorFlag&&((defaultLightValue<bloodLightValue)||(emptyLightValue+30>bloodLightValue))){
+                errorFlag=true;
+            }
+        }
+        else {
+            if(!errorFlag&&((defaultLightValue<bloodLightValue)||(emptyLightValue>bloodLightValue))){
+                errorFlag=true;
+            }
         }
 //        System.out.println(errorFlag);
         int bubbleHoldCount=Integer.parseInt(bubbleHoldCountText.getText());

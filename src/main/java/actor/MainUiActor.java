@@ -168,7 +168,7 @@ public class MainUiActor extends BaseActor{
 		if (response==GuardResponse.GUARD_SERIAL_ASK){
 			Map tempMap=createGuardConfigDialog((Map)response.getConfig().getData());
 			if (tempMap!=null) {
-				System.out.println("GuardSet");
+//				System.out.println("GuardSet");
 				sendRequest(blackHoleActor, GuardRequest.GUARD_SERIAL_SET, tempMap);
 			}
 		}
