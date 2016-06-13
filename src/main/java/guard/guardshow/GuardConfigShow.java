@@ -35,7 +35,7 @@ public class GuardConfigShow extends JDialog implements Observer{
     private boolean bloodLightValueAdjustEnableFlag=false;
     private boolean emptyLightValueAdjustEnableFlag=false;
     private boolean beginAdjust=false;
-    private boolean emptyLightValueHasAdjust=false;
+//    private boolean emptyLightValueHasAdjust=false;
 
     public GuardConfigShow(JFrame jFrame,Boolean model){
         super(jFrame,model);
@@ -243,19 +243,10 @@ public class GuardConfigShow extends JDialog implements Observer{
             errorFlag=true;
         }
         int emptyLightValue=Integer.parseInt(emptyLightValueText.getText());
-        if(emptyLightValueHasAdjust) {
-            if (!errorFlag && emptyLightValue+30 > 0 && emptyLightValue+30 < 1024) {
-                this.emptyLightValue = emptyLightValue + 30;
-            } else {
+        if (!errorFlag && emptyLightValue> 0 && emptyLightValue< 1024) {
+            this.emptyLightValue = emptyLightValue ;
+        } else {
                 errorFlag = true;
-            }
-        }
-        else {
-            if (!errorFlag && emptyLightValue > 0 && emptyLightValue < 1024) {
-                this.emptyLightValue = emptyLightValue ;
-            } else {
-                errorFlag = true;
-            }
         }
 //        System.out.println(errorFlag);
         int bloodLightValue=Integer.parseInt(bloodLightValueText.getText());
@@ -280,15 +271,8 @@ public class GuardConfigShow extends JDialog implements Observer{
 //        System.out.println(emptyLightValue);
 //        System.out.println(bloodLightValue);
 //        System.out.println(emptyLightValueHasAdjust);
-        if(emptyLightValueHasAdjust){
-            if(!errorFlag&&((defaultLightValue<bloodLightValue)||(emptyLightValue+30>bloodLightValue))){
-                errorFlag=true;
-            }
-        }
-        else {
-            if(!errorFlag&&((defaultLightValue<bloodLightValue)||(emptyLightValue>bloodLightValue))){
-                errorFlag=true;
-            }
+        if(!errorFlag&&((defaultLightValue<bloodLightValue)||(emptyLightValue>bloodLightValue))){
+            errorFlag=true;
         }
 //        System.out.println(errorFlag);
         int bubbleHoldCount=Integer.parseInt(bubbleHoldCountText.getText());
@@ -386,9 +370,9 @@ public class GuardConfigShow extends JDialog implements Observer{
         defaultLightValueAdjustEnableFlag=false;
     }
     private void adjustEmptyLightValue(GuardData data){
-        emptyLightValueText.setText(data.getLightValue());
+        emptyLightValueText.setText(String.valueOf(Integer.parseInt(data.getLightValue())+20));
         emptyLightValueAdjustEnableFlag=false;
-        emptyLightValueHasAdjust=true;
+//        emptyLightValueHasAdjust=true;
     }
     private void adjustBloodLightValue(GuardData data){
         bloodLightValueText.setText(data.getLightValue());

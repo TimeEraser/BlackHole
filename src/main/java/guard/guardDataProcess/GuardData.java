@@ -16,6 +16,7 @@ public class GuardData {
     private int bubbleCount;
     private int bloodLightValue;
     private int bubbleLightValue;
+    private int emptyLightValue;
     private boolean countFish=false;
     private boolean onceReadCountFlag=false;
     public void setTemperature(String temperature){
@@ -127,6 +128,12 @@ public class GuardData {
     }
     public int getBubbleLightValue(){
         return bubbleLightValue;
+    }
+    public int getEmptyLightValue(){
+        return emptyLightValue;
+    }
+    public void setEmptyLightValue(int emptyLightValue){
+        this.emptyLightValue=emptyLightValue;
     }
 }
 

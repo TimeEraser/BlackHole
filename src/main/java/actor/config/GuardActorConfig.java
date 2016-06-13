@@ -12,9 +12,9 @@ public class GuardActorConfig {
     private BlackHoleActor blackHoleActor;
     private int temperatureLow=25;
     private int temperatureHigh=38;
-    private int defaultLightValue=750;  //正常阈值
-    private int emptyLightValue=450;  //空管阈值
-    private int bloodLightValue=710;  //漏血阈值
+    private int defaultLightValue=950;  //正常阈值
+    private int emptyLightValue=500;  //空管阈值
+    private int bloodLightValue=900;  //漏血阈值
     private int bubbleLightValue=20; //气泡差值
     private int bubbleHoldCount=1;   //最大气泡阈值
 //    private int normalHoldCount=10;

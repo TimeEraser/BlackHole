@@ -63,6 +63,7 @@ public class ECGShowUI extends JPanel implements Observer {
     private JLabel temperatureLabel;
     private DefaultValueDataset lightValueDataSet;
     private StandardDialRange normalDialRange;
+    private StandardDialRange bubbleDialRange;
     private StandardDialRange bloodDialRange;
 
     private DateAxis[] dateAxises ;
@@ -365,7 +366,7 @@ public class ECGShowUI extends JPanel implements Observer {
         bloodDialRange.setOuterRadius(0.55000000000000004D);
         lightValueDialPlot.addLayer(bloodDialRange);
         //设置刻度范围（橘黄色）
-        StandardDialRange bubbleDialRange =new StandardDialRange(0D, 500D, Color.black);
+        bubbleDialRange =new StandardDialRange(0D, 500D, Color.black);
         bubbleDialRange.setInnerRadius(0.52000000000000002D);
         bubbleDialRange.setOuterRadius(0.55000000000000004D);
         lightValueDialPlot.addLayer(bubbleDialRange);
@@ -570,7 +571,8 @@ public class ECGShowUI extends JPanel implements Observer {
         temperatureLabel.setText(guardData.getTemperature());
         lightValueDataSet.setValue(Integer.parseInt(guardData.getLightValue()));
         normalDialRange.setBounds((double) guardData.getBloodLightValue(),1024D);
-        bloodDialRange.setBounds((double)guardData.getBubbleLightValue(),(double)guardData.getBloodLightValue());
+        bloodDialRange.setBounds((double)guardData.getEmptyLightValue(),(double)guardData.getBloodLightValue());
+        bubbleDialRange.setBounds(0,(double)guardData.getEmptyLightValue());
 //        if(!guardData.getTemperatureMessage().equals("温度正常")&&guardData.getBloodMessage().equals())
     }
 

@@ -108,8 +108,8 @@ public class LightValueDialPlot extends JPanel implements Observer{
         GuardData guardData=(GuardData)arg;
         dataSet.setValue(Integer.parseInt(guardData.getLightValue()));
         normalDialRange.setBounds((double) guardData.getBloodLightValue(),1024D);
-        bloodDialRange.setBounds((double)guardData.getBubbleLightValue(),(double)guardData.getBloodLightValue());
-//        bubbleDialRange.setBounds(0,(double)guardData.getBubbleLightValue());
+        bloodDialRange.setBounds((double)guardData.getEmptyLightValue(),(double)guardData.getBloodLightValue());
+        bubbleDialRange.setBounds(0,(double)guardData.getEmptyLightValue());
     }
 }
 
