@@ -169,7 +169,7 @@ public class GuardActor extends BaseActor {
         boolean successFlag=false;
 
         String winSerialPort="COM"+String.valueOf(guardActorConfig.getSerialPortNum());
-        String unixSerialPort="/dev/ttyS/"+String.valueOf((char)(guardActorConfig.getSerialPortNum()));
+        String unixSerialPort="/dev/serial";
 //        System.out.println(winSerialPort);
 //        System.out.println(unixSerialPort);
         while (portList.hasMoreElements()) {
