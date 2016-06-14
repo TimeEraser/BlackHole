@@ -1,13 +1,12 @@
 package guard.guardshow;
 
-import com.sun.jnlp.ApiDialog;
+
 import guard.guardDataProcess.GuardData;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.dial.*;
 import org.jfree.data.general.DefaultValueDataset;
 import org.jfree.ui.GradientPaintTransformType;
-import org.jfree.ui.RectangleInsets;
 import org.jfree.ui.StandardGradientPaintTransformer;
 
 import javax.swing.*;
