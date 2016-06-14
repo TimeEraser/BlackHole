@@ -11,7 +11,7 @@ import java.net.*;
 public class MobileActor extends BaseActor  {
     protected ServerSocket serverSocket;
     protected Socket socket;
-    private Request startrequest;
+    private Request startRequest;
     private TransData transData;
     protected MobileActorConfig mobileActorConfig;
     public MobileActor(MobileActorConfig mobileActorConfig){
@@ -29,7 +29,7 @@ public class MobileActor extends BaseActor  {
         //接收到连接指令后开始查找手机端
         if(request == MobileRequest.MOBILE_CONNECT){
             System.out.println("MobileRequest.MOBILE_CONNECT");
-            startrequest=request;
+            startRequest=request;
             start();
         }
 
@@ -49,13 +49,14 @@ public class MobileActor extends BaseActor  {
         try {
             socket=serverSocket.accept();
         }catch (Exception e){
-            sendResponse(startrequest,MobileResponse.MOBILE_CONNECT_FAILED);
+            sendResponse(startRequest,MobileResponse.MOBILE_CONNECT_FAILED);
             return false;
         }
-        if (socket!=null){
-            transData = new TransData(serverSocket,mobileActorConfig);
+        if (socket!=null) {
+            transData = new TransData(serverSocket, mobileActorConfig);
+            return true;
         }
-        return true;
+        return false;
     }
 
     @Override
