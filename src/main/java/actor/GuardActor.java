@@ -169,17 +169,30 @@ public class GuardActor extends BaseActor {
         boolean successFlag=false;
 
         String winSerialPort="COM"+String.valueOf(guardActorConfig.getSerialPortNum());
-        String unixSerialPort="/dev/serial";
-//        System.out.println(winSerialPort);
-//        System.out.println(unixSerialPort);
+        String unixSerialPort="/dev/ttyACM0";
         while (portList.hasMoreElements()) {
             portId = (CommPortIdentifier) portList.nextElement();
             /*getPortType方法返回端口类型*/
             if (portId.getPortType() == CommPortIdentifier.PORT_SERIAL) {
             /* 默认找Windows下的第6个串口,即小板子连上我的电脑后的串口编号*/
-                if ((portId.getName().equals(winSerialPort))||(portId.getName().equals(unixSerialPort))){
+                if (portId.getName().equals(winSerialPort)){
                     serialComm = new SerialComm(this,portId,GuardRequest.GUARD_DATA);
                     successFlag=true;
+                }
+            }
+        }
+        if(!successFlag){
+            System.setProperty("gnu.io.rxtx.SerialPorts", "/dev/ttyACM0");
+            portList=CommPortIdentifier.getPortIdentifiers();//读出串口列表
+            while (portList.hasMoreElements()) {
+                portId = (CommPortIdentifier) portList.nextElement();
+            /*getPortType方法返回端口类型*/
+                if (portId.getPortType() == CommPortIdentifier.PORT_SERIAL) {
+            /* 默认找Windows下的第6个串口,即小板子连上我的电脑后的串口编号*/
+                    if (portId.getName().equals(unixSerialPort)){
+                        serialComm = new SerialComm(this,portId,GuardRequest.GUARD_DATA);
+                        successFlag=true;
+                    }
                 }
             }
         }
