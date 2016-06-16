@@ -156,7 +156,7 @@ public class ECGDataRefresher extends Observable implements Observer{
 			}
 		}
 		setChanged();
-		notifyObservers();
+		notifyObservers("flash");
 	}
 
 

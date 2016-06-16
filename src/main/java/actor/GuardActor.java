@@ -146,6 +146,9 @@ public class GuardActor extends BaseActor {
                     if (tempData % 16 / 8 == 1) {
                         sendRequest(guardActorConfig.getBlackHoleActor(), MainUiRequest.MAIN_UI_GUARD_TEMPERATURE_HIGH);
                     }
+                    if(tempData!=0){
+                        sendRequest(serialComm,GuardRequest.GUARD_ALARM);
+                    }
                     readFlag = 0;
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -164,6 +167,7 @@ public class GuardActor extends BaseActor {
     @Override
     public boolean start() {
         Enumeration portList;
+        System.setProperty("gnu.io.rxtx.SerialPorts", "COM6");
         portList=CommPortIdentifier.getPortIdentifiers();//读出串口列表
         CommPortIdentifier portId;
         boolean successFlag=false;

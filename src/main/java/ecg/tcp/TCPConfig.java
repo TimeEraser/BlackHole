@@ -5,7 +5,6 @@ import config.ConfigCenter;
 import javax.swing.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
 import java.io.*;
 
 public class TCPConfig extends JDialog {		//TCP配置界面

@@ -1,10 +1,14 @@
 package guard.guardshow;
 
+import config.ConfigCenter;
 import guard.guardDataProcess.GuardData;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.*;
 import java.util.Timer;
 
@@ -288,6 +292,30 @@ public class GuardConfigShow extends JDialog implements Observer{
         }
         else {
             confirmFlag = true;
+            String filename = ConfigCenter.getString("guard.Config.save");
+            File file=new File(filename);
+            FileWriter fileWriter=null;
+            try {
+                fileWriter = new FileWriter(filename);
+                fileWriter.write(String.valueOf(serialNum) + "\r\n");
+                fileWriter.write(String.valueOf(temperatureLow) + "\r\n");
+                fileWriter.write(String.valueOf(temperatureHigh) + "\r\n");
+                fileWriter.write(String.valueOf(defaultLightValue) + "\r\n");
+                fileWriter.write(String.valueOf(emptyLightValue) + "\r\n");
+                fileWriter.write(String.valueOf(bloodLightValue) + "\r\n");
+                fileWriter.write(String.valueOf(bubbleLightValue) + "\r\n");
+                fileWriter.write(String.valueOf(bubbleHoldCount) + "\r\n");
+            }catch (IOException e) {
+                e.printStackTrace();
+            }
+            finally {
+                try {
+                    fileWriter.flush();
+                    fileWriter.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
             this.dispose();
         }
     }

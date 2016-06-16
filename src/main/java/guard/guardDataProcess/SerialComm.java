@@ -8,6 +8,7 @@ import gnu.io.*;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.Enumeration;
 import java.util.TooManyListenersException;
 
@@ -17,6 +18,7 @@ import java.util.TooManyListenersException;
 public class SerialComm extends BaseActor implements SerialPortEventListener,Runnable {
     private CommPortIdentifier portId;
     private InputStream inputStream;
+    private OutputStream outputStream;
     private SerialPort serialPort;
     private Thread readThread;
     private BaseActor commActor;
@@ -38,6 +40,7 @@ InputStream和一个OutputStream。如果端口是用open方法打开的，那�
             try {
             /*获取端口的输入流对象*/
                 inputStream = serialPort.getInputStream();
+                outputStream=serialPort.getOutputStream();
             } catch (IOException e) {
             }
             try {
@@ -63,6 +66,16 @@ InputStream和一个OutputStream。如果端口是用open方法打开的，那�
         }
     }
     protected boolean processActorRequest(Request requests) {
+        if(requests==GuardRequest.GUARD_ALARM){
+            byte [] buffer=new byte[1];
+            buffer[0]=(byte)0xf0;
+            try {
+                outputStream.write(buffer);
+                outputStream.flush();
+            }
+            catch (IOException e){
+            }
+        }
         return false;
     }
 
@@ -100,9 +113,9 @@ InputStream和一个OutputStream。如果端口是用open方法打开的，那�
             case SerialPortEvent.CTS:/*Clear to send，清除发送*/
             case SerialPortEvent.DSR:/*Data set ready，数据设备就绪*/
             case SerialPortEvent.RI:/*Ring indicator，响铃指示*/
-            case SerialPortEvent.OUTPUT_BUFFER_EMPTY:/*Output buffer is empty，输出缓冲区清空*/
                 sendRequest(commActor, GuardRequest.GUARD_ERROR);
                 break;
+            case SerialPortEvent.OUTPUT_BUFFER_EMPTY:/*Output buffer is empty，输出缓冲区清空*/
             case SerialPortEvent.DATA_AVAILABLE:/*Data available at the serial port，端口有可用数据。读到缓冲数组，输出到终端*/
                 byte[] readBuffer = new byte[20];
                 int numBytes=0;

@@ -9,9 +9,9 @@ import java.awt.Toolkit;
 public class MainUiActorConfig {
 
 	//Interactive element
-	private CtActor ctActor;
-	private MobileActor mobileActor;
-	private MonitorActor monitorActor;
+//	private CtActor ctActor;
+//	private MobileActor mobileActor;
+//	private MonitorActor monitorActor;
 	private BlackHoleActor blackHoleActor;
 
 	//Interface element
@@ -25,18 +25,18 @@ public class MainUiActorConfig {
 	private Integer MENU_FONT_SIZE=(int)(0.011*WIDTH);
 	private Integer CONTENT_FONT_SIZE=(int)(0.017*WIDTH);
 
-	public MonitorActor getMonitorActor() {return monitorActor;}
-	public void setMonitorActor(MonitorActor monitorActor) {this.monitorActor = monitorActor;}
+//	public MonitorActor getMonitorActor() {return monitorActor;}
+//	public void setMonitorActor(MonitorActor monitorActor) {this.monitorActor = monitorActor;}
 
 	public BlackHoleActor getBlackHoleActor() {return blackHoleActor;}
 	public void setBlackHoleActor(BlackHoleActor blackHoleActor) {this.blackHoleActor = blackHoleActor;}
 
-	public CtActor getCtActor(){return ctActor;}
-	public  void setCtActor(CtActor ctActor){this.ctActor=ctActor;}
+//	public CtActor getCtActor(){return ctActor;}
+//	public  void setCtActor(CtActor ctActor){this.ctActor=ctActor;}
 
 
-	public MobileActor getMobileActor(){return  mobileActor;}
-	public  void setMobileActor(MobileActor mobileActor){this.mobileActor=mobileActor;}
+//	public MobileActor getMobileActor(){return  mobileActor;}
+//	public  void setMobileActor(MobileActor mobileActor){this.mobileActor=mobileActor;}
 
 	public Integer getWIDTH() {return WIDTH;}
 	public void setWIDTH(Integer WIDTH) {this.WIDTH = WIDTH;}

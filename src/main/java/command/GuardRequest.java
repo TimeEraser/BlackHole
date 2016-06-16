@@ -12,7 +12,8 @@ public enum  GuardRequest implements Request {
     GUARD_SERIAL_DATA_PROCESS,
     GUARD_START,
     GUARD_SHUT_DOWN,
-    GUARD_ERROR;
+    GUARD_ERROR,
+    GUARD_ALARM;
     //if CommandConfig==null abandon the request
     private CommandConfig requestConfig=null;
     public CommandConfig setConfig(CommandConfig requestConfig) {

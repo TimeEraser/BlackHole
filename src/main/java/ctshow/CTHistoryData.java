@@ -31,9 +31,11 @@ public class CTHistoryData extends JScrollPane{
     private BaseActor boss;
     private DefaultTableModel imageTableModel;
     private JTable imageTable;
-    public CTHistoryData(BaseActor boss){
+    public CTHistoryData(BaseActor boss,int WIDTH,int HEIGHT){
         this.boss=boss;
         //getVerticalScrollBar().setPreferredSize(new Dimension(0, 0));
+        imageWidth=(int)(WIDTH*0.2)-20;
+        imageHeight=imageWidth;
         getViewport().setBorder(null);
         setViewportBorder(null);
         setBorder(null);

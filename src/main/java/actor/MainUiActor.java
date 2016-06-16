@@ -38,10 +38,10 @@ public class MainUiActor extends BaseActor{
 
 	//Initialize parameter
 	//Interactive element
-	private CtActor ctActor;
-	private MonitorActor monitorActor;
+//	private CtActor ctActor;
+//	private MonitorActor monitorActor;
 	private BlackHoleActor blackHoleActor;
-	private MobileActor mobileActor;
+//	private MobileActor mobileActor;
 
 	//Interface element
 	private JFrame InitializationInterface;
@@ -61,10 +61,10 @@ public class MainUiActor extends BaseActor{
 
 
 	public MainUiActor(MainUiActorConfig mainUiActorConfig){
-		ctActor=mainUiActorConfig.getCtActor();
-		monitorActor=mainUiActorConfig.getMonitorActor();
+//		ctActor=mainUiActorConfig.getCtActor();
+//		monitorActor=mainUiActorConfig.getMonitorActor();
 		blackHoleActor=mainUiActorConfig.getBlackHoleActor();
-		mobileActor=mainUiActorConfig.getMobileActor();
+//		mobileActor=mainUiActorConfig.getMobileActor();
 
 		WIDTH=mainUiActorConfig.getWIDTH();
 		HEIGHT=mainUiActorConfig.getHeight();
@@ -180,6 +180,9 @@ public class MainUiActor extends BaseActor{
 			if(ecgDataRefresher!=null) {
 				ecgDataRefresher.addObserver(guardBottomShow);
 			}
+		}
+		if(response==MobileResponse.MOBILE_CONNECT_FAILED){
+			System.out.println("fail");
 		}
 		return false;
 	}
@@ -297,11 +300,11 @@ public class MainUiActor extends BaseActor{
 			Image phoneImage = ImageIO.read(getIconImage("Icon/phone.png"));
 			BufferedImage phoneBufferImage = ImageUtil.zoom(phoneImage, (int) (WIDTH * 0.074), (int) (HEIGHT * 0.065), new Color(1f, 1f, 1f, 0f));
 			JMenu mobile = new JMenu("");
-			mobile.addMenuListener(new MenuSwitchListener(contentPane, MOBILEComponent));
+//			mobile.addMenuListener(new MenuSwitchListener(contentPane, MOBILEComponent));
 			ImageIcon phoneIcon = new ImageIcon(phoneBufferImage);
 			mobile.setIcon(phoneIcon);
 			JMenuItem mobile_config = new JMenuItem("连接手机");
-			mobile_config.addActionListener(new NoticeListener(mobileActor, MainUiRequest.MAIN_UI_MOBILE_DATA));
+			mobile_config.addActionListener(new NoticeListener(blackHoleActor, MobileRequest.MOBILE_CONNECT));
 			mobile.add(mobile_config);
 			mainMenu.add(mobile);
 		}
@@ -318,7 +321,7 @@ public class MainUiActor extends BaseActor{
 
 	private JPanel createBOTTOMJPanel(){
 		JPanel GuardBottom=new JPanel();
-		guardBottomShow=new GuardBottomShow();
+		guardBottomShow=new GuardBottomShow(WIDTH,HEIGHT);
 		guardSerialDataProcess.addObserver(guardBottomShow);
 		GuardBottom.setBounds(0,(int)(HEIGHT*0.87),(int)(WIDTH*0.985),(int)(HEIGHT*0.15));
 		GuardBottom.setLayout(new BorderLayout());
@@ -453,7 +456,7 @@ public class MainUiActor extends BaseActor{
 		Border etchedBorder = BorderFactory.createEtchedBorder(EtchedBorder.LOWERED,Color.LIGHT_GRAY,Color.LIGHT_GRAY);	//创建一个具有“浮雕化”外观效果的边框，将组件的当前背景色用于高亮显示和阴影显示。
 		CTPanel.setBounds(0,0,WIDTH,(int)(HEIGHT*0.9));
 
-		CTShowUI ctShowUI = new CTShowUI(blackHoleActor);
+		CTShowUI ctShowUI = new CTShowUI(blackHoleActor,WIDTH,HEIGHT);
 		JPanel CTData = new JPanel(null);
 		CTData.setBounds((int)(WIDTH*0.375)-256,(int)(HEIGHT*0.02),512,512);	//setBounds()设定的是四个值，分别是X坐标和y坐标（其中屏幕的左上角是原点）、宽和高
 		CTData.add(ctShowUI.getCtData());
@@ -480,12 +483,12 @@ public class MainUiActor extends BaseActor{
 			JButton CTAnalyse = new JButton();
 			CTAnalyse.setText(" 分析CT病灶 ");
 			CTAnalyse.setIcon(new ImageIcon(analyseBufferImage));
-			CTAnalyse.addActionListener(new NoticeListener(this, ctActor, CtRequest.CT_ANALYSIS));
+			CTAnalyse.addActionListener(new NoticeListener(this, blackHoleActor, CtRequest.CT_ANALYSIS));
 			CTControl.add(CTAnalyse);
 			JButton CTSave = new JButton();
 			CTSave.setText(" 保存CT结果  ");
 			CTSave.setIcon(new ImageIcon(saveBufferImage));
-			CTSave.addActionListener(new NoticeListener(this, ctActor, CtRequest.CT_SAVE));
+			CTSave.addActionListener(new NoticeListener(this, blackHoleActor, CtRequest.CT_SAVE));
 			CTControl.add(CTSave);
 			JButton returnCurrent = new JButton();
 			returnCurrent.setText("返回当前数据");
@@ -503,7 +506,7 @@ public class MainUiActor extends BaseActor{
 		CTHistory.add(ctShowUI.getCtHistoryData());
 		CTPanel.add(CTHistory);
 
-		sendRequest(ctActor,CtRequest.CT_UI_CONFIG,ctShowUI);
+		sendRequest(blackHoleActor,CtRequest.CT_UI_CONFIG,ctShowUI);
 		CTPanel.setVisible(false);
 		return CTPanel;
 	}
@@ -543,10 +546,10 @@ public class MainUiActor extends BaseActor{
 			ButtonSwitchListener buttonSwitchListener = new ButtonSwitchListener();
 			buttonSwitchListener.setText(0, " 开始传输 ");
 			buttonSwitchListener.setIcon(0, new ImageIcon(startBufferImage));
-			buttonSwitchListener.setMessage(0, monitorActor, MonitorRequest.MONITOR_ECG_START);
+			buttonSwitchListener.setMessage(0, blackHoleActor, MonitorRequest.MONITOR_ECG_START);
 			buttonSwitchListener.setText(1, " 暂停传输 ");
 			buttonSwitchListener.setIcon(1, new ImageIcon(pauseBufferImage));
-			buttonSwitchListener.setMessage(1, monitorActor, MonitorRequest.MONITOR_ECG_STOP);
+			buttonSwitchListener.setMessage(1, blackHoleActor, MonitorRequest.MONITOR_ECG_STOP);
 			ecgStart.addActionListener(buttonSwitchListener);
 			ECGControl.add(ecgStart);
 
@@ -554,14 +557,14 @@ public class MainUiActor extends BaseActor{
 			ecgStop.setText(" 停止传输 ");
 
 			ecgStop.setIcon(new ImageIcon(startBufferImage));
-			ecgStop.addActionListener(new NoticeListener(this, monitorActor, MonitorRequest.MONITOR_SHUTDOWM,ecgStart.getText()));
+			ecgStop.addActionListener(new NoticeListener(this, blackHoleActor, MonitorRequest.MONITOR_SHUTDOWM,ecgStart.getText()));
 
 			ECGControl.add(ecgStop);
 
 			JButton ecgAnalyse = new JButton();
 			ecgAnalyse.setText("心电图分析");
 			ecgAnalyse.setIcon(new ImageIcon(analyseBufferImage));
-			ecgAnalyse.addActionListener(new NoticeListener(this, monitorActor, MainUiRequest.MAIN_UI_ECG_ANALYSIS));
+			ecgAnalyse.addActionListener(new NoticeListener(this, blackHoleActor, MainUiRequest.MAIN_UI_ECG_ANALYSIS));
 			//ECGControl.add(ecgAnalyse);
 			ECGPanel.add(ECGControl);
 		}catch (IOException e){}
@@ -570,7 +573,7 @@ public class MainUiActor extends BaseActor{
 		ECGData.setBounds((int)(WIDTH*0.02),(int)(HEIGHT*0.12),(int)(WIDTH*0.58),(int)(HEIGHT*0.66));
 		ECGShowUI ecgShowUI=new ECGShowUI("ecg", 5000L);
 		ECGData.add(ecgShowUI.getECGData());
-		sendRequest(monitorActor,MonitorRequest.ECG_UI_CONFIG,ecgShowUI);
+		sendRequest(blackHoleActor,MonitorRequest.ECG_UI_CONFIG,ecgShowUI);
 		ECGPanel.add(ECGData);
 
 		JPanel HeartRate=new JPanel(new BorderLayout());
@@ -601,15 +604,6 @@ public class MainUiActor extends BaseActor{
 		guardSerialDataProcess.addObserver(ecgShowUI);
 
 		GuardDataPanel.add(ecgShowUI.getGuardDataPanel());
-//		Temperature.setLayout(new BorderLayout());
-//		Temperature.add(ecgShowUI.getTemperatureData(),BorderLayout.CENTER);
-//
-//		JPanel LightValue=new JPanel();
-//		LightValue.setBounds((int)(WIDTH*0.80),(int)(HEIGHT*0.35),(int)(WIDTH*0.18),(int)(HEIGHT*0.32));
-//		LightValue.setLayout(new BorderLayout());
-//		LightValue.add(ecgShowUI.getLightValueData(),BorderLayout.CENTER);
-
-		//ECGAnalyse.add(ecgShowUI.getECGInfo());
 		ECGPanel.add(GuardDataPanel);
 
 		ECGPanel.setVisible(false);

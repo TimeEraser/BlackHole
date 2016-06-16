@@ -23,6 +23,7 @@ public class LightValueDialPlot extends JPanel implements Observer{
     private StandardDialRange bubbleDialRange;
     public LightValueDialPlot(){
         int WIDTH = (int)Toolkit.getDefaultToolkit().getScreenSize().getWidth();
+//        System.out.println(WIDTH);
         int HEIGHT = (int)Toolkit.getDefaultToolkit().getScreenSize().getHeight();
         dataSet=new DefaultValueDataset();
         DialPlot lightValueDialPlot=new DialPlot();

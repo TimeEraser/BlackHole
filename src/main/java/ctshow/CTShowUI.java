@@ -12,9 +12,9 @@ public class CTShowUI {
     private CTHistoryData ctHistoryData;
     private CTResultData ctResultData;
     private CTData ctData;
-    public CTShowUI(BaseActor boss){
+    public CTShowUI(BaseActor boss,int WIDTH,int HEIGHT){
         ctCurrentData=new CTCurrentData();
-        ctHistoryData=new CTHistoryData(boss);
+        ctHistoryData=new CTHistoryData(boss,WIDTH,HEIGHT);
         ctResultData=new CTResultData();
         ctData=new CTData(ctCurrentData,ctResultData,512,512);
 //        ctData=new CTData(ctCurrentData,ctCurrentData.getResultImageJPanel());
