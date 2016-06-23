@@ -90,7 +90,7 @@ public class GuardActor extends BaseActor {
         }
         if(requests==GuardRequest.GUARD_SERIAL_ASK){
             Map<String,String> connectInfo=new HashMap<>();
-            connectInfo.put("serialNum",String.valueOf(guardActorConfig.getSerialPortNum()));
+            connectInfo.put("serialName",guardActorConfig.getSerialPortName());
             connectInfo.put("temperatureLow",String.valueOf(guardActorConfig.getTemperatureLow()));
             connectInfo.put("temperatureHigh",String.valueOf(guardActorConfig.getTemperatureHigh()));
             connectInfo.put("defaultLightValue",String.valueOf(guardActorConfig.getDefaultLightValue()));
@@ -103,7 +103,7 @@ public class GuardActor extends BaseActor {
         if(requests==GuardRequest.GUARD_SERIAL_SET){
             Map<String,String> connectInfo=(Map)requests.getConfig().getData();
             if(connectInfo!=null){
-                guardActorConfig.setSerialPortNum(Integer.parseInt(connectInfo.get("serialNum")));
+                guardActorConfig.setSerialPortName(connectInfo.get("serialName"));
                 guardActorConfig.setTemperatureLow(Integer.parseInt(connectInfo.get("temperatureLow")));
                 guardActorConfig.setTemperatureHigh(Integer.parseInt(connectInfo.get("temperatureHigh")));
                 guardActorConfig.setDefaultLightValue(Integer.parseInt(connectInfo.get("defaultLightValue")));
@@ -134,6 +134,10 @@ public class GuardActor extends BaseActor {
                 //返回值为1时漏血，返回值为2时气泡
                 try {
                     short tempData = guardSerialDataProcess.process(data);
+                    if(tempData!=0){
+                        sendRequest(serialComm,GuardRequest.GUARD_ALARM);
+//                        System.out.println("send");
+                    }
                     if (tempData % 2 == 1) {
                         sendRequest(guardActorConfig.getBlackHoleActor(), MainUiRequest.MAIN_UI_GUARD_BLOOD_LEAK);
                     }
@@ -145,9 +149,6 @@ public class GuardActor extends BaseActor {
                     }
                     if (tempData % 16 / 8 == 1) {
                         sendRequest(guardActorConfig.getBlackHoleActor(), MainUiRequest.MAIN_UI_GUARD_TEMPERATURE_HIGH);
-                    }
-                    if(tempData!=0){
-                        sendRequest(serialComm,GuardRequest.GUARD_ALARM);
                     }
                     readFlag = 0;
                 } catch (IOException e) {
@@ -167,36 +168,21 @@ public class GuardActor extends BaseActor {
     @Override
     public boolean start() {
         Enumeration portList;
-        System.setProperty("gnu.io.rxtx.SerialPorts", "COM6");
+        String portName=guardActorConfig.getSerialPortName();
+        System.out.println(portName);
+        System.setProperty("gnu.io.rxtx.SerialPorts", portName);
         portList=CommPortIdentifier.getPortIdentifiers();//读出串口列表
         CommPortIdentifier portId;
         boolean successFlag=false;
 
-        String winSerialPort="COM"+String.valueOf(guardActorConfig.getSerialPortNum());
-        String unixSerialPort="/dev/ttyACM0";
         while (portList.hasMoreElements()) {
             portId = (CommPortIdentifier) portList.nextElement();
             /*getPortType方法返回端口类型*/
             if (portId.getPortType() == CommPortIdentifier.PORT_SERIAL) {
             /* 默认找Windows下的第6个串口,即小板子连上我的电脑后的串口编号*/
-                if (portId.getName().equals(winSerialPort)){
+                if (portId.getName().equals(portName)){
                     serialComm = new SerialComm(this,portId,GuardRequest.GUARD_DATA);
                     successFlag=true;
-                }
-            }
-        }
-        if(!successFlag){
-            System.setProperty("gnu.io.rxtx.SerialPorts", "/dev/ttyACM0");
-            portList=CommPortIdentifier.getPortIdentifiers();//读出串口列表
-            while (portList.hasMoreElements()) {
-                portId = (CommPortIdentifier) portList.nextElement();
-            /*getPortType方法返回端口类型*/
-                if (portId.getPortType() == CommPortIdentifier.PORT_SERIAL) {
-            /* 默认找Windows下的第6个串口,即小板子连上我的电脑后的串口编号*/
-                    if (portId.getName().equals(unixSerialPort)){
-                        serialComm = new SerialComm(this,portId,GuardRequest.GUARD_DATA);
-                        successFlag=true;
-                    }
                 }
             }
         }

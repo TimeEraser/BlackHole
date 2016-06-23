@@ -17,6 +17,7 @@ import java.util.concurrent.TimeUnit;
 
 import javax.swing.JButton;
 
+import actor.BlackHoleActor;
 import org.jfree.chart.axis.DateAxis;
 import org.jfree.data.time.Millisecond;
 import org.jfree.data.time.Second;
@@ -164,7 +165,8 @@ public class ECGDataRefresher extends Observable implements Observer{
 
 	public void refreshHeartRate(byte[] message){
 		HeartRatedatas[1]=(short)(((message[0])<<8)|(message[1]&0xff));
-
+		setChanged();
+		notifyObservers("HeartRate:"+String.valueOf(HeartRatedatas[1]));
 	}
 
 	public void refreshSystolicPressure(byte[] message){
@@ -177,7 +179,10 @@ public class ECGDataRefresher extends Observable implements Observer{
 	}
 
 	public void refreshBloodOxygen(byte[] message){
+//		BloodOxygendatas[1]=100;
 		BloodOxygendatas[1]=(short)message[0];
+		setChanged();
+		notifyObservers("bloodOxygendata:"+String.valueOf(BloodOxygendatas[1]));
 	}
 
 

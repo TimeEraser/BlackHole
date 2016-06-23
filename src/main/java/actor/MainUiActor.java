@@ -29,6 +29,7 @@ import ecg.tcp.TCPConfig;
 
 import guard.guardDataProcess.GuardSerialDataProcess;
 import guard.guardshow.*;
+import mobile.TransData;
 import util.ImageUtil;
 
 
@@ -179,10 +180,23 @@ public class MainUiActor extends BaseActor{
 			ECGDataRefresher ecgDataRefresher=(ECGDataRefresher)response.getConfig().getData();
 			if(ecgDataRefresher!=null) {
 				ecgDataRefresher.addObserver(guardBottomShow);
+				sendRequest(blackHoleActor,MobileRequest.MOBILE_GET_ECG_DATA_REFRESH,ecgDataRefresher);
 			}
 		}
 		if(response==MobileResponse.MOBILE_CONNECT_FAILED){
 			System.out.println("fail");
+		}
+		if(response==MobileResponse.MOBILE_CONNECT){
+//			System.out.println("accepted");
+			TransData transData=(TransData)response.getConfig().getData();
+//			System.out.println(transData==null);
+			if(transData!=null){
+				transData.addObserver(guardBottomShow);
+				System.out.println("serverSetSuccess");
+			}
+			else {
+				System.out.println("serverSetFail");
+			}
 		}
 		return false;
 	}
@@ -190,6 +204,7 @@ public class MainUiActor extends BaseActor{
 	@Override
 	public boolean start()  {
 		sendRequest(blackHoleActor,GuardRequest.GUARD_SERIAL_DATA_PROCESS);
+		sendRequest(blackHoleActor,MobileRequest.MOBILE_SYNCHRONIZE);
 		this.constructInterface();
 		return false;
 	}
@@ -241,7 +256,7 @@ public class MainUiActor extends BaseActor{
 	}
 
 	private void managerElement() {
-		InitializationInterface=new JFrame("医疗健康管理系统");
+		InitializationInterface=new JFrame("人工肝医疗辅助系统");
 		InitializationInterface.setSize(WIDTH,HEIGHT);
 		InitializationInterface.setLocation(LEFT,TOP);
 		InitializationInterface.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -304,7 +319,7 @@ public class MainUiActor extends BaseActor{
 			ImageIcon phoneIcon = new ImageIcon(phoneBufferImage);
 			mobile.setIcon(phoneIcon);
 			JMenuItem mobile_config = new JMenuItem("连接手机");
-			mobile_config.addActionListener(new NoticeListener(blackHoleActor, MobileRequest.MOBILE_CONNECT));
+			mobile_config.addActionListener(new NoticeListener(this,blackHoleActor, MobileRequest.MOBILE_CONNECT));
 			mobile.add(mobile_config);
 			mainMenu.add(mobile);
 		}
@@ -411,7 +426,7 @@ public class MainUiActor extends BaseActor{
 	private Map<String, String>  createGuardConfigDialog(Map<String, String> connectInfo){
 		GuardConfigShow guardConfigShow = new GuardConfigShow(InitializationInterface,true);
 		guardSerialDataProcess.addObserver(guardConfigShow);
-		guardConfigShow.setSerialNum(Integer.parseInt(connectInfo.get("serialNum")));
+		guardConfigShow.setSerialName(connectInfo.get("serialName"));
 		guardConfigShow.setTemperatureLow(Integer.parseInt(connectInfo.get("temperatureLow")));
 		guardConfigShow.setTemperatureHigh(Integer.parseInt(connectInfo.get("temperatureHigh")));
 		guardConfigShow.setDefaultLightValue(Integer.parseInt(connectInfo.get("defaultLightValue")));
@@ -427,7 +442,7 @@ public class MainUiActor extends BaseActor{
 		else return null;
 	}
 	private Map<String, String> getGuardConnectInfo(GuardConfigShow guardConfigShow){
-		String serialNum=String.valueOf(guardConfigShow.getSerialNum());
+		String serialNum=guardConfigShow.getSerialName();
 		String temperatureLow=String.valueOf(guardConfigShow.getTemperatureLow());
 		String temperatureHigh=String.valueOf(guardConfigShow.getTemperatureHigh());
 		String defaultLightValue=String.valueOf(guardConfigShow.getDefaultLightValue());
@@ -436,7 +451,7 @@ public class MainUiActor extends BaseActor{
 		String bubbleLightValue=String.valueOf(guardConfigShow.getBubbleLightValue());
 		String bubbleHoldCount=String.valueOf(guardConfigShow.getBubbleHoldCount());
 		Map<String,String> connectInfo=new HashMap<>();
-		connectInfo.put("serialNum",serialNum);
+		connectInfo.put("serialName",serialNum);
 		connectInfo.put("temperatureLow",temperatureLow);
 		connectInfo.put("temperatureHigh",temperatureHigh);
 		connectInfo.put("defaultLightValue",defaultLightValue);

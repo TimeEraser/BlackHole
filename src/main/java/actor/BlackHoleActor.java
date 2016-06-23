@@ -31,7 +31,10 @@ public class BlackHoleActor extends BaseActor {
         guardActor=new GuardActor(guardActorConfig);
 
         ctActor=new CtActor(new CtActorConfig());
-        mobileActor=new MobileActor(new MobileActorConfig());
+
+        MobileActorConfig mobileActorConfig=new MobileActorConfig();
+        mobileActorConfig.setBlackHoleActor(this);
+        mobileActor=new MobileActor(mobileActorConfig);
         MainUiActorConfig mainUiActorConfig= new MainUiActorConfig();
         mainUiActorConfig.setBlackHoleActor(this);
 //        mainUiActorConfig.setMobileActor(mobileActor);

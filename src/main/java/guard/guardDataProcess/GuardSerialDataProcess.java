@@ -121,8 +121,10 @@ public class GuardSerialDataProcess extends Observable {
                 bubbleJudgeCount+=1;
             }
             else {
-                alarmBlood = true;
-                bloodCount += 1;
+                if(lastLightValue>emptyLightValue) {
+                    alarmBlood = true;
+                    bloodCount += 1;
+                }
             }
         }
         else {
@@ -151,7 +153,7 @@ public class GuardSerialDataProcess extends Observable {
 //        }
 
         if((alarmBlood && alarmBloodSolved)||alarmBubble) {
-            if (alarmBlood) {
+            if (alarmBlood && alarmBloodSolved) {
                 FileOutputStream alarmStream = new FileOutputStream(alarmMessageDataFile, true);
                 alarmOutputData = (nowTime + ":" + "Blood\r\n").getBytes();
                 alarmStream.write(alarmOutputData);

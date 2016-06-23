@@ -81,7 +81,7 @@ public class TemperatureShow extends JPanel implements Observer{
         rangeAxis.setLabelFont(yfont);
         rangeAxis.setLabelPaint(Color.BLACK) ; // 字体颜色
         rangeAxis.setTickLabelFont(yfont);
-        rangeAxis.setRange(25.0D,45.0D);
+        rangeAxis.setRange(20.0D,40.0D);
         rangeAxis.setTickLabelsVisible(true);
         rangeAxis.setVisible(true);
     }

@@ -11,7 +11,7 @@ import java.io.*;
 public class GuardActorConfig {
     Integer GUARD_THREAD_POOL_SIZE;
     private BlackHoleActor blackHoleActor;
-    private int serialPortNum=6;
+    private String serialPortName="COM6";
     private int temperatureLow=25;
     private int temperatureHigh=38;
     private int defaultLightValue=950;  //正常阈值
@@ -30,7 +30,7 @@ public class GuardActorConfig {
                 e.printStackTrace();
             }
             try {
-                serialPortNum=Integer.parseInt(bufferedReader.readLine());
+                serialPortName=bufferedReader.readLine();
                 temperatureLow=Integer.parseInt(bufferedReader.readLine());
                 temperatureHigh=Integer.parseInt(bufferedReader.readLine());
                 defaultLightValue=Integer.parseInt(bufferedReader.readLine());
@@ -47,7 +47,7 @@ public class GuardActorConfig {
             try {
                 file.createNewFile();
                 fileWriter = new FileWriter(filename);
-                fileWriter.write(String.valueOf(serialPortNum) + "\r\n");
+                fileWriter.write(String.valueOf(serialPortName) + "\r\n");
                 fileWriter.write(String.valueOf(temperatureLow) + "\r\n");
                 fileWriter.write(String.valueOf(temperatureHigh) + "\r\n");
                 fileWriter.write(String.valueOf(defaultLightValue) + "\r\n");
@@ -70,11 +70,11 @@ public class GuardActorConfig {
     }
 //    private int normalHoldCount=10;
 
-    public void  setSerialPortNum(int serialPortNum){
-        this.serialPortNum=serialPortNum;
+    public void  setSerialPortName(String serialPortName){
+        this.serialPortName=serialPortName;
     }
-    public int getSerialPortNum(){
-        return  this.serialPortNum;
+    public String getSerialPortName(){
+        return  this.serialPortName;
     }
     public BlackHoleActor getBlackHoleActor(){
         return blackHoleActor;

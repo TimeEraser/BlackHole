@@ -187,7 +187,7 @@ public class TCPClient extends Thread{  //跑多线程
 						//ecgOtherData.setBlood_oxygen(blood_oxygen);
 						fosBloodOxygen.write(receivedBuffer,8,1);
 						//ecgDataRefresher.setEcgOtherData(ecgOtherData);
-						//ecgDataRefresher.refreshBloodOxygen(Arrays.copyOfRange(receivedBuffer,8,1));
+						ecgDataRefresher.refreshBloodOxygen(Arrays.copyOfRange(receivedBuffer,8,9));
 					}
 
 

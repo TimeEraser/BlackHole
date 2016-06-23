@@ -25,7 +25,7 @@ public class GuardConfigShow extends JDialog implements Observer{
     private JTextField bubbleLightValueText;
     private JTextField bubbleHoldCountText;
 
-    private int serialNum;
+    private String serialName;
     private int temperatureLow;
     private int temperatureHigh;
     private int defaultLightValue;
@@ -46,7 +46,7 @@ public class GuardConfigShow extends JDialog implements Observer{
     }
     //初始化构件
     public void initComponents() {
-        JLabel serialPortLabel=new JLabel("端口号(1-26)");
+        JLabel serialPortLabel=new JLabel("端口名");
         JLabel temperatureLowLabel=new JLabel("下限温度(15-35)");
         JLabel temperatureHighLabel=new JLabel("上限温度(30-45)");
         JLabel defaultLightValueLabel=new JLabel("正常工作透光值(0-1024)");
@@ -55,7 +55,7 @@ public class GuardConfigShow extends JDialog implements Observer{
         JLabel bubbleLightValueLabel=new JLabel("气泡报警差值(10-50)");
         JLabel bubbleHoldCountLabel=new JLabel("气泡大小报警阈值(1-10)");
 
-        serialPortNumText=new JTextField(String.valueOf(serialNum));
+        serialPortNumText=new JTextField(String.valueOf(serialName));
         temperatureLowText=new JTextField(String.valueOf(temperatureLow));
         temperatureHighText=new JTextField(String.valueOf(temperatureHigh));
         defaultLightValueText=new JTextField(String.valueOf(defaultLightValue));
@@ -215,13 +215,7 @@ public class GuardConfigShow extends JDialog implements Observer{
     }
     private void confirmButtonActionPerformed(java.awt.event.ActionEvent evt){
         boolean errorFlag=false;
-        int serialNum=Integer.parseInt(serialPortNumText.getText());
-        if(0<serialNum&&serialNum<27) {
-            this.serialNum=serialNum;
-        }
-        else{
-            errorFlag=true;
-        }
+        serialName=serialPortNumText.getText();
 //        System.out.println(errorFlag);
         int temperatureLow=Integer.parseInt(temperatureLowText.getText());
         if(!errorFlag&&temperatureLow<35&&temperatureLow>15){
@@ -297,7 +291,7 @@ public class GuardConfigShow extends JDialog implements Observer{
             FileWriter fileWriter=null;
             try {
                 fileWriter = new FileWriter(filename);
-                fileWriter.write(String.valueOf(serialNum) + "\r\n");
+                fileWriter.write(String.valueOf(serialName) + "\r\n");
                 fileWriter.write(String.valueOf(temperatureLow) + "\r\n");
                 fileWriter.write(String.valueOf(temperatureHigh) + "\r\n");
                 fileWriter.write(String.valueOf(defaultLightValue) + "\r\n");
@@ -448,11 +442,11 @@ public class GuardConfigShow extends JDialog implements Observer{
     public int getBubbleHoldCount(){
         return bubbleHoldCount;
     }
-    public int getSerialNum(){
-        return serialNum;
+    public String getSerialName(){
+        return serialName;
     }
-    public void setSerialNum(int serialNum){
-        this.serialNum=serialNum;
+    public void setSerialName(String serialName){
+        this.serialName=serialName;
     }
     public boolean getConfirmFlag(){
         return confirmFlag;
