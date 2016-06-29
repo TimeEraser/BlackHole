@@ -120,30 +120,37 @@ public class TransData extends Observable implements Runnable,Observer {
                             if(connectInfo.get("temperature")!=null) {
                                 out.writeUTF("temperature:" + connectInfo.get("temperature") + "\r\n");
                                 out.flush();
+                                Thread.sleep(10);
                             }
                             if(connectInfo.get("time")!=null) {
                                 out.writeUTF("time:" + connectInfo.get("time") + "\r\n");
                                 out.flush();
+                                Thread.sleep(10);
                             }
                             if (connectInfo.get("temperatureMessage") != null) {
                                 out.writeUTF("temperatureMessage:" + connectInfo.get("temperatureMessage") + "\r\n");
                                 out.flush();
+                                Thread.sleep(10);
                             }
                             if (connectInfo.get("bloodMessage") != null) {
                                 out.writeUTF("bloodMessage:" + connectInfo.get("bloodMessage") + "\r\n");
                                 out.flush();
+                                Thread.sleep(10);
                             }
                             if (connectInfo.get("bubbleMessage") != null) {
                                 out.writeUTF("bubbleMessage:" + connectInfo.get("bubbleMessage") + "\r\n");
                                 out.flush();
+                                Thread.sleep(10);
                             }
                             if(connectInfo.get("heartRateData")!=null) {
                                 out.writeUTF("heartRateData:" + connectInfo.get("heartRateData") + "\r\n");
                                 out.flush();
+                                Thread.sleep(10);
                             }
                             if(connectInfo.get("bloodOxygenData")!=null) {
                                 out.writeUTF("bloodOxygenData:" + connectInfo.get("bloodOxygenData") + "\r\n");
                                 out.flush();
+                                Thread.sleep(10);
                             }
                             connectInfo.clear();
 //                            out.flush();

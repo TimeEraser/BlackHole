@@ -299,15 +299,16 @@ public class ECGShowUI extends JPanel implements Observer {
         GroupLayout layout=new GroupLayout(GuardDataPanel);
         GuardDataPanel.setLayout(layout);
         JPanel temperatureData=new JPanel();
-        temperatureData.setLayout(new FlowLayout(FlowLayout.CENTER));
+        temperatureData.setLayout(new FlowLayout());
+//        temperatureData.setLayout(null);
 //        temperatureData.setBounds(0,0,(int) (WIDTH * 0.14), (int) (HEIGHT * 0.15));
-        temperatureData.setSize((int) (WIDTH * 0.14), (int) (HEIGHT * 0.11));
+        temperatureData.setSize((int) (WIDTH * 0.16), (int) (HEIGHT * 0.11));
         temperatureData.setBackground(new Color(0,150,255));
-        temperatureLabel=new JLabel("--.-");
+        temperatureLabel=new JLabel("--.- ");
         temperatureLabel.setFont(loadFont("LED.tff",(float) (HEIGHT * 0.070)));
         temperatureLabel.setBackground(new Color(0,150,255));
         temperatureLabel.setForeground(Color.RED);
-        temperatureLabel.setBounds(0,0,200,100);
+//        temperatureLabel.setBounds(0,0,200,100);
         temperatureLabel.setOpaque(true);
         JLabel temperatureLabelName=new JLabel("温度 ");
         temperatureLabelName.setFont(new Font("SansSerif", 0,(int)(HEIGHT *0.020)));
@@ -463,7 +464,7 @@ public class ECGShowUI extends JPanel implements Observer {
         scheduledExecutorService.scheduleAtFixedRate(new Runnable() {
             @Override
             public void run() {
-                if (BloodOxygendatas[0]==0){
+                if (BloodOxygendatas[0]==0||HeartRatedatas[0]==-100){
                     jLabel1.setText("--");
                 }
                 else {
@@ -568,7 +569,7 @@ public class ECGShowUI extends JPanel implements Observer {
     @Override
     public void update(Observable o, Object arg) {
         GuardData guardData=(GuardData)arg;
-        temperatureLabel.setText(guardData.getTemperature());
+        temperatureLabel.setText(guardData.getTemperature()+" ");
         lightValueDataSet.setValue(Integer.parseInt(guardData.getLightValue()));
         normalDialRange.setBounds((double) guardData.getBloodLightValue(),1024D);
         bloodDialRange.setBounds((double)guardData.getEmptyLightValue(),(double)guardData.getBloodLightValue());

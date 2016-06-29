@@ -231,17 +231,17 @@ public class ECGDataRefresher extends Observable implements Observer{
 							}
 
 							HeartRatedatas[0]=HeartRatedatas[1];
-
 							BloodOxygendatas[0]=BloodOxygendatas[1];
-							//SystolicPressureSeries[0].addOrUpdate(time, SystolicPressuredatas[0]);
-							//SystolicPressureSeries[1].addOrUpdate(time, SystolicPressuredatas[0]);
-							//DiastolicPressureSeries[0].addOrUpdate(time, DiastolicPressuredatas[0]);
-							//DiastolicPressureSeries[1].addOrUpdate(time, DiastolicPressuredatas[0]);
 
-							SystolicPressureSeries[0].addOrUpdate(time, 40);
-							SystolicPressureSeries[1].addOrUpdate(time, 40);
-							DiastolicPressureSeries[0].addOrUpdate(time, 20);
-							DiastolicPressureSeries[1].addOrUpdate(time, 20);
+							SystolicPressureSeries[0].addOrUpdate(time, SystolicPressuredatas[0]);
+							SystolicPressureSeries[1].addOrUpdate(time, SystolicPressuredatas[0]);
+							DiastolicPressureSeries[0].addOrUpdate(time, DiastolicPressuredatas[0]);
+							DiastolicPressureSeries[1].addOrUpdate(time, DiastolicPressuredatas[0]);
+
+							//SystolicPressureSeries[0].addOrUpdate(time, 40);
+							//SystolicPressureSeries[1].addOrUpdate(time, 40);
+							//DiastolicPressureSeries[0].addOrUpdate(time, 20);
+							//DiastolicPressureSeries[1].addOrUpdate(time, 20);
 
 						}
 						time= new Millisecond(new Date(currentTimeMillis));
