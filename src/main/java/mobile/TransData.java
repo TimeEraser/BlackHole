@@ -19,6 +19,7 @@ import java.util.Observer;
  * Created by adminstrator on 2016/6/22.
  */
 public class TransData extends Observable implements Runnable,Observer {
+//    private static TransData instance=null;
     private ServerSocket serverSocket;
     private MobileActorConfig mobileActorConfig;
     private Map<String,String> connectInfo=new HashMap<>();
@@ -26,6 +27,7 @@ public class TransData extends Observable implements Runnable,Observer {
     public TransData(ServerSocket serverSocket,MobileActorConfig mobileActorConfig){
         this.mobileActorConfig=mobileActorConfig;
         this.serverSocket=serverSocket;
+//        instance=this;
     }
     public void setEnableFlag(boolean enableFlag){
         this.enableFlag=enableFlag;
@@ -54,6 +56,9 @@ public class TransData extends Observable implements Runnable,Observer {
 //        System.out.println("ReadOne");
         if(o instanceof GuardSerialDataProcess){
             GuardData temp=(GuardData) arg;
+//            if(temp.getTemperatureMessage()!=null) {
+//                System.out.println(temp.getTemperatureMessage());
+//            }
             connectInfo.put("temperature",temp.getTemperature());
             connectInfo.put("time",temp.getTime());
             connectInfo.put("temperatureMessage",temp.getTemperatureMessage());
@@ -76,6 +81,7 @@ public class TransData extends Observable implements Runnable,Observer {
         private boolean confirmedFlag=false;
         private DataInputStream input;
         private DataOutputStream out;
+        private boolean connectEnableFlag=true;
         HandlerThread(Socket client){
             this.client=client;
             try {
@@ -89,7 +95,17 @@ public class TransData extends Observable implements Runnable,Observer {
 
         @Override
         public void run() {
-            while (true) {
+            while (connectEnableFlag) {
+                if(client.isClosed()){
+                    try {
+                        client.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    connectEnableFlag=false;
+                    Thread.interrupted();
+                    break;
+                }
 //                System.out.println(client==null);
 //                System.out.println("sendOne"+confirmedFlag);
                 try {
@@ -161,7 +177,7 @@ public class TransData extends Observable implements Runnable,Observer {
                         }
                     }
                 } catch (Exception e) {
-                    System.out.println("服务器 run 异常: " + e.getMessage());
+//                    System.out.println("服务器 run 异常: " + e.getMessage());
                 }
                 try {
                     Thread.sleep(100);

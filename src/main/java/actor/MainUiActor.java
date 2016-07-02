@@ -261,7 +261,7 @@ public class MainUiActor extends BaseActor{
 		InitializationInterface.setLocation(LEFT,TOP);
 		InitializationInterface.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		InitializationInterface.setLayout(null);
-
+		InitializationInterface.setResizable(false);
 		JOptionPane.setRootFrame(InitializationInterface);	//设置窗体，以用于不提供窗体的类方法
 
 
